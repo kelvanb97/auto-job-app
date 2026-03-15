@@ -20,7 +20,7 @@ export async function createRole(input: TCreateRole): Promise<TResult<TRole>> {
 			location: input.location ?? null,
 			salary_min: input.salaryMin ?? null,
 			salary_max: input.salaryMax ?? null,
-			status: input.status,
+			status: input.status ?? "new",
 			posted_at: input.postedAt ?? null,
 			notes: input.notes ?? null,
 		})

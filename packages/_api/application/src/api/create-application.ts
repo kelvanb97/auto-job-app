@@ -17,7 +17,7 @@ export async function createApplication(
 		.from("application")
 		.insert({
 			role_id: input.roleId ?? null,
-			status: input.status,
+			status: input.status ?? "draft",
 			resume_path: input.resumePath ?? null,
 			cover_letter_path: input.coverLetterPath ?? null,
 			submitted_at: input.submittedAt ?? null,
