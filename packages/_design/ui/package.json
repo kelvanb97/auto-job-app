@@ -16,7 +16,6 @@
 		"./library/checkbox": "./src/library/checkbox/checkbox.tsx",
 		"./library/command": "./src/library/command/command.tsx",
 		"./library/dialog": "./src/library/dialog/dialog.tsx",
-		"./library/discord-button": "./src/library/discord-button/discord-button.tsx",
 		"./library/document-upload": "./src/library/document-upload/document-upload.tsx",
 		"./library/dropdown-menu": "./src/library/dropdown-menu/dropdown-menu.tsx",
 		"./library/error-message": "./src/library/error-message/error-message.tsx",

@@ -4,8 +4,8 @@ import {
 	Fallback as AvatarPrimitiveFallback,
 	Root as AvatarPrimitiveRoot,
 } from "@radix-ui/react-avatar"
-import { UserIcon } from "#assets/icons/lucide-icons"
 import { cn } from "#utils/cn"
+import { UserIcon } from "lucide-react"
 import NextImage from "next/image"
 
 const fallbackSizeClasses = {

@@ -1,7 +1,7 @@
-import { ArrowLeftIcon, ArrowRightIcon } from "#assets/icons/lucide-icons"
 import { Flex } from "#primitives/flex"
 import { XStack } from "#primitives/x-stack"
 import { cn } from "#utils/cn"
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react"
 import Image from "next/image"
 import {
 	forwardRef,

@@ -8,9 +8,9 @@ import {
 	Root as TooltipPrimitiveRoot,
 	Trigger as TooltipPrimitiveTrigger,
 } from "@radix-ui/react-tooltip"
-import { CircleQuestionMarkIcon } from "#assets/icons/lucide-icons"
 import { Paragraph } from "#library/text/text"
 import { cn } from "#utils/cn"
+import { CircleQuestionMarkIcon } from "lucide-react"
 import type { ComponentProps } from "react"
 
 function TooltipProvider({
