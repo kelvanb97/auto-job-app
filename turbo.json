@@ -3,7 +3,12 @@
 	"ui": "stream",
 	"tasks": {
 		"build": {
-			"env": ["NODE_ENV"],
+			"env": [
+				"NODE_ENV",
+				"NEXT_PUBLIC_SUPABASE_URL",
+				"NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+				"SUPABASE_SECRET_KEY"
+			],
 			"dependsOn": ["^build"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": [".next/**", "!.next/cache/**"]
