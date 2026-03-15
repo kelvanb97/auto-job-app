@@ -1,0 +1,12 @@
+{
+	"name": "@aja-app/supabase",
+	"private": true,
+	"version": "0.0.0",
+	"exports": {
+		".": "./src/supabase.ts"
+	},
+	"scripts": {
+		"typegen:local": "pnpm dlx supabase gen types typescript --local > src/supabase.ts",
+		"typegen:production": "pnpm dlx supabase gen types typescript --project-id auto-job-app > src/supabase.ts"
+	}
+}

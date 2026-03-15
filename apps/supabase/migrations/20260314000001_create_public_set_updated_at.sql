@@ -1,8 +1,8 @@
-CREATE OR REPLACE FUNCTION public.set_updated_at()
-RETURNS TRIGGER
-LANGUAGE plpgsql
-SET search_path = ''
-AS $$
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
 begin
     new.updated_at = now();
     return new;
