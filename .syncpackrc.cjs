@@ -12,16 +12,6 @@ const config = {
 			strategy: "name@version",
 		},
 	},
-	dependencyTypes: [
-		"dev",
-		"local",
-		"engines",
-		"overrides",
-		"peer",
-		"pnpmOverrides",
-		"prod",
-		"resolutions",
-	],
 	indent: "	",
 	semverGroups: [
 		{
