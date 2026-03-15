@@ -102,9 +102,6 @@ importers:
 
   packages/_api/application:
     dependencies:
-      '@aja-core/next-safe-action':
-        specifier: workspace:*
-        version: link:../../_core/next-safe-action
       '@aja-core/result':
         specifier: workspace:*
         version: link:../../_core/result
@@ -127,12 +124,6 @@ importers:
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
-      next:
-        specifier: 16.1.6
-        version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      react:
-        specifier: 19.2.4
-        version: 19.2.4
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -142,9 +133,6 @@ importers:
 
   packages/_api/company:
     dependencies:
-      '@aja-core/next-safe-action':
-        specifier: workspace:*
-        version: link:../../_core/next-safe-action
       '@aja-core/result':
         specifier: workspace:*
         version: link:../../_core/result
@@ -167,12 +155,6 @@ importers:
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
-      next:
-        specifier: 16.1.6
-        version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      react:
-        specifier: 19.2.4
-        version: 19.2.4
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -182,9 +164,6 @@ importers:
 
   packages/_api/interaction:
     dependencies:
-      '@aja-core/next-safe-action':
-        specifier: workspace:*
-        version: link:../../_core/next-safe-action
       '@aja-core/result':
         specifier: workspace:*
         version: link:../../_core/result
@@ -207,12 +186,6 @@ importers:
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
-      next:
-        specifier: 16.1.6
-        version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      react:
-        specifier: 19.2.4
-        version: 19.2.4
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -222,9 +195,6 @@ importers:
 
   packages/_api/person:
     dependencies:
-      '@aja-core/next-safe-action':
-        specifier: workspace:*
-        version: link:../../_core/next-safe-action
       '@aja-core/result':
         specifier: workspace:*
         version: link:../../_core/result
@@ -247,12 +217,6 @@ importers:
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
-      next:
-        specifier: 16.1.6
-        version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      react:
-        specifier: 19.2.4
-        version: 19.2.4
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -262,9 +226,6 @@ importers:
 
   packages/_api/role:
     dependencies:
-      '@aja-core/next-safe-action':
-        specifier: workspace:*
-        version: link:../../_core/next-safe-action
       '@aja-core/result':
         specifier: workspace:*
         version: link:../../_core/result
@@ -287,12 +248,6 @@ importers:
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
-      next:
-        specifier: 16.1.6
-        version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      react:
-        specifier: 19.2.4
-        version: 19.2.4
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -302,9 +257,6 @@ importers:
 
   packages/_api/role-person:
     dependencies:
-      '@aja-core/next-safe-action':
-        specifier: workspace:*
-        version: link:../../_core/next-safe-action
       '@aja-core/result':
         specifier: workspace:*
         version: link:../../_core/result
@@ -327,12 +279,6 @@ importers:
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
-      next:
-        specifier: 16.1.6
-        version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      react:
-        specifier: 19.2.4
-        version: 19.2.4
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -342,9 +288,6 @@ importers:
 
   packages/_api/score:
     dependencies:
-      '@aja-core/next-safe-action':
-        specifier: workspace:*
-        version: link:../../_core/next-safe-action
       '@aja-core/result':
         specifier: workspace:*
         version: link:../../_core/result
@@ -367,12 +310,6 @@ importers:
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
-      next:
-        specifier: 16.1.6
-        version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      react:
-        specifier: 19.2.4
-        version: 19.2.4
       typescript:
         specifier: 5.8.3
         version: 5.8.3
