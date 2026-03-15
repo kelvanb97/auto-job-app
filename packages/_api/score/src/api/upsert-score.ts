@@ -1,0 +1,30 @@
+import type { Database } from "@aja-app/supabase"
+import { supabaseServerClient } from "@aja-core/supabase-next-auth/admin"
+import { type TResult, errFrom, ok } from "@aja-core/result"
+import type { TScore, TUpsertScore } from "#schema/score-schema"
+import { unmarshalScore } from "#schema/score-marshallers"
+
+export async function upsertScore(
+	input: TUpsertScore,
+): Promise<TResult<TScore>> {
+	const supabase = await supabaseServerClient<Database>()
+
+	const { data, error } = await supabase
+		.schema("app")
+		.from("score")
+		.upsert(
+			{
+				role_id: input.roleId,
+				score: input.score,
+				positive: input.positive ?? null,
+				negative: input.negative ?? null,
+			},
+			{ onConflict: "role_id" },
+		)
+		.select()
+		.single()
+
+	if (error) return errFrom(`Error upserting score: ${error.message}`)
+
+	return ok(unmarshalScore(data))
+}
