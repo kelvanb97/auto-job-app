@@ -1,8 +1,14 @@
 import type { Database } from "@aja-app/supabase"
 import { errFrom, ok, type TResult } from "@aja-core/result"
 import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalRolePerson } from "#schema/role-person-marshallers"
-import type { TRolePerson, TUpdateRolePerson } from "#schema/role-person-schema"
+import {
+	marshalUpdateRolePerson,
+	unmarshalRolePerson,
+} from "#schema/role-person-marshallers"
+import type {
+	TRolePerson,
+	TUpdateRolePerson,
+} from "#schema/role-person-schema"
 
 export async function updateRolePerson(
 	input: TUpdateRolePerson,
@@ -12,7 +18,7 @@ export async function updateRolePerson(
 	const { data, error } = await supabase
 		.schema("app")
 		.from("role_person")
-		.update({ relationship: input.relationship })
+		.update(marshalUpdateRolePerson(input))
 		.eq("role_id", input.roleId)
 		.eq("person_id", input.personId)
 		.select()

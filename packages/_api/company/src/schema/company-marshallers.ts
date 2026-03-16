@@ -1,4 +1,13 @@
-import type { TCompany, TMarshalledCompany } from "./company-schema"
+import type { Database } from "@aja-app/supabase"
+import type {
+	TCompany,
+	TCreateCompany,
+	TMarshalledCompany,
+	TUpdateCompany,
+} from "./company-schema"
+
+type CompanyInsert = Database["app"]["Tables"]["company"]["Insert"]
+type CompanyUpdate = Database["app"]["Tables"]["company"]["Update"]
 
 export function unmarshalCompany(m: TMarshalledCompany): TCompany {
 	return {
@@ -15,16 +24,27 @@ export function unmarshalCompany(m: TMarshalledCompany): TCompany {
 	}
 }
 
-export function marshalCompany(
-	c: Omit<TCompany, "id" | "createdAt" | "updatedAt">,
-): Omit<TMarshalledCompany, "id" | "created_at" | "updated_at"> {
+export function marshalCreateCompany(input: TCreateCompany): CompanyInsert {
 	return {
-		name: c.name,
-		website: c.website,
-		linkedin_url: c.linkedinUrl,
-		size: c.size,
-		stage: c.stage,
-		industry: c.industry,
-		notes: c.notes,
+		name: input.name,
+		website: input.website ?? null,
+		linkedin_url: input.linkedinUrl ?? null,
+		size: input.size ?? null,
+		stage: input.stage ?? null,
+		industry: input.industry ?? null,
+		notes: input.notes ?? null,
 	}
+}
+
+export function marshalUpdateCompany(input: TUpdateCompany): CompanyUpdate {
+	const updates: CompanyUpdate = {}
+	if (input.name !== undefined) updates.name = input.name
+	if (input.website !== undefined) updates.website = input.website
+	if (input.linkedinUrl !== undefined)
+		updates.linkedin_url = input.linkedinUrl
+	if (input.size !== undefined) updates.size = input.size
+	if (input.stage !== undefined) updates.stage = input.stage
+	if (input.industry !== undefined) updates.industry = input.industry
+	if (input.notes !== undefined) updates.notes = input.notes
+	return updates
 }

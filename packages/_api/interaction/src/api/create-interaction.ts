@@ -1,7 +1,10 @@
 import type { Database } from "@aja-app/supabase"
 import { errFrom, ok, type TResult } from "@aja-core/result"
 import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalInteraction } from "#schema/interaction-marshallers"
+import {
+	marshalCreateInteraction,
+	unmarshalInteraction,
+} from "#schema/interaction-marshallers"
 import type {
 	TCreateInteraction,
 	TInteraction,
@@ -15,12 +18,7 @@ export async function createInteraction(
 	const { data, error } = await supabase
 		.schema("app")
 		.from("interaction")
-		.insert({
-			role_id: input.roleId ?? null,
-			person_id: input.personId ?? null,
-			type: input.type,
-			notes: input.notes ?? null,
-		})
+		.insert(marshalCreateInteraction(input))
 		.select()
 		.single()
 

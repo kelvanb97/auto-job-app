@@ -1,7 +1,10 @@
 import type { Database } from "@aja-app/supabase"
 import { errFrom, ok, type TResult } from "@aja-core/result"
 import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalPerson } from "#schema/person-marshallers"
+import {
+	marshalCreatePerson,
+	unmarshalPerson,
+} from "#schema/person-marshallers"
 import type { TCreatePerson, TPerson } from "#schema/person-schema"
 
 export async function createPerson(
@@ -12,14 +15,7 @@ export async function createPerson(
 	const { data, error } = await supabase
 		.schema("app")
 		.from("person")
-		.insert({
-			company_id: input.companyId ?? null,
-			name: input.name,
-			title: input.title ?? null,
-			email: input.email ?? null,
-			linkedin_url: input.linkedinUrl ?? null,
-			notes: input.notes ?? null,
-		})
+		.insert(marshalCreatePerson(input))
 		.select()
 		.single()
 

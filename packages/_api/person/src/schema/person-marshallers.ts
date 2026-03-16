@@ -1,4 +1,13 @@
-import type { TPerson, TMarshalledPerson } from "./person-schema"
+import type { Database } from "@aja-app/supabase"
+import type {
+	TCreatePerson,
+	TMarshalledPerson,
+	TPerson,
+	TUpdatePerson,
+} from "./person-schema"
+
+type PersonInsert = Database["app"]["Tables"]["person"]["Insert"]
+type PersonUpdate = Database["app"]["Tables"]["person"]["Update"]
 
 export function unmarshalPerson(m: TMarshalledPerson): TPerson {
 	return {
@@ -14,15 +23,25 @@ export function unmarshalPerson(m: TMarshalledPerson): TPerson {
 	}
 }
 
-export function marshalPerson(
-	p: Omit<TPerson, "id" | "createdAt" | "updatedAt">,
-): Omit<TMarshalledPerson, "id" | "created_at" | "updated_at"> {
+export function marshalCreatePerson(input: TCreatePerson): PersonInsert {
 	return {
-		company_id: p.companyId,
-		name: p.name,
-		title: p.title,
-		email: p.email,
-		linkedin_url: p.linkedinUrl,
-		notes: p.notes,
+		company_id: input.companyId ?? null,
+		name: input.name,
+		title: input.title ?? null,
+		email: input.email ?? null,
+		linkedin_url: input.linkedinUrl ?? null,
+		notes: input.notes ?? null,
 	}
+}
+
+export function marshalUpdatePerson(input: TUpdatePerson): PersonUpdate {
+	const updates: PersonUpdate = {}
+	if (input.companyId !== undefined) updates.company_id = input.companyId
+	if (input.name !== undefined) updates.name = input.name
+	if (input.title !== undefined) updates.title = input.title
+	if (input.email !== undefined) updates.email = input.email
+	if (input.linkedinUrl !== undefined)
+		updates.linkedin_url = input.linkedinUrl
+	if (input.notes !== undefined) updates.notes = input.notes
+	return updates
 }

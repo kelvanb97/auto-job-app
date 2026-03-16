@@ -1,7 +1,10 @@
 import type { Database } from "@aja-app/supabase"
 import { errFrom, ok, type TResult } from "@aja-core/result"
 import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalApplication } from "#schema/application-marshallers"
+import {
+	marshalCreateApplication,
+	unmarshalApplication,
+} from "#schema/application-marshallers"
 import type {
 	TApplication,
 	TCreateApplication,
@@ -15,14 +18,7 @@ export async function createApplication(
 	const { data, error } = await supabase
 		.schema("app")
 		.from("application")
-		.insert({
-			role_id: input.roleId ?? null,
-			status: input.status ?? "draft",
-			resume_path: input.resumePath ?? null,
-			cover_letter_path: input.coverLetterPath ?? null,
-			submitted_at: input.submittedAt ?? null,
-			notes: input.notes ?? null,
-		})
+		.insert(marshalCreateApplication(input))
 		.select()
 		.single()
 

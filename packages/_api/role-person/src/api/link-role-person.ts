@@ -1,7 +1,10 @@
 import type { Database } from "@aja-app/supabase"
 import { errFrom, ok, type TResult } from "@aja-core/result"
 import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalRolePerson } from "#schema/role-person-marshallers"
+import {
+	marshalLinkRolePerson,
+	unmarshalRolePerson,
+} from "#schema/role-person-marshallers"
 import type { TLinkRolePerson, TRolePerson } from "#schema/role-person-schema"
 
 export async function linkRolePerson(
@@ -12,11 +15,7 @@ export async function linkRolePerson(
 	const { data, error } = await supabase
 		.schema("app")
 		.from("role_person")
-		.insert({
-			role_id: input.roleId,
-			person_id: input.personId,
-			relationship: input.relationship ?? null,
-		})
+		.insert(marshalLinkRolePerson(input))
 		.select()
 		.single()
 

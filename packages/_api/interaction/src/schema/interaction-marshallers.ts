@@ -1,6 +1,17 @@
-import type { TInteraction, TMarshalledInteraction } from "./interaction-schema"
+import type { Database } from "@aja-app/supabase"
+import type {
+	TCreateInteraction,
+	TInteraction,
+	TMarshalledInteraction,
+	TUpdateInteraction,
+} from "./interaction-schema"
 
-export function unmarshalInteraction(m: TMarshalledInteraction): TInteraction {
+type InteractionInsert = Database["app"]["Tables"]["interaction"]["Insert"]
+type InteractionUpdate = Database["app"]["Tables"]["interaction"]["Update"]
+
+export function unmarshalInteraction(
+	m: TMarshalledInteraction,
+): TInteraction {
 	return {
 		id: m.id,
 		roleId: m.role_id,
@@ -12,13 +23,24 @@ export function unmarshalInteraction(m: TMarshalledInteraction): TInteraction {
 	}
 }
 
-export function marshalInteraction(
-	i: Omit<TInteraction, "id" | "createdAt" | "updatedAt">,
-): Omit<TMarshalledInteraction, "id" | "created_at" | "updated_at"> {
+export function marshalCreateInteraction(
+	input: TCreateInteraction,
+): InteractionInsert {
 	return {
-		role_id: i.roleId,
-		person_id: i.personId,
-		type: i.type,
-		notes: i.notes,
+		role_id: input.roleId ?? null,
+		person_id: input.personId ?? null,
+		type: input.type,
+		notes: input.notes ?? null,
 	}
+}
+
+export function marshalUpdateInteraction(
+	input: TUpdateInteraction,
+): InteractionUpdate {
+	const updates: InteractionUpdate = {}
+	if (input.roleId !== undefined) updates.role_id = input.roleId
+	if (input.personId !== undefined) updates.person_id = input.personId
+	if (input.type !== undefined) updates.type = input.type
+	if (input.notes !== undefined) updates.notes = input.notes
+	return updates
 }

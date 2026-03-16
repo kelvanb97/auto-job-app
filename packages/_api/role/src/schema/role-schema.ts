@@ -81,7 +81,7 @@ export const createRoleSchema = z.object({
 	location: z.string().nullable().optional(),
 	salaryMin: z.number().nullable().optional(),
 	salaryMax: z.number().nullable().optional(),
-	status: z.string().optional(),
+	status: roleStatusSchema.optional(),
 	postedAt: z.string().nullable().optional(),
 	notes: z.string().nullable().optional(),
 })
@@ -99,7 +99,7 @@ export const updateRoleSchema = z.object({
 	location: z.string().nullable().optional(),
 	salaryMin: z.number().nullable().optional(),
 	salaryMax: z.number().nullable().optional(),
-	status: z.string().optional(),
+	status: roleStatusSchema.optional(),
 	postedAt: z.string().nullable().optional(),
 	notes: z.string().nullable().optional(),
 })
