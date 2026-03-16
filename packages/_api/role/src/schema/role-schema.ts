@@ -33,6 +33,11 @@ export const listRolesSchema = z.object({
 	status: z.string().optional(),
 	locationType: z.string().optional(),
 	source: z.string().optional(),
+	sortBy: z
+		.enum(["created_at", "posted_at", "title", "status"])
+		.default("created_at")
+		.optional(),
+	sortOrder: z.enum(["asc", "desc"]).default("desc").optional(),
 })
 
 export type TListRoles = z.infer<typeof listRolesSchema>

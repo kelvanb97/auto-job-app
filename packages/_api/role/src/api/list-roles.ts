@@ -30,8 +30,11 @@ export async function listRoles(
 		query = query.eq("source", input.source)
 	}
 
+	const sortColumn = input.sortBy ?? "created_at"
+	const ascending = (input.sortOrder ?? "desc") === "asc"
+
 	const { data, error } = await query
-		.order("created_at", { ascending: false })
+		.order(sortColumn, { ascending })
 		.range(start, end)
 
 	if (error) return errFrom(`Error listing roles: ${error.message}`)

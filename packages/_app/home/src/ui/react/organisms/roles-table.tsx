@@ -1,0 +1,81 @@
+import type { TRole } from "@aja-api/role/schema/role-schema"
+import {
+	Table,
+	TableBody,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@aja-design/ui/library/table"
+import { TextBody } from "@aja-design/ui/library/text"
+import { RolesTableRow } from "#molecules/roles-table-row"
+
+interface IRolesTableProps {
+	roles: TRole[]
+	companiesMap: Map<string, string>
+	onStatusChange: (roleId: string, status: string) => void
+	onRowClick: (role: TRole) => void
+	sentinelRef: React.RefCallback<HTMLDivElement>
+	isLoadingMore: boolean
+	statusDisabledId: string | null
+}
+
+export function RolesTable({
+	roles,
+	companiesMap,
+	onStatusChange,
+	onRowClick,
+	sentinelRef,
+	isLoadingMore,
+	statusDisabledId,
+}: IRolesTableProps) {
+	if (roles.length === 0 && !isLoadingMore) {
+		return (
+			<TextBody size="md" variant="muted-foreground">
+				No roles found.
+			</TextBody>
+		)
+	}
+
+	return (
+		<>
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead>Title</TableHead>
+						<TableHead>Company</TableHead>
+						<TableHead>Status</TableHead>
+						<TableHead>Location</TableHead>
+						<TableHead>Salary</TableHead>
+						<TableHead>Added</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					{roles.map((role) => (
+						<RolesTableRow
+							key={role.id}
+							role={role}
+							companyName={
+								role.companyId
+									? (companiesMap.get(role.companyId) ?? null)
+									: null
+							}
+							onStatusChange={onStatusChange}
+							onClick={() => onRowClick(role)}
+							statusDisabled={role.id === statusDisabledId}
+						/>
+					))}
+				</TableBody>
+			</Table>
+			<div ref={sentinelRef} className="h-1" />
+			{isLoadingMore && (
+				<TextBody
+					size="sm"
+					variant="muted-foreground"
+					className="text-center py-4"
+				>
+					Loading more...
+				</TextBody>
+			)}
+		</>
+	)
+}

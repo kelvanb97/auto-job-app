@@ -9,8 +9,7 @@
 		"./home-screen": "./src/next/screens/home.tsx",
 		"./roles-screen": "./src/next/screens/roles.tsx",
 		"./people-screen": "./src/next/screens/people.tsx",
-		"./follow-ups-screen": "./src/next/screens/follow-ups.tsx",
-		"./actions/create-role-with-company": "./src/next/actions/create-role-with-company.ts"
+		"./follow-ups-screen": "./src/next/screens/follow-ups.tsx"
 	},
 	"scripts": {
 		"check-types": "tsc --noEmit",

@@ -5,9 +5,9 @@
 @import "./styles/container-lg.css";
 
 /* Source the files using this config */
-@source "./src/**/*{ts,tsx}";
-@source "../../**/*{ts,tsx}";
-@source "../../../apps/web/**/*{ts,tsx}";
+@source "./src/**/*.{ts,tsx}";
+@source "../../_app/**/*.{ts,tsx}";
+@source "../../../apps/web/**/*.{ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 

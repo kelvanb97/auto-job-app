@@ -2,10 +2,7 @@
 
 import { createCompany } from "@aja-api/company/api/create-company"
 import { createRole } from "@aja-api/role/api/create-role"
-import {
-	SafeForClientError,
-	actionClient,
-} from "@aja-core/next-safe-action"
+import { actionClient, SafeForClientError } from "@aja-core/next-safe-action"
 import { z } from "zod"
 
 const createRoleWithCompanySchema = z.object({
@@ -32,7 +29,7 @@ const createRoleWithCompanySchema = z.object({
 })
 
 export const createRoleWithCompanyAction = actionClient
-	.schema(createRoleWithCompanySchema)
+	.inputSchema(createRoleWithCompanySchema)
 	.action(async ({ parsedInput }) => {
 		let companyId: string | undefined
 
