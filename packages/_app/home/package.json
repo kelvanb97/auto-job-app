@@ -9,27 +9,34 @@
 		"./home-screen": "./src/next/screens/home.tsx",
 		"./roles-screen": "./src/next/screens/roles.tsx",
 		"./people-screen": "./src/next/screens/people.tsx",
-		"./follow-ups-screen": "./src/next/screens/follow-ups.tsx"
+		"./follow-ups-screen": "./src/next/screens/follow-ups.tsx",
+		"./actions/create-role-with-company": "./src/next/actions/create-role-with-company.ts"
 	},
 	"scripts": {
 		"check-types": "tsc --noEmit",
 		"lint": "eslint ./src"
 	},
+	"dependencies": {
+		"@aja-api/company": "workspace:*",
+		"@aja-api/role": "workspace:*",
+		"@aja-core/next-safe-action": "workspace:*",
+		"zod": "4.3.6"
+	},
 	"peerDependencies": {
 		"@aja-design/ui": "workspace:*",
-		"next": "^16.1.1",
-		"react": "^19.2.1",
-		"react-dom": "^19.2.1"
+		"next": "^16.1.6",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4"
 	},
 	"devDependencies": {
 		"@aja-core/eslint": "workspace:*",
 		"@aja-core/tsconfig": "workspace:*",
 		"@aja-design/ui": "workspace:*",
-		"@types/react": "19.1.12",
+		"@types/react": "19.2.14",
 		"eslint": "9.24.0",
-		"next": "16.1.1",
-		"react": "19.2.1",
-		"react-dom": "19.2.1"
+		"next": "16.1.6",
+		"react": "19.2.4",
+		"react-dom": "19.2.4"
 	},
 	"imports": {
 		"#*": [

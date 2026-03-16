@@ -14,25 +14,25 @@
 		"lint": "eslint ."
 	},
 	"peerDependencies": {
-		"next": "^16.0.10",
-		"react": "^19.2.1"
+		"next": "^16.1.6",
+		"react": "^19.2.4"
 	},
 	"dependencies": {
 		"@supabase/ssr": "0.6.1",
 		"@supabase/supabase-js": "2.76.1",
-		"@t3-oss/env-nextjs": "0.12.0",
+		"@t3-oss/env-nextjs": "0.13.10",
 		"server-only": "0.0.1",
-		"zod": "4.1.12"
+		"zod": "4.3.6"
 	},
 	"devDependencies": {
 		"@aja-core/eslint": "workspace:*",
 		"@aja-core/tsconfig": "workspace:*",
-		"@types/node": "20.19.2",
-		"@types/react": "19.1.12",
+		"@types/node": "25.5.0",
+		"@types/react": "19.2.14",
 		"eslint": "9.24.0",
-		"next": "16.0.10",
-		"react": "19.2.1",
-		"typescript": "5.8.3"
+		"next": "16.1.6",
+		"react": "19.2.4",
+		"typescript": "5.9.3"
 	},
 	"imports": {
 		"#*": [
