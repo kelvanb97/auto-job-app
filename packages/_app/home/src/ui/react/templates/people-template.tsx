@@ -2,10 +2,10 @@
 
 import { TextBody } from "@aja-design/ui/library/text"
 
-export function HomeTemplate() {
+export function PeopleTemplate() {
 	return (
 		<TextBody size="md" variant="muted-foreground">
-			Welcome to your job application tracker.
+			Manage your professional contacts.
 		</TextBody>
 	)
 }

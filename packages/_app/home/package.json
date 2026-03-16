@@ -5,7 +5,11 @@
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
-		"./home-screen": "./src/next/screens/home.tsx"
+		"./create-screen": "./src/next/screens/create.tsx",
+		"./home-screen": "./src/next/screens/home.tsx",
+		"./roles-screen": "./src/next/screens/roles.tsx",
+		"./people-screen": "./src/next/screens/people.tsx",
+		"./follow-ups-screen": "./src/next/screens/follow-ups.tsx"
 	},
 	"scripts": {
 		"check-types": "tsc --noEmit",

@@ -3,7 +3,6 @@
 
 /* Custom Styles */
 @import "./styles/container-lg.css";
-@import "./styles/animations.css";
 
 /* Source the files using this config */
 @source "./src/**/*{ts,tsx}";
