@@ -1,0 +1,155 @@
+"use client"
+
+import { Button } from "@aja-design/ui/library/button"
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "@aja-design/ui/library/card"
+import { DocumentUpload } from "@aja-design/ui/library/document-upload"
+import { InputGroup } from "@aja-design/ui/library/input-group"
+import { Label } from "@aja-design/ui/library/label"
+import { Textarea } from "@aja-design/ui/library/text-area"
+import { XStack } from "@aja-design/ui/primitives/x-stack"
+import { YStack } from "@aja-design/ui/primitives/y-stack"
+import { useState } from "react"
+
+interface IApplicationFieldsCardProps {
+	resumeUrl: string | null
+	coverLetterUrl: string | null
+	notes: string
+	onNotesChange: (notes: string) => void
+	onUpload: (fileType: "resume" | "cover_letter", file: File) => void
+	onRemove: (fileType: "resume" | "cover_letter") => void
+	uploadingType: "resume" | "cover_letter" | null
+	removingType: "resume" | "cover_letter" | null
+}
+
+function FileSlot({
+	label,
+	fileType,
+	url,
+	onUpload,
+	onRemove,
+	isUploading,
+	isRemoving,
+}: {
+	label: string
+	fileType: "resume" | "cover_letter"
+	url: string | null
+	onUpload: (file: File) => void
+	onRemove: () => void
+	isUploading: boolean
+	isRemoving: boolean
+}) {
+	const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+	const handleFileSelect = (file: File | null) => {
+		setSelectedFile(file)
+		if (file) {
+			onUpload(file)
+		}
+	}
+
+	if (url && !selectedFile) {
+		return (
+			<InputGroup>
+				<Label>{label}</Label>
+				<XStack className="items-center gap-2 rounded-md border px-3 py-2">
+					<a
+						href={url}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-sm text-primary underline truncate flex-1"
+					>
+						{label} uploaded
+					</a>
+					<Button
+						variant="ghost"
+						size="sm"
+						className="text-destructive shrink-0"
+						onClick={onRemove}
+						disabled={isRemoving}
+					>
+						{isRemoving ? "Removing..." : "Remove"}
+					</Button>
+				</XStack>
+			</InputGroup>
+		)
+	}
+
+	return (
+		<InputGroup>
+			<Label>{label}</Label>
+			{isUploading ? (
+				<div className="border-2 border-dashed rounded-lg p-6 text-center text-sm text-muted-foreground">
+					Uploading...
+				</div>
+			) : (
+				<DocumentUpload
+					id={`app-${fileType}`}
+					cta={`Upload ${label}`}
+					selectedFile={selectedFile}
+					setSelectedFile={handleFileSelect}
+					incomingDocumentUrl={null}
+					accepts=".pdf,.doc,.docx"
+				/>
+			)}
+		</InputGroup>
+	)
+}
+
+export function ApplicationFieldsCard({
+	resumeUrl,
+	coverLetterUrl,
+	notes,
+	onNotesChange,
+	onUpload,
+	onRemove,
+	uploadingType,
+	removingType,
+}: IApplicationFieldsCardProps) {
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Application</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<YStack className="gap-4">
+					<FileSlot
+						label="Resume"
+						fileType="resume"
+						url={resumeUrl}
+						onUpload={(file) => onUpload("resume", file)}
+						onRemove={() => onRemove("resume")}
+						isUploading={uploadingType === "resume"}
+						isRemoving={removingType === "resume"}
+					/>
+
+					<FileSlot
+						label="Cover Letter"
+						fileType="cover_letter"
+						url={coverLetterUrl}
+						onUpload={(file) => onUpload("cover_letter", file)}
+						onRemove={() => onRemove("cover_letter")}
+						isUploading={uploadingType === "cover_letter"}
+						isRemoving={removingType === "cover_letter"}
+					/>
+
+					<InputGroup>
+						<Label htmlFor="app-notes">Notes</Label>
+						<Textarea
+							id="app-notes"
+							value={notes}
+							onChange={(
+								e: React.ChangeEvent<HTMLTextAreaElement>,
+							) => onNotesChange(e.target.value)}
+							placeholder="Application notes..."
+						/>
+					</InputGroup>
+				</YStack>
+			</CardContent>
+		</Card>
+	)
+}

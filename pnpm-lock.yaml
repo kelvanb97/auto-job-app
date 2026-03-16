@@ -319,19 +319,37 @@ importers:
 
   packages/_app/home:
     dependencies:
+      '@aja-api/application':
+        specifier: workspace:*
+        version: link:../../_api/application
       '@aja-api/company':
         specifier: workspace:*
         version: link:../../_api/company
+      '@aja-api/interaction':
+        specifier: workspace:*
+        version: link:../../_api/interaction
+      '@aja-api/person':
+        specifier: workspace:*
+        version: link:../../_api/person
       '@aja-api/role':
         specifier: workspace:*
         version: link:../../_api/role
+      '@aja-api/role-person':
+        specifier: workspace:*
+        version: link:../../_api/role-person
       '@aja-core/next-safe-action':
         specifier: workspace:*
         version: link:../../_core/next-safe-action
+      '@aja-core/supabase-next-auth':
+        specifier: workspace:*
+        version: link:../../_core/supabase-next-auth
       zod:
         specifier: 4.3.6
         version: 4.3.6
     devDependencies:
+      '@aja-app/supabase':
+        specifier: workspace:*
+        version: link:../supabase
       '@aja-core/eslint':
         specifier: workspace:*
         version: link:../../_core/eslint
