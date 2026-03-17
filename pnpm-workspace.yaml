@@ -5,3 +5,4 @@ packages:
     - "packages/_app/*"
     - "packages/_core/*"
     - "packages/_design/*"
+    - "packages/_integrations/*"

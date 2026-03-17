@@ -14,7 +14,7 @@ pnpm test
 
 ## Architecture
 
-Turborepo monorepo with pnpm workspaces. Four package layers:
+Turborepo monorepo with pnpm workspaces. Five package layers:
 
 | Layer               | Scope           | Purpose                                                  |
 | ------------------- | --------------- | -------------------------------------------------------- |
@@ -23,6 +23,7 @@ Turborepo monorepo with pnpm workspaces. Four package layers:
 | `packages/_app/`    | `@aja-app/*`    | Feature modules (React components, server actions)       |
 | `packages/_core/`   | `@aja-core/*`   | Shared utilities and config                              |
 | `packages/_design/` | `@aja-design/*` | Component library (Radix UI + Tailwind)                  |
+| `packages/_integrations/` | `@aja-integrations/*` | Third-party SDK wrappers (Anthropic, etc.)     |
 
 ### Dependency hierarchy
 
@@ -30,6 +31,8 @@ Turborepo monorepo with pnpm workspaces. Four package layers:
 apps → _app → _api → _core
                  ↘    ↗
                _design
+
+_api and apps → _integrations
 ```
 
 API and core packages are **dependencies** (not peerDependencies) in app packages.
