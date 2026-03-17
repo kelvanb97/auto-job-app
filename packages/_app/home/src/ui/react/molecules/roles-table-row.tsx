@@ -1,4 +1,6 @@
 import type { TRole, TRoleStatus } from "@aja-api/role/schema/role-schema"
+import { timeAgo } from "@aja-core/dates"
+import { Badge } from "@aja-design/ui/library/badge"
 import { TableCell, TableRow } from "@aja-design/ui/library/table"
 import { RoleStatusSelect } from "#molecules/role-status-select"
 
@@ -62,6 +64,16 @@ export function RolesTableRow({
 			</TableCell>
 			<TableCell>
 				{formatSalary(role.salaryMin, role.salaryMax)}
+			</TableCell>
+			<TableCell>
+				{role.source ? (
+					<Badge variant="secondary">{role.source}</Badge>
+				) : (
+					"—"
+				)}
+			</TableCell>
+			<TableCell>
+				{role.postedAt ? timeAgo(role.postedAt) : "—"}
 			</TableCell>
 			<TableCell>{formatDate(role.createdAt)}</TableCell>
 		</TableRow>

@@ -154,7 +154,7 @@ export function RolesTemplate() {
 				status: f.status,
 				locationType: f.locationType,
 				source: f.source,
-				sortBy: "created_at",
+				sortBy: "posted_at",
 				sortOrder: "desc",
 			})
 		},

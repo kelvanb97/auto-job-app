@@ -46,6 +46,8 @@ export function RolesTable({
 						<TableHead>Status</TableHead>
 						<TableHead>Location</TableHead>
 						<TableHead>Salary</TableHead>
+						<TableHead>Source</TableHead>
+						<TableHead>Posted</TableHead>
 						<TableHead>Added</TableHead>
 					</TableRow>
 				</TableHeader>
