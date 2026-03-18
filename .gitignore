@@ -3,3 +3,10 @@ node_modules
 
 # turbo
 .turbo
+
+# env files (can opt-in for committing if needed)
+.env*
+!.env.example
+
+# symphony logs
+log

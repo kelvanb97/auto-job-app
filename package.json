@@ -17,7 +17,9 @@
 		"lint": "turbo run lint",
 		"prepare": "husky",
 		"purge": "rm -rf node_modules; find . -type d -path '*/*/node_modules' -print0 | xargs -0 rm -rf",
-		"test": "turbo run test"
+		"test": "turbo run test",
+		"workflow:start": "sh -c 'set -a && . .env && set +a && symphony --workflow WORKFLOW.md'",
+		"workflow:stop": "sh -c 'lsof -ti :8090 | xargs kill -SIGTERM 2>/dev/null || echo \"No workflow process found on port 8090\"'"
 	},
 	"dependencies": {
 		"husky": "9.1.7"
