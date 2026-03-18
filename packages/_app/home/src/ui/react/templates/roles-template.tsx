@@ -282,6 +282,7 @@ export function RolesTemplate() {
 				onOpenChange={handleDialogOpenChange}
 				role={state.selectedRole}
 				company={selectedCompany}
+				score={state.scores.get(state.selectedRole?.id ?? "") ?? null}
 				onSaved={handleRoleSaved}
 			/>
 		</YStack>

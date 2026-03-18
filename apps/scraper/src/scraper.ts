@@ -4,6 +4,12 @@ import * as jobicy from "./sources/jobicy"
 import * as remoteok from "./sources/remoteok"
 import * as weworkremotely from "./sources/weworkremotely"
 
+const RELEVANT_TITLE_RE =
+	/engineer|developer|software|frontend|fullstack|full.?stack|react|typescript|node/i
+
+const BLOCKED_TITLE_RE =
+	/\bsales\b|\bmanager\b|\bdirector\b|\bvp\b|\bvice.?president\b|\bprincipal\b|\bstaff\b/i
+
 type SourceModule = {
 	scrape: () => Promise<ScrapedRole[]>
 }
@@ -16,10 +22,22 @@ const sources: Record<string, SourceModule> = {
 }
 
 type ScrapeSummary = {
-	total: { found: number; inserted: number; skipped: number; errors: number }
+	total: {
+		found: number
+		filtered: number
+		inserted: number
+		skipped: number
+		errors: number
+	}
 	sources: Record<
 		string,
-		{ found: number; inserted: number; skipped: number; error?: string }
+		{
+			found: number
+			filtered: number
+			inserted: number
+			skipped: number
+			error?: string
+		}
 	>
 }
 
@@ -38,14 +56,20 @@ export async function runScraper(only?: string): Promise<ScrapeSummary> {
 
 	const results = await Promise.allSettled(
 		entries.map(async ([name, source]) => {
-			const roles = await source.scrape()
+			const allRoles = await source.scrape()
+			const roles = allRoles.filter(
+				(r) =>
+					RELEVANT_TITLE_RE.test(r.title) &&
+					!BLOCKED_TITLE_RE.test(r.title),
+			)
+			const filtered = allRoles.length - roles.length
 			const { inserted, skipped } = await insertRoles(roles)
-			return { name, found: roles.length, inserted, skipped }
+			return { name, found: allRoles.length, filtered, inserted, skipped }
 		}),
 	)
 
 	const summary: ScrapeSummary = {
-		total: { found: 0, inserted: 0, skipped: 0, errors: 0 },
+		total: { found: 0, filtered: 0, inserted: 0, skipped: 0, errors: 0 },
 		sources: {},
 	}
 
@@ -54,27 +78,34 @@ export async function runScraper(only?: string): Promise<ScrapeSummary> {
 		const result = results[i]!
 
 		if (result.status === "fulfilled") {
-			const { found, inserted, skipped } = result.value
-			summary.sources[name] = { found, inserted, skipped }
+			const { found, filtered, inserted, skipped } = result.value
+			summary.sources[name] = { found, filtered, inserted, skipped }
 			summary.total.found += found
+			summary.total.filtered += filtered
 			summary.total.inserted += inserted
 			summary.total.skipped += skipped
 			console.log(
-				`[${name}] found=${found} inserted=${inserted} skipped=${skipped}`,
+				`[${name}] found=${found} filtered=${filtered} inserted=${inserted} skipped=${skipped}`,
 			)
 		} else {
 			const error =
 				result.reason instanceof Error
 					? result.reason.message
 					: String(result.reason)
-			summary.sources[name] = { found: 0, inserted: 0, skipped: 0, error }
+			summary.sources[name] = {
+				found: 0,
+				filtered: 0,
+				inserted: 0,
+				skipped: 0,
+				error,
+			}
 			summary.total.errors += 1
 			console.error(`[${name}] error: ${error}`)
 		}
 	}
 
 	console.log(
-		`[total] found=${summary.total.found} inserted=${summary.total.inserted} skipped=${summary.total.skipped} errors=${summary.total.errors}`,
+		`[total] found=${summary.total.found} filtered=${summary.total.filtered} inserted=${summary.total.inserted} skipped=${summary.total.skipped} errors=${summary.total.errors}`,
 	)
 
 	return summary

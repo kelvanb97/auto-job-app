@@ -5,6 +5,7 @@ import type { TInteraction } from "@aja-api/interaction/schema/interaction-schem
 import type { TPerson } from "@aja-api/person/schema/person-schema"
 import type { TRolePerson } from "@aja-api/role-person/schema/role-person-schema"
 import type { TRole } from "@aja-api/role/schema/role-schema"
+import type { TScore } from "@aja-api/score/schema/score-schema"
 import {
 	useAction,
 	useActionError,
@@ -52,7 +53,7 @@ import {
 import { RolePersonList } from "#molecules/role-person-list"
 import { useEffect, useState } from "react"
 
-type Tab = "details" | "people" | "interactions" | "application"
+type Tab = "details" | "people" | "interactions" | "application" | "score"
 
 function roleToFieldValues(role: TRole): IRoleFieldsValues {
 	return {
@@ -346,6 +347,57 @@ function useRoleApplication(roleId: string | null) {
 	}
 }
 
+// --- Score Tab ---
+
+function RoleScoreTab({ score }: { score: TScore }) {
+	const scoreColor =
+		score.score >= 70
+			? "text-green-600"
+			: score.score >= 40
+				? "text-yellow-600"
+				: "text-red-600"
+
+	return (
+		<YStack className="gap-6 p-1">
+			<div className={`text-5xl font-bold ${scoreColor}`}>
+				{score.score}
+				<span className="text-xl font-normal text-muted-foreground">
+					{" "}
+					/ 100
+				</span>
+			</div>
+			<YStack className="gap-2">
+				<p className="font-semibold">Strengths</p>
+				{score.positive && score.positive.length > 0 ? (
+					<ul className="list-disc pl-5 space-y-1">
+						{score.positive.map((item, i) => (
+							<li key={i} className="text-sm">
+								{item}
+							</li>
+						))}
+					</ul>
+				) : (
+					<p className="text-sm text-muted-foreground">None</p>
+				)}
+			</YStack>
+			<YStack className="gap-2">
+				<p className="font-semibold">Concerns</p>
+				{score.negative && score.negative.length > 0 ? (
+					<ul className="list-disc pl-5 space-y-1">
+						{score.negative.map((item, i) => (
+							<li key={i} className="text-sm">
+								{item}
+							</li>
+						))}
+					</ul>
+				) : (
+					<p className="text-sm text-muted-foreground">None</p>
+				)}
+			</YStack>
+		</YStack>
+	)
+}
+
 // --- Main Dialog ---
 
 interface IEditRoleDialogProps {
@@ -353,6 +405,7 @@ interface IEditRoleDialogProps {
 	onOpenChange: (open: boolean) => void
 	role: TRole | null
 	company: TCompany | null
+	score: TScore | null
 	onSaved: (role: TRole) => void
 }
 
@@ -361,6 +414,7 @@ export function EditRoleDialog({
 	onOpenChange,
 	role,
 	company,
+	score,
 	onSaved,
 }: IEditRoleDialogProps) {
 	const [activeTab, setActiveTab] = useState<Tab>("details")
@@ -447,6 +501,7 @@ export function EditRoleDialog({
 		{ key: "people", label: "People" },
 		{ key: "interactions", label: "Interactions" },
 		{ key: "application", label: "Application" },
+		...(score ? [{ key: "score" as const, label: "Score" }] : []),
 	]
 
 	return (
@@ -487,6 +542,9 @@ export function EditRoleDialog({
 					)}
 					{activeTab === "interactions" && role && (
 						<RoleInteractionsTab roleId={role.id} />
+					)}
+					{activeTab === "score" && score && (
+						<RoleScoreTab score={score} />
 					)}
 					{activeTab === "application" && role && (
 						<ApplicationFieldsCard
