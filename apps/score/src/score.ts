@@ -1,26 +1,26 @@
 import { listUnscoredRoles } from "@aja-api/role/api/list-unscored-roles"
 import { scoreRoleById } from "@aja-api/score/api/score-role-by-id"
 
-const RATE_LIMIT_MS = Number(process.env["SCORER_RATE_LIMIT_MS"] ?? "500")
+const RATE_LIMIT_MS = Number(process.env["SCORE_RATE_LIMIT_MS"] ?? "500")
 
 function delay(ms: number): Promise<void> {
 	return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-type ScorerSummary = {
+type ScoreSummary = {
 	scored: number
 	errors: number
 	total: number
 }
 
-export async function runScorer(): Promise<ScorerSummary> {
+export async function runScore(): Promise<ScoreSummary> {
 	const result = await listUnscoredRoles()
 	if (!result.ok) {
 		throw new Error(result.error.message)
 	}
 
 	const roles = result.data
-	console.log(`[scorer] Found ${roles.length} unscored roles`)
+	console.log(`[score] Found ${roles.length} unscored roles`)
 
 	if (roles.length === 0) {
 		return { scored: 0, errors: 0, total: 0 }
@@ -34,11 +34,11 @@ export async function runScorer(): Promise<ScorerSummary> {
 
 		if (scoreResult.ok) {
 			scored++
-			console.log(`[scorer] "${role.title}" → ${scoreResult.data.score}`)
+			console.log(`[score] "${role.title}" → ${scoreResult.data.score}`)
 		} else {
 			errors++
 			console.warn(
-				`[scorer] "${role.title}": ${scoreResult.error.message}`,
+				`[score] "${role.title}": ${scoreResult.error.message}`,
 			)
 		}
 

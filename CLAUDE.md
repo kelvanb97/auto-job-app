@@ -16,14 +16,14 @@ pnpm test
 
 Turborepo monorepo with pnpm workspaces. Five package layers:
 
-| Layer               | Scope           | Purpose                                                  |
-| ------------------- | --------------- | -------------------------------------------------------- |
-| `apps/`             | —               | Deployable applications (web, scraper, scorer, supabase) |
-| `packages/_api/`    | `@aja-api/*`    | Entity CRUD operations against Supabase                  |
-| `packages/_app/`    | `@aja-app/*`    | Feature modules (React components, server actions)       |
-| `packages/_core/`   | `@aja-core/*`   | Shared utilities and config                              |
-| `packages/_design/` | `@aja-design/*` | Component library (Radix UI + Tailwind)                  |
-| `packages/_integrations/` | `@aja-integrations/*` | Third-party SDK wrappers (Anthropic, etc.)     |
+| Layer                     | Scope                 | Purpose                                                 |
+| ------------------------- | --------------------- | ------------------------------------------------------- |
+| `apps/`                   | —                     | Deployable applications (web, scraper, score, supabase) |
+| `packages/_api/`          | `@aja-api/*`          | Entity CRUD operations against Supabase                 |
+| `packages/_app/`          | `@aja-app/*`          | Feature modules (React components, server actions)      |
+| `packages/_core/`         | `@aja-core/*`         | Shared utilities and config                             |
+| `packages/_design/`       | `@aja-design/*`       | Component library (Radix UI + Tailwind)                 |
+| `packages/_integrations/` | `@aja-integrations/*` | Third-party SDK wrappers (Anthropic, etc.)              |
 
 ### Dependency hierarchy
 
@@ -106,6 +106,6 @@ API functions use `supabaseAdminClient<Database>()` from `@aja-core/supabase`.
 ## Supabase
 
 - All application tables live in the `app` schema (not `public`)
-- Local dev URLs: `http://127.0.0.1:54321` (scraper/scorer), `http://127.0.0.1:54331` (web)
+- Local dev URLs: `http://127.0.0.1:54321` (scraper/score), `http://127.0.0.1:3000` (web)
 - Env vars: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`
 - Migrations are in `apps/supabase/migrations/`

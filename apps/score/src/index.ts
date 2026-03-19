@@ -1,8 +1,8 @@
-import { runScorer } from "./scorer.js"
+import { runScore } from "./score.js"
 
 async function main() {
-	console.log("Running scorer...")
-	const summary = await runScorer()
+	console.log("Running score...")
+	const summary = await runScore()
 	console.log("Scoring complete.", JSON.stringify(summary))
 	process.exit(0)
 }

@@ -5,8 +5,8 @@
 		"build": {
 			"env": [
 				"NODE_ENV",
-				"SCORER_MODEL",
-				"SCORER_RATE_LIMIT_MS",
+				"SCORE_MODEL",
+				"SCORE_RATE_LIMIT_MS",
 				"SUPABASE_URL",
 				"SUPABASE_PUBLISHABLE_KEY",
 				"SUPABASE_SECRET_KEY",

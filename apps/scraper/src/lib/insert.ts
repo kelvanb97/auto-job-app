@@ -110,11 +110,11 @@ export async function insertRoles(
 			const scoreResult = await scoreRoleById(result.data.id)
 			if (scoreResult.ok) {
 				console.log(
-					`[scorer] "${role.title}" → ${scoreResult.data.score}`,
+					`[score] "${role.title}" → ${scoreResult.data.score}`,
 				)
 			} else {
 				console.warn(
-					`[scorer] "${role.title}": ${scoreResult.error.message}`,
+					`[score] "${role.title}": ${scoreResult.error.message}`,
 				)
 			}
 		} else {
