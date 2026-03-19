@@ -3,6 +3,7 @@ packages:
     - "packages/*"
     - "packages/_api/*"
     - "packages/_app/*"
+    - "packages/_config/*"
     - "packages/_core/*"
     - "packages/_design/*"
     - "packages/_integrations/*"

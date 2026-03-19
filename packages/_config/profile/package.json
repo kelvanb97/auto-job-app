@@ -1,0 +1,21 @@
+{
+	"name": "@aja-config/profile",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		"./*": "./src/*.ts"
+	},
+	"scripts": {
+		"check-types": "tsc --noEmit",
+		"lint": "eslint ./src"
+	},
+	"devDependencies": {
+		"@aja-core/eslint": "workspace:*",
+		"@aja-core/tsconfig": "workspace:*",
+		"@types/node": "25.5.0",
+		"eslint": "9.24.0",
+		"typescript": "5.9.3"
+	}
+}
