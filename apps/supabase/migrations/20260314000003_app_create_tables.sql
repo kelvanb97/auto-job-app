@@ -55,6 +55,8 @@ create table app.role (
   -- core info
   title         text not null,
   url           text,
+  source_url    text,
+  application_url text,
   description   text,
   source        text,       -- 'greenhouse', 'lever', 'wellfound', 'remoteok', etc.
   location_type text,       -- 'remote', 'hybrid', 'onsite'
