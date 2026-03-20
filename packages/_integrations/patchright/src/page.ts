@@ -1,7 +1,7 @@
-import type { Page } from "patchright"
+import type { Page, Response } from "patchright"
 import { BotBlockedError, CaptchaDetectedError } from "./errors.js"
 
-export type { Page }
+export type { Page, Response }
 
 export async function checkForBlocks(page: Page): Promise<void> {
 	const url = page.url()
