@@ -1,4 +1,4 @@
-import type { ScrapedRole } from "../lib/insert.js"
+import type { ScrapedRole } from "../lib/insert"
 
 type JobicyJob = {
 	jobTitle?: string

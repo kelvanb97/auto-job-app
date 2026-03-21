@@ -2,7 +2,7 @@ import { getCompany } from "@aja-api/company/api/get-company"
 import { getRole } from "@aja-api/role/api/get-role"
 import { errFrom, type TResult } from "@aja-core/result"
 import type { TScore } from "#schema/score-schema"
-import { scoreRoleData } from "./score-role-data.js"
+import { scoreRoleData } from "./score-role-data"
 
 export async function scoreRoleById(roleId: string): Promise<TResult<TScore>> {
 	try {

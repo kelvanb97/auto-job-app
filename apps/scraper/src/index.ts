@@ -5,7 +5,7 @@ import {
 	type ServerResponse,
 } from "node:http"
 import cron from "node-cron"
-import { runScraper } from "./scraper.js"
+import { runScraper } from "./scraper"
 
 const EVERY_HOUR_CRON = "0 */1 * * *"
 const SCRAPER_CRON_SCHEDULE =

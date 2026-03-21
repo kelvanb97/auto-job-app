@@ -1,4 +1,4 @@
-import { runScore } from "./score.js"
+import { runScore } from "./score"
 
 async function main() {
 	console.log("Running score...")

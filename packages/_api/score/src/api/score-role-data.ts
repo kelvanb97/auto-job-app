@@ -7,7 +7,7 @@ import type { TAnthropicModel } from "@aja-integrations/anthropic/client"
 import { scoreRole } from "#lib/claude-client"
 import { buildScoringPrompt } from "#prompt/scoring-prompt"
 import type { TScore } from "#schema/score-schema"
-import { upsertScore } from "./upsert-score.js"
+import { upsertScore } from "./upsert-score"
 
 const SCORER_MODEL = (process.env["SCORE_MODEL"] ??
 	"claude-haiku-4-5-20251001") as TAnthropicModel
