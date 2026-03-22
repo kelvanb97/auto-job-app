@@ -9,11 +9,9 @@ export async function listFiles(
 ): Promise<TResult<Array<{ name: string }>>> {
 	const supabase = supabaseAdminClient<Database>()
 
-	const { data, error } = await supabase.storage
-		.from(bucket)
-		.list(folder, {
-			...(options?.search !== undefined && { search: options.search }),
-		})
+	const { data, error } = await supabase.storage.from(bucket).list(folder, {
+		...(options?.search !== undefined && { search: options.search }),
+	})
 
 	if (error)
 		return errFrom(`Error listing files in ${folder}: ${error.message}`)

@@ -1,5 +1,5 @@
 {
-	"name": "@aja-app/scraper",
+	"name": "scraper",
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
@@ -15,16 +15,9 @@
 		"lint": "eslint ./src"
 	},
 	"dependencies": {
-		"@aja-api/company": "workspace:*",
-		"@aja-api/role": "workspace:*",
-		"@aja-api/score": "workspace:*",
+		"@aja-app/scraper": "workspace:*",
 		"@aja-config/user": "workspace:*",
-		"@aja-core/result": "workspace:*",
-		"@aja-core/supabase": "workspace:*",
-		"@aja-integrations/patchright": "workspace:*",
-		"node-cron": "4.0.7",
-		"rss-parser": "3.13.0",
-		"zod": "4.3.6"
+		"node-cron": "4.0.7"
 	},
 	"devDependencies": {
 		"@aja-app/supabase": "workspace:*",

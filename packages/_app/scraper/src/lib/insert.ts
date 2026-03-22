@@ -2,26 +2,8 @@ import { createCompany } from "@aja-api/company/api/create-company"
 import { findCompanyByName } from "@aja-api/company/api/find-company-by-name"
 import { createRole } from "@aja-api/role/api/create-role"
 import { listRoleUrls } from "@aja-api/role/api/list-role-urls"
-import type {
-	TLocationType,
-	TRoleSource,
-} from "@aja-api/role/schema/role-schema"
 import { scoreRoleById } from "@aja-api/score/api/score-role-by-id"
-
-export type ScrapedRole = {
-	title: string
-	url: string | null
-	source_url?: string | null
-	application_url?: string | null
-	company: string | null
-	description: string | null
-	source: TRoleSource
-	location_type: TLocationType | null
-	location: string | null
-	salary_min: number | null
-	salary_max: number | null
-	posted_at: string | null
-}
+import type { ScrapedRole } from "#types"
 
 async function resolveCompanyId(
 	name: string,
@@ -53,6 +35,7 @@ const DUPLICATE_VIOLATION = "duplicate key value violates unique constraint"
 
 export async function insertRoles(
 	roles: ScrapedRole[],
+	signal?: AbortSignal,
 ): Promise<{ inserted: number; skipped: number }> {
 	const rolesWithUrl = roles.filter(
 		(r): r is ScrapedRole & { url: string } =>
@@ -93,6 +76,8 @@ export async function insertRoles(
 	let conflicts = 0
 
 	for (const role of newRoles) {
+		if (signal?.aborted) break
+
 		const companyId = role.company
 			? await resolveCompanyId(role.company, companyCache)
 			: null

@@ -10,7 +10,7 @@ import {
 } from "@aja-integrations/patchright/interaction"
 import { checkForBlocks } from "@aja-integrations/patchright/page"
 import type { Response } from "@aja-integrations/patchright/page"
-import type { ScrapedRole } from "../../lib/insert"
+import type { ScrapedRole } from "#types"
 import { extractJobEntries, unescapeXhrBody } from "./extract"
 import { parsePostedAt, parseSalary } from "./parse"
 

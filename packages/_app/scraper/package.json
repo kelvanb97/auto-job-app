@@ -1,30 +1,35 @@
 {
-	"name": "apply",
+	"name": "@aja-app/scraper",
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		"./scrape": "./src/scrape.ts",
+		"./types": "./src/types.ts"
+	},
 	"scripts": {
-		"apply": "node --env-file=.env --import=tsx src/index.ts",
 		"check-types": "tsc --noEmit",
 		"lint": "eslint ./src"
 	},
 	"dependencies": {
-		"@aja-api/application": "workspace:*",
 		"@aja-api/company": "workspace:*",
-		"@aja-api/cover-letter": "workspace:*",
-		"@aja-api/resume": "workspace:*",
 		"@aja-api/role": "workspace:*",
-		"@aja-api/storage": "workspace:*",
+		"@aja-api/score": "workspace:*",
 		"@aja-config/user": "workspace:*",
-		"@aja-core/result": "workspace:*",
-		"@aja-integrations/anthropic": "workspace:*"
+		"@aja-integrations/patchright": "workspace:*",
+		"rss-parser": "3.13.0"
 	},
 	"devDependencies": {
 		"@aja-core/eslint": "workspace:*",
 		"@aja-core/tsconfig": "workspace:*",
-		"@types/node": "25.5.0",
 		"eslint": "9.24.0",
-		"tsx": "4.21.0",
 		"typescript": "5.9.3"
+	},
+	"imports": {
+		"#*": [
+			"./src/*",
+			"./src/*.ts"
+		]
 	}
 }

@@ -1,5 +1,5 @@
+import type { ScrapedRole } from "#types"
 import Parser from "rss-parser"
-import type { ScrapedRole } from "../lib/insert"
 
 function extractCompany(title: string): string | null {
 	const colonIndex = title.indexOf(":")

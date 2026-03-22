@@ -1,4 +1,4 @@
-import type { ScrapedRole } from "../lib/insert"
+import type { ScrapedRole } from "#types"
 
 type HimalayasJob = {
 	title?: string
