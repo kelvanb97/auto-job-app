@@ -46,55 +46,6 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
 
-  apps/apply:
-    dependencies:
-      '@aja-api/application':
-        specifier: workspace:*
-        version: link:../../packages/_api/application
-      '@aja-api/company':
-        specifier: workspace:*
-        version: link:../../packages/_api/company
-      '@aja-api/cover-letter':
-        specifier: workspace:*
-        version: link:../../packages/_api/cover-letter
-      '@aja-api/resume':
-        specifier: workspace:*
-        version: link:../../packages/_api/resume
-      '@aja-api/role':
-        specifier: workspace:*
-        version: link:../../packages/_api/role
-      '@aja-api/storage':
-        specifier: workspace:*
-        version: link:../../packages/_api/storage
-      '@aja-config/user':
-        specifier: workspace:*
-        version: link:../../packages/_config/user
-      '@aja-core/result':
-        specifier: workspace:*
-        version: link:../../packages/_core/result
-      '@aja-integrations/anthropic':
-        specifier: workspace:*
-        version: link:../../packages/_integrations/anthropic
-    devDependencies:
-      '@aja-core/eslint':
-        specifier: workspace:*
-        version: link:../../packages/_core/eslint
-      '@aja-core/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
-      eslint:
-        specifier: 9.24.0
-        version: 9.24.0(jiti@2.6.1)
-      tsx:
-        specifier: 4.21.0
-        version: 4.21.0
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
-
   apps/score:
     dependencies:
       '@aja-app/score':
@@ -164,6 +115,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@aja-app/apply':
+        specifier: workspace:*
+        version: link:../../packages/_app/apply
       '@aja-app/home':
         specifier: workspace:*
         version: link:../../packages/_app/home
@@ -547,6 +501,49 @@ importers:
       '@types/node':
         specifier: 25.5.0
         version: 25.5.0
+      eslint:
+        specifier: 9.24.0
+        version: 9.24.0(jiti@2.6.1)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
+  packages/_app/apply:
+    dependencies:
+      '@aja-api/application':
+        specifier: workspace:*
+        version: link:../../_api/application
+      '@aja-api/company':
+        specifier: workspace:*
+        version: link:../../_api/company
+      '@aja-api/cover-letter':
+        specifier: workspace:*
+        version: link:../../_api/cover-letter
+      '@aja-api/resume':
+        specifier: workspace:*
+        version: link:../../_api/resume
+      '@aja-api/role':
+        specifier: workspace:*
+        version: link:../../_api/role
+      '@aja-api/storage':
+        specifier: workspace:*
+        version: link:../../_api/storage
+      '@aja-config/user':
+        specifier: workspace:*
+        version: link:../../_config/user
+      '@aja-core/result':
+        specifier: workspace:*
+        version: link:../../_core/result
+      '@aja-integrations/anthropic':
+        specifier: workspace:*
+        version: link:../../_integrations/anthropic
+    devDependencies:
+      '@aja-core/eslint':
+        specifier: workspace:*
+        version: link:../../_core/eslint
+      '@aja-core/tsconfig':
+        specifier: workspace:*
+        version: link:../../_core/tsconfig
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)

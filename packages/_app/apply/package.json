@@ -1,0 +1,38 @@
+{
+	"name": "@aja-app/apply",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		"./get-top-role": "./src/get-top-role.ts",
+		"./create-draft": "./src/create-draft.ts",
+		"./list-documents": "./src/list-documents.ts",
+		"./generate-documents": "./src/generate-documents.ts",
+		"./download-documents": "./src/download-documents.ts",
+		"./skip-role": "./src/skip-role.ts",
+		"./submit-application": "./src/submit-application.ts",
+		"./types": "./src/types.ts"
+	},
+	"scripts": {
+		"check-types": "tsc --noEmit",
+		"lint": "eslint ./src"
+	},
+	"dependencies": {
+		"@aja-api/application": "workspace:*",
+		"@aja-api/company": "workspace:*",
+		"@aja-api/cover-letter": "workspace:*",
+		"@aja-api/resume": "workspace:*",
+		"@aja-api/role": "workspace:*",
+		"@aja-api/storage": "workspace:*",
+		"@aja-config/user": "workspace:*",
+		"@aja-core/result": "workspace:*",
+		"@aja-integrations/anthropic": "workspace:*"
+	},
+	"devDependencies": {
+		"@aja-core/eslint": "workspace:*",
+		"@aja-core/tsconfig": "workspace:*",
+		"eslint": "9.24.0",
+		"typescript": "5.9.3"
+	}
+}

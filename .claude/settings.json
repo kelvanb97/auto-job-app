@@ -1,0 +1,17 @@
+{
+	"mcpServers": {
+		"playwright": {
+			"command": "npx",
+			"args": [
+				"@playwright/mcp@0.0.68",
+				"--browser",
+				"chrome",
+				"--user-data-dir",
+				"~/.chrome-profile"
+			]
+		}
+	},
+	"enabledPlugins": {
+		"playwright@claude-plugins-official": true
+	}
+}

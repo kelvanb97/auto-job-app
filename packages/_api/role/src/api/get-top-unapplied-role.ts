@@ -26,6 +26,21 @@ export async function getTopUnappliedRole(): Promise<
 		.map((r) => r.role_id)
 		.filter((id): id is string => id !== null)
 
+	// Get role IDs with wont_do status
+	const { data: wontDoRows, error: wontDoError } = await supabase
+		.schema("app")
+		.from("role")
+		.select("id")
+		.eq("status", "wont_do")
+
+	if (wontDoError)
+		return errFrom(
+			`Error fetching wont_do role IDs: ${wontDoError.message}`,
+		)
+
+	const wontDoIds = wontDoRows.map((r) => r.id)
+	const excludedIds = [...appliedIds, ...wontDoIds]
+
 	// Get all scores ordered by score descending
 	let scoreQuery = supabase
 		.schema("app")
@@ -33,11 +48,11 @@ export async function getTopUnappliedRole(): Promise<
 		.select("role_id, score")
 		.order("score", { ascending: false })
 
-	if (appliedIds.length > 0) {
+	if (excludedIds.length > 0) {
 		scoreQuery = scoreQuery.not(
 			"role_id",
 			"in",
-			`(${appliedIds.join(",")})`,
+			`(${excludedIds.join(",")})`,
 		)
 	}
 
