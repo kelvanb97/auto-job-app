@@ -4,6 +4,7 @@ import {
 	Briefcase,
 	LayoutDashboard,
 	MessageSquare,
+	Play,
 	Plus,
 	Users,
 } from "@aja-design/ui/assets/lucide"
@@ -32,6 +33,12 @@ const NAV_ITEMS = [
 
 const SECONDARY_NAV_ITEMS = [
 	{ page: "create" as const, href: "/create", label: "Create", icon: Plus },
+	{
+		page: "operations" as const,
+		href: "/operations",
+		label: "Operations",
+		icon: Play,
+	},
 ]
 
 interface ISidebarProps {

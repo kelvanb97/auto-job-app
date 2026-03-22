@@ -1,5 +1,5 @@
 import type { Page, Response } from "patchright"
-import { BotBlockedError, CaptchaDetectedError } from "./errors.js"
+import { BotBlockedError, CaptchaDetectedError } from "./errors"
 
 export type { Page, Response }
 

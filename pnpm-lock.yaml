@@ -167,6 +167,15 @@ importers:
       '@aja-app/home':
         specifier: workspace:*
         version: link:../../packages/_app/home
+      '@aja-app/score':
+        specifier: workspace:*
+        version: link:../../packages/_app/score
+      '@aja-app/scraper':
+        specifier: workspace:*
+        version: link:../../packages/_app/scraper
+      '@aja-config/user':
+        specifier: workspace:*
+        version: link:../../packages/_config/user
       '@aja-design/ui':
         specifier: workspace:*
         version: link:../../packages/_design/ui

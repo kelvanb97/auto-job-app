@@ -10,6 +10,7 @@ const TITLE_MAP: Record<TPage, string> = {
 	people: "People",
 	"follow-ups": "Follow-ups",
 	create: "Create",
+	operations: "Operations",
 }
 
 interface ITopBarProps {

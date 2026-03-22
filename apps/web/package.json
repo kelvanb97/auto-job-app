@@ -8,10 +8,14 @@
 		"build": "next build",
 		"dev": "next dev --turbopack",
 		"lint": "eslint .",
-		"start": "next start"
+		"start": "next start",
+		"check-types": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@aja-app/home": "workspace:*",
+		"@aja-app/score": "workspace:*",
+		"@aja-app/scraper": "workspace:*",
+		"@aja-config/user": "workspace:*",
 		"@aja-design/ui": "workspace:*",
 		"@t3-oss/env-nextjs": "0.13.10",
 		"next": "16.1.6",

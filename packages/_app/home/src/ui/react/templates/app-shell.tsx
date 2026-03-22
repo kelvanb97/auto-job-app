@@ -5,7 +5,13 @@ import { YStack } from "@aja-design/ui/primitives/y-stack"
 import { Sidebar } from "#organisms/sidebar"
 import { TopBar } from "#organisms/top-bar"
 
-export type TPage = "dashboard" | "roles" | "people" | "follow-ups" | "create"
+export type TPage =
+	| "dashboard"
+	| "roles"
+	| "people"
+	| "follow-ups"
+	| "create"
+	| "operations"
 
 interface IAppShellProps {
 	activePage: TPage
