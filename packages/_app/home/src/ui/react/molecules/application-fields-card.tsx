@@ -24,6 +24,8 @@ interface IApplicationFieldsCardProps {
 	onRemove: (fileType: "resume" | "cover_letter") => void
 	uploadingType: "resume" | "cover_letter" | null
 	removingType: "resume" | "cover_letter" | null
+	onGenerate?: () => void
+	isGenerating?: boolean
 }
 
 function FileSlot({
@@ -109,11 +111,27 @@ export function ApplicationFieldsCard({
 	onRemove,
 	uploadingType,
 	removingType,
+	onGenerate,
+	isGenerating,
 }: IApplicationFieldsCardProps) {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Application</CardTitle>
+				<XStack className="items-center justify-between">
+					<CardTitle>Application</CardTitle>
+					{onGenerate && (
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={onGenerate}
+							disabled={isGenerating}
+						>
+							{isGenerating
+								? "Generating..."
+								: "Generate Resume & Cover Letter"}
+						</Button>
+					)}
+				</XStack>
 			</CardHeader>
 			<CardContent>
 				<YStack className="gap-4">

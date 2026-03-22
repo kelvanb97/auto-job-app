@@ -562,12 +562,18 @@ importers:
       '@aja-api/company':
         specifier: workspace:*
         version: link:../../_api/company
+      '@aja-api/cover-letter':
+        specifier: workspace:*
+        version: link:../../_api/cover-letter
       '@aja-api/interaction':
         specifier: workspace:*
         version: link:../../_api/interaction
       '@aja-api/person':
         specifier: workspace:*
         version: link:../../_api/person
+      '@aja-api/resume':
+        specifier: workspace:*
+        version: link:../../_api/resume
       '@aja-api/role':
         specifier: workspace:*
         version: link:../../_api/role
@@ -580,6 +586,9 @@ importers:
       '@aja-api/storage':
         specifier: workspace:*
         version: link:../../_api/storage
+      '@aja-config/user':
+        specifier: workspace:*
+        version: link:../../_config/user
       '@aja-core/dates':
         specifier: workspace:*
         version: link:../../_core/dates

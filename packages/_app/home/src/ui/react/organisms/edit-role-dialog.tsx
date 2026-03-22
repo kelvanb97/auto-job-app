@@ -27,6 +27,7 @@ import {
 import { toast } from "@aja-design/ui/library/toast"
 import { XStack } from "@aja-design/ui/primitives/x-stack"
 import { YStack } from "@aja-design/ui/primitives/y-stack"
+import { generateApplicationDocsAction } from "#actions/generate-application-docs"
 import {
 	getRoleApplicationAction,
 	removeApplicationFile,
@@ -41,6 +42,7 @@ import {
 	listRolePeopleAction,
 	unlinkPersonFromRoleAction,
 } from "#actions/role-people"
+import { scoreRoleAction } from "#actions/score-role"
 import { updateRoleWithCompanyAction } from "#actions/update-role-with-company"
 import { AddInteractionForm } from "#molecules/add-interaction-form"
 import { AddPersonToRole } from "#molecules/add-person-to-role"
@@ -339,7 +341,9 @@ function useRoleApplication(roleId: string | null) {
 
 	return {
 		resumeUrl,
+		setResumeUrl,
 		coverLetterUrl,
+		setCoverLetterUrl,
 		notes,
 		setNotes,
 		handleSave,
@@ -353,7 +357,48 @@ function useRoleApplication(roleId: string | null) {
 
 // --- Score Tab ---
 
-function RoleScoreTab({ score }: { score: TScore }) {
+function RoleScoreTab({
+	score,
+	roleId,
+	onScoreUpdated,
+}: {
+	score: TScore | null
+	roleId: string
+	onScoreUpdated: (score: TScore) => void
+}) {
+	const {
+		execute: executeScore,
+		result: scoreResult,
+		status: scoreStatus,
+	} = useAction(scoreRoleAction, {
+		onSuccess: ({ data }) => {
+			if (data) {
+				toast.success("Role scored!")
+				onScoreUpdated(data)
+			}
+		},
+	})
+
+	const scoreError = useActionError(scoreResult)
+	useToastOnError(scoreError, scoreStatus)
+	const isScoring = useIsLoading(scoreStatus)
+
+	if (!score) {
+		return (
+			<YStack className="items-center justify-center gap-4 py-8">
+				<p className="text-sm text-muted-foreground">
+					This role has not been scored yet.
+				</p>
+				<Button
+					onClick={() => executeScore({ roleId })}
+					disabled={isScoring}
+				>
+					{isScoring ? "Scoring..." : "Score"}
+				</Button>
+			</YStack>
+		)
+	}
+
 	const scoreColor =
 		score.score >= 70
 			? "text-green-600"
@@ -363,13 +408,23 @@ function RoleScoreTab({ score }: { score: TScore }) {
 
 	return (
 		<YStack className="gap-6 p-1">
-			<div className={`text-5xl font-bold ${scoreColor}`}>
-				{score.score}
-				<span className="text-xl font-normal text-muted-foreground">
-					{" "}
-					/ 100
-				</span>
-			</div>
+			<XStack className="items-center justify-between">
+				<div className={`text-5xl font-bold ${scoreColor}`}>
+					{score.score}
+					<span className="text-xl font-normal text-muted-foreground">
+						{" "}
+						/ 100
+					</span>
+				</div>
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() => executeScore({ roleId })}
+					disabled={isScoring}
+				>
+					{isScoring ? "Scoring..." : "Re-score"}
+				</Button>
+			</XStack>
 			<YStack className="gap-2">
 				<p className="font-semibold">Strengths</p>
 				{score.positive && score.positive.length > 0 ? (
@@ -411,6 +466,7 @@ interface IEditRoleDialogProps {
 	company: TCompany | null
 	score: TScore | null
 	onSaved: (role: TRole) => void
+	onScoreUpdated: (roleId: string, score: TScore) => void
 }
 
 export function EditRoleDialog({
@@ -420,6 +476,7 @@ export function EditRoleDialog({
 	company,
 	score,
 	onSaved,
+	onScoreUpdated,
 }: IEditRoleDialogProps) {
 	const [activeTab, setActiveTab] = useState<Tab>("details")
 	const [roleFields, setRoleFields] = useState<IRoleFieldsValues>(
@@ -500,12 +557,30 @@ export function EditRoleDialog({
 
 	const app = useRoleApplication(role?.id ?? null)
 
+	const {
+		execute: executeGenerate,
+		result: generateResult,
+		status: generateStatus,
+	} = useAction(generateApplicationDocsAction, {
+		onSuccess: ({ data }) => {
+			if (data) {
+				toast.success("Resume & cover letter generated!")
+				app.setResumeUrl(data.resumePath)
+				app.setCoverLetterUrl(data.coverLetterPath)
+			}
+		},
+	})
+
+	const generateError = useActionError(generateResult)
+	useToastOnError(generateError, generateStatus)
+	const isGenerating = useIsLoading(generateStatus)
+
 	const tabs: Array<{ key: Tab; label: string }> = [
 		{ key: "details", label: "Details" },
 		{ key: "people", label: "People" },
 		{ key: "interactions", label: "Interactions" },
 		{ key: "application", label: "Application" },
-		...(score ? [{ key: "score" as const, label: "Score" }] : []),
+		{ key: "score", label: "Score" },
 	]
 
 	return (
@@ -547,8 +622,12 @@ export function EditRoleDialog({
 					{activeTab === "interactions" && role && (
 						<RoleInteractionsTab roleId={role.id} />
 					)}
-					{activeTab === "score" && score && (
-						<RoleScoreTab score={score} />
+					{activeTab === "score" && role && (
+						<RoleScoreTab
+							score={score}
+							roleId={role.id}
+							onScoreUpdated={(s) => onScoreUpdated(role.id, s)}
+						/>
 					)}
 					{activeTab === "application" && role && (
 						<ApplicationFieldsCard
@@ -560,6 +639,10 @@ export function EditRoleDialog({
 							onRemove={app.handleRemove}
 							uploadingType={app.uploadingType}
 							removingType={app.removingType}
+							onGenerate={() =>
+								executeGenerate({ roleId: role.id })
+							}
+							isGenerating={isGenerating}
 						/>
 					)}
 				</div>

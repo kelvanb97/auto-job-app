@@ -61,6 +61,7 @@ type TAction =
 			page: number
 	  }
 	| { type: "UPDATE_ROLE"; role: TRole }
+	| { type: "UPDATE_SCORE"; roleId: string; score: TScore }
 	| { type: "OPEN_DIALOG"; role: TRole }
 	| { type: "CLOSE_DIALOG" }
 
@@ -104,6 +105,11 @@ function reducer(state: IState, action: TAction): IState {
 					r.id === action.role.id ? action.role : r,
 				),
 			}
+		case "UPDATE_SCORE": {
+			const newScores = new Map(state.scores)
+			newScores.set(action.roleId, action.score)
+			return { ...state, scores: newScores }
+		}
 		case "OPEN_DIALOG":
 			return { ...state, selectedRole: action.role, isDialogOpen: true }
 		case "CLOSE_DIALOG":
@@ -284,6 +290,9 @@ export function RolesTemplate() {
 				company={selectedCompany}
 				score={state.scores.get(state.selectedRole?.id ?? "") ?? null}
 				onSaved={handleRoleSaved}
+				onScoreUpdated={(roleId, score) =>
+					dispatch({ type: "UPDATE_SCORE", roleId, score })
+				}
 			/>
 		</YStack>
 	)

@@ -57,7 +57,9 @@ export const saveRoleApplicationAction = actionClient
 		return result.data
 	})
 
-async function getOrCreateApplication(roleId: string): Promise<TApplication> {
+export async function getOrCreateApplication(
+	roleId: string,
+): Promise<TApplication> {
 	const listResult = await listApplications({
 		roleId,
 		page: 1,

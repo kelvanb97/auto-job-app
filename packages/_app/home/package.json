@@ -19,12 +19,15 @@
 	"dependencies": {
 		"@aja-api/application": "workspace:*",
 		"@aja-api/company": "workspace:*",
+		"@aja-api/cover-letter": "workspace:*",
 		"@aja-api/interaction": "workspace:*",
 		"@aja-api/person": "workspace:*",
+		"@aja-api/resume": "workspace:*",
 		"@aja-api/role": "workspace:*",
 		"@aja-api/score": "workspace:*",
 		"@aja-api/role-person": "workspace:*",
 		"@aja-api/storage": "workspace:*",
+		"@aja-config/user": "workspace:*",
 		"@aja-core/dates": "workspace:*",
 		"@aja-core/next-safe-action": "workspace:*",
 		"zod": "4.3.6"

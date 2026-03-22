@@ -55,7 +55,7 @@ export const USER_PROFILE: TUserProfile = {
 	name: "Kelvan Brandt",
 	email: "kelvanb97@gmail.com",
 	phone: "(206) 508-1205",
-	linkedIn: "linkedin.com/in/your-profile",
+	linkedIn: "https://www.linkedin.com/in/kelvan-brandt-4409a0156/",
 	github: "https://github.com/kelvanb97",
 	personalWebsite: "https://www.kelvanbrandt.com/",
 	location: "United States",
