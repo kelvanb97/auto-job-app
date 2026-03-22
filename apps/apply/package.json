@@ -14,13 +14,12 @@
 		"@aja-api/cover-letter": "workspace:*",
 		"@aja-api/resume": "workspace:*",
 		"@aja-api/role": "workspace:*",
+		"@aja-api/storage": "workspace:*",
 		"@aja-config/user": "workspace:*",
 		"@aja-core/result": "workspace:*",
-		"@aja-core/supabase": "workspace:*",
 		"@aja-integrations/anthropic": "workspace:*"
 	},
 	"devDependencies": {
-		"@aja-app/supabase": "workspace:*",
 		"@aja-core/eslint": "workspace:*",
 		"@aja-core/tsconfig": "workspace:*",
 		"@types/node": "25.5.0",

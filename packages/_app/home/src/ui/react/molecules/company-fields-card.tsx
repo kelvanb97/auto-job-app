@@ -1,4 +1,8 @@
 import {
+	COMPANY_SIZES,
+	COMPANY_STAGES,
+} from "@aja-api/company/schema/company-schema"
+import {
 	Card,
 	CardContent,
 	CardDescription,
@@ -23,24 +27,9 @@ export interface ICompanyFieldsValues {
 	notes: string
 }
 
-const SIZE_OPTIONS = [
-	{ label: "1-10", value: "1-10" },
-	{ label: "11-50", value: "11-50" },
-	{ label: "51-200", value: "51-200" },
-	{ label: "201-500", value: "201-500" },
-	{ label: "501-1000", value: "501-1000" },
-	{ label: "1001-5000", value: "1001-5000" },
-	{ label: "5000+", value: "5000+" },
-]
+const SIZE_OPTIONS = COMPANY_SIZES.map((s) => ({ label: s, value: s }))
 
-const STAGE_OPTIONS = [
-	{ label: "Seed", value: "Seed" },
-	{ label: "Series A", value: "Series A" },
-	{ label: "Series B", value: "Series B" },
-	{ label: "Series C+", value: "Series C+" },
-	{ label: "Public", value: "Public" },
-	{ label: "Bootstrapped", value: "Bootstrapped" },
-]
+const STAGE_OPTIONS = COMPANY_STAGES.map((s) => ({ label: s, value: s }))
 
 interface ICompanyFieldsCardProps {
 	values: ICompanyFieldsValues

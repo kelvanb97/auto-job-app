@@ -1,6 +1,5 @@
-import type { Database } from "@aja-app/supabase"
-import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
+import { uploadFile } from "@aja-api/storage/api/upload-file"
+import { ok, type TResult } from "@aja-core/result"
 
 const DOCX_CONTENT_TYPE =
 	"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -10,14 +9,12 @@ export async function uploadDocument(
 	path: string,
 	buffer: Buffer,
 ): Promise<TResult<string>> {
-	const supabase = supabaseAdminClient<Database>()
-
-	const { error } = await supabase.storage.from(bucket).upload(path, buffer, {
+	const result = await uploadFile(bucket, path, buffer, {
 		contentType: DOCX_CONTENT_TYPE,
 		upsert: true,
 	})
 
-	if (error) return errFrom(`Error uploading ${path}: ${error.message}`)
+	if (!result.ok) return result
 
 	return ok(path)
 }

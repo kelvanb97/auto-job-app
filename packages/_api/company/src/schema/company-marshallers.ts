@@ -1,9 +1,11 @@
 import type { Database } from "@aja-app/supabase"
-import type {
-	TCompany,
-	TCreateCompany,
-	TMarshalledCompany,
-	TUpdateCompany,
+import {
+	companySizeSchema,
+	companyStageSchema,
+	type TCompany,
+	type TCreateCompany,
+	type TMarshalledCompany,
+	type TUpdateCompany,
 } from "./company-schema"
 
 type CompanyInsert = Database["app"]["Tables"]["company"]["Insert"]
@@ -15,8 +17,8 @@ export function unmarshalCompany(m: TMarshalledCompany): TCompany {
 		name: m.name,
 		website: m.website,
 		linkedinUrl: m.linkedin_url,
-		size: m.size,
-		stage: m.stage,
+		size: m.size ? companySizeSchema.parse(m.size) : null,
+		stage: m.stage ? companyStageSchema.parse(m.stage) : null,
 		industry: m.industry,
 		notes: m.notes,
 		createdAt: m.created_at,

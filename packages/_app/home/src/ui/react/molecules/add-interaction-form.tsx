@@ -1,6 +1,10 @@
 "use client"
 
-import type { TInteraction } from "@aja-api/interaction/schema/interaction-schema"
+import {
+	INTERACTION_TYPES,
+	type TInteraction,
+	type TInteractionType,
+} from "@aja-api/interaction/schema/interaction-schema"
 import {
 	useAction,
 	useActionError,
@@ -18,14 +22,10 @@ import { YStack } from "@aja-design/ui/primitives/y-stack"
 import { createRoleInteractionAction } from "#actions/role-interactions"
 import { useState } from "react"
 
-const INTERACTION_TYPE_OPTIONS = [
-	{ label: "Email", value: "Email" },
-	{ label: "Call", value: "Call" },
-	{ label: "Interview", value: "Interview" },
-	{ label: "LinkedIn Touch", value: "LinkedIn Touch" },
-	{ label: "Note", value: "Note" },
-	{ label: "Other", value: "Other" },
-]
+const INTERACTION_TYPE_OPTIONS = INTERACTION_TYPES.map((t) => ({
+	label: t,
+	value: t,
+}))
 
 interface IAddInteractionFormProps {
 	roleId: string
@@ -39,7 +39,7 @@ export function AddInteractionForm({
 	onCreated,
 }: IAddInteractionFormProps) {
 	const [expanded, setExpanded] = useState(false)
-	const [type, setType] = useState("")
+	const [type, setType] = useState<TInteractionType | "">("")
 	const [personId, setPersonId] = useState("")
 	const [notes, setNotes] = useState("")
 

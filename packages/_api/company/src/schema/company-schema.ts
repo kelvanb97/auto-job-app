@@ -1,13 +1,40 @@
 import type { Database } from "@aja-app/supabase"
 import { z } from "zod"
 
+export const COMPANY_SIZES = [
+	"1-10",
+	"11-50",
+	"51-200",
+	"201-500",
+	"501-1000",
+	"1001-5000",
+	"5000+",
+] as const
+
+export type TCompanySize = (typeof COMPANY_SIZES)[number]
+
+export const companySizeSchema = z.enum(COMPANY_SIZES)
+
+export const COMPANY_STAGES = [
+	"Seed",
+	"Series A",
+	"Series B",
+	"Series C+",
+	"Public",
+	"Bootstrapped",
+] as const
+
+export type TCompanyStage = (typeof COMPANY_STAGES)[number]
+
+export const companyStageSchema = z.enum(COMPANY_STAGES)
+
 export type TCompany = {
 	id: string
 	name: string
 	website: string | null
 	linkedinUrl: string | null
-	size: string | null
-	stage: string | null
+	size: TCompanySize | null
+	stage: TCompanyStage | null
 	industry: string | null
 	notes: string | null
 	createdAt: string | null
@@ -25,8 +52,8 @@ export const listCompaniesSchema = z.object({
 	pageSize: z.number().min(1).max(100).default(25),
 	search: z.string().optional(),
 	industry: z.string().optional(),
-	stage: z.string().optional(),
-	size: z.string().optional(),
+	stage: companyStageSchema.optional(),
+	size: companySizeSchema.optional(),
 })
 
 export type TListCompanies = z.infer<typeof listCompaniesSchema>
@@ -35,8 +62,8 @@ export const createCompanySchema = z.object({
 	name: z.string().min(1),
 	website: z.string().nullable().optional(),
 	linkedinUrl: z.string().nullable().optional(),
-	size: z.string().nullable().optional(),
-	stage: z.string().nullable().optional(),
+	size: companySizeSchema.nullable().optional(),
+	stage: companyStageSchema.nullable().optional(),
 	industry: z.string().nullable().optional(),
 	notes: z.string().nullable().optional(),
 })
@@ -48,8 +75,8 @@ export const updateCompanySchema = z.object({
 	name: z.string().min(1).optional(),
 	website: z.string().nullable().optional(),
 	linkedinUrl: z.string().nullable().optional(),
-	size: z.string().nullable().optional(),
-	stage: z.string().nullable().optional(),
+	size: companySizeSchema.nullable().optional(),
+	stage: companyStageSchema.nullable().optional(),
 	industry: z.string().nullable().optional(),
 	notes: z.string().nullable().optional(),
 })

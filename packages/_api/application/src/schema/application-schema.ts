@@ -1,10 +1,24 @@
 import type { Database } from "@aja-app/supabase"
 import { z } from "zod"
 
+export const APPLICATION_STATUSES = [
+	"draft",
+	"submitted",
+	"outreach_sent",
+	"phone_screen",
+	"interview",
+	"offer",
+	"rejected",
+] as const
+
+export type TApplicationStatus = (typeof APPLICATION_STATUSES)[number]
+
+export const applicationStatusSchema = z.enum(APPLICATION_STATUSES)
+
 export type TApplication = {
 	id: string
 	roleId: string | null
-	status: string
+	status: TApplicationStatus
 	resumePath: string | null
 	coverLetterPath: string | null
 	submittedAt: string | null
@@ -24,14 +38,14 @@ export const listApplicationsSchema = z.object({
 	page: z.number().min(1).default(1),
 	pageSize: z.number().min(1).max(100).default(25),
 	roleId: z.string().optional(),
-	status: z.string().optional(),
+	status: applicationStatusSchema.optional(),
 })
 
 export type TListApplications = z.infer<typeof listApplicationsSchema>
 
 export const createApplicationSchema = z.object({
 	roleId: z.string().nullable().optional(),
-	status: z.string().optional(),
+	status: applicationStatusSchema.optional(),
 	resumePath: z.string().nullable().optional(),
 	coverLetterPath: z.string().nullable().optional(),
 	submittedAt: z.string().nullable().optional(),
@@ -43,7 +57,7 @@ export type TCreateApplication = z.infer<typeof createApplicationSchema>
 export const updateApplicationSchema = z.object({
 	id: z.string(),
 	roleId: z.string().nullable().optional(),
-	status: z.string().optional(),
+	status: applicationStatusSchema.optional(),
 	resumePath: z.string().nullable().optional(),
 	coverLetterPath: z.string().nullable().optional(),
 	submittedAt: z.string().nullable().optional(),

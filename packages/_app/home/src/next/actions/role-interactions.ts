@@ -3,6 +3,7 @@
 import { createInteraction } from "@aja-api/interaction/api/create-interaction"
 import { deleteInteraction } from "@aja-api/interaction/api/delete-interaction"
 import { listInteractions } from "@aja-api/interaction/api/list-interactions"
+import { interactionTypeSchema } from "@aja-api/interaction/schema/interaction-schema"
 import { actionClient, SafeForClientError } from "@aja-core/next-safe-action"
 import { z } from "zod"
 
@@ -25,7 +26,7 @@ export const createRoleInteractionAction = actionClient
 		z.object({
 			roleId: z.string(),
 			personId: z.string().nullable().optional(),
-			type: z.string().min(1),
+			type: interactionTypeSchema,
 			notes: z.string().nullable().optional(),
 		}),
 	)

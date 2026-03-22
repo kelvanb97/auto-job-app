@@ -63,22 +63,19 @@ importers:
       '@aja-api/role':
         specifier: workspace:*
         version: link:../../packages/_api/role
+      '@aja-api/storage':
+        specifier: workspace:*
+        version: link:../../packages/_api/storage
       '@aja-config/user':
         specifier: workspace:*
         version: link:../../packages/_config/user
       '@aja-core/result':
         specifier: workspace:*
         version: link:../../packages/_core/result
-      '@aja-core/supabase':
-        specifier: workspace:*
-        version: link:../../packages/_core/supabase
       '@aja-integrations/anthropic':
         specifier: workspace:*
         version: link:../../packages/_integrations/anthropic
     devDependencies:
-      '@aja-app/supabase':
-        specifier: workspace:*
-        version: link:../../packages/_app/supabase
       '@aja-core/eslint':
         specifier: workspace:*
         version: link:../../packages/_core/eslint
@@ -565,6 +562,34 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
 
+  packages/_api/storage:
+    dependencies:
+      '@aja-core/result':
+        specifier: workspace:*
+        version: link:../../_core/result
+    devDependencies:
+      '@aja-app/supabase':
+        specifier: workspace:*
+        version: link:../../_app/supabase
+      '@aja-core/eslint':
+        specifier: workspace:*
+        version: link:../../_core/eslint
+      '@aja-core/supabase':
+        specifier: workspace:*
+        version: link:../../_core/supabase
+      '@aja-core/tsconfig':
+        specifier: workspace:*
+        version: link:../../_core/tsconfig
+      '@types/node':
+        specifier: 25.5.0
+        version: 25.5.0
+      eslint:
+        specifier: 9.24.0
+        version: 9.24.0(jiti@2.6.1)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
   packages/_app/home:
     dependencies:
       '@aja-api/application':
@@ -588,15 +613,15 @@ importers:
       '@aja-api/score':
         specifier: workspace:*
         version: link:../../_api/score
+      '@aja-api/storage':
+        specifier: workspace:*
+        version: link:../../_api/storage
       '@aja-core/dates':
         specifier: workspace:*
         version: link:../../_core/dates
       '@aja-core/next-safe-action':
         specifier: workspace:*
         version: link:../../_core/next-safe-action
-      '@aja-core/supabase':
-        specifier: workspace:*
-        version: link:../../_core/supabase
       zod:
         specifier: 4.3.6
         version: 4.3.6

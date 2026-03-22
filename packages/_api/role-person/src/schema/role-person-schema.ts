@@ -1,6 +1,14 @@
 import type { Database } from "@aja-app/supabase"
 import { z } from "zod"
 
+export const ROLE_PERSON_RELATIONSHIPS = [
+	"Recruiter",
+	"Hiring Manager",
+	"Engineer",
+	"Referral",
+	"Other",
+] as const
+
 export type TRolePerson = {
 	roleId: string
 	personId: string

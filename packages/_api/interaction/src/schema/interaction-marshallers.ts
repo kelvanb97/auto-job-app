@@ -1,9 +1,10 @@
 import type { Database } from "@aja-app/supabase"
-import type {
-	TCreateInteraction,
-	TInteraction,
-	TMarshalledInteraction,
-	TUpdateInteraction,
+import {
+	interactionTypeSchema,
+	type TCreateInteraction,
+	type TInteraction,
+	type TMarshalledInteraction,
+	type TUpdateInteraction,
 } from "./interaction-schema"
 
 type InteractionInsert = Database["app"]["Tables"]["interaction"]["Insert"]
@@ -14,7 +15,7 @@ export function unmarshalInteraction(m: TMarshalledInteraction): TInteraction {
 		id: m.id,
 		roleId: m.role_id,
 		personId: m.person_id,
-		type: m.type,
+		type: interactionTypeSchema.parse(m.type),
 		notes: m.notes,
 		createdAt: m.created_at,
 		updatedAt: m.updated_at,

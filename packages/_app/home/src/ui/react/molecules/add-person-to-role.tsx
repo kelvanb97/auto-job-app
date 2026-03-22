@@ -1,6 +1,7 @@
 "use client"
 
 import type { TPerson } from "@aja-api/person/schema/person-schema"
+import { ROLE_PERSON_RELATIONSHIPS } from "@aja-api/role-person/schema/role-person-schema"
 import {
 	useAction,
 	useActionError,
@@ -22,13 +23,7 @@ import {
 } from "#actions/role-people"
 import { useCallback, useEffect, useRef, useState } from "react"
 
-const RELATIONSHIP_SUGGESTIONS = [
-	"Recruiter",
-	"Hiring Manager",
-	"Engineer",
-	"Referral",
-	"Other",
-]
+const RELATIONSHIP_SUGGESTIONS = [...ROLE_PERSON_RELATIONSHIPS]
 
 interface IAddPersonToRoleProps {
 	roleId: string

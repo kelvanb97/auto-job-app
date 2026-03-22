@@ -4,9 +4,11 @@ import { createApplication } from "@aja-api/application/api/create-application"
 import { listApplications } from "@aja-api/application/api/list-applications"
 import { updateApplication } from "@aja-api/application/api/update-application"
 import type { TApplication } from "@aja-api/application/schema/application-schema"
-import type { Database } from "@aja-app/supabase"
+import { getPublicUrl } from "@aja-api/storage/api/get-public-url"
+import { listFiles } from "@aja-api/storage/api/list-files"
+import { removeFiles } from "@aja-api/storage/api/remove-files"
+import { uploadFile } from "@aja-api/storage/api/upload-file"
 import { actionClient, SafeForClientError } from "@aja-core/next-safe-action"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
 import { z } from "zod"
 
 const BUCKET = "applications"
@@ -94,19 +96,21 @@ export async function uploadApplicationFile(
 	const ext = getExtension(file.name) || ".pdf"
 	const storagePath = `${roleId}/${fileType}${ext}`
 
-	const supabase = supabaseAdminClient<Database>()
+	const uploadResult = await uploadFile(BUCKET, storagePath, file, {
+		upsert: true,
+	})
 
-	const { error: uploadError } = await supabase.storage
-		.from(BUCKET)
-		.upload(storagePath, file, { upsert: true })
-
-	if (uploadError) {
-		throw new Error(`Upload failed: ${uploadError.message}`)
+	if (!uploadResult.ok) {
+		throw new Error(`Upload failed: ${uploadResult.error.message}`)
 	}
 
-	const {
-		data: { publicUrl },
-	} = supabase.storage.from(BUCKET).getPublicUrl(storagePath)
+	const urlResult = getPublicUrl(BUCKET, storagePath)
+
+	if (!urlResult.ok) {
+		throw new Error(`Failed to get public URL: ${urlResult.error.message}`)
+	}
+
+	const publicUrl = urlResult.data
 
 	const application = await getOrCreateApplication(roleId)
 
@@ -131,19 +135,14 @@ export async function removeApplicationFile(
 	applicationId: string,
 	fileType: "resume" | "cover_letter",
 ): Promise<TApplication> {
-	const supabase = supabaseAdminClient<Database>()
+	const listResult = await listFiles(BUCKET, roleId, { search: fileType })
 
-	// List files at the role's directory to find the exact filename
-	const { data: files } = await supabase.storage
-		.from(BUCKET)
-		.list(roleId, { search: fileType })
-
-	if (files && files.length > 0) {
-		const paths = files
+	if (listResult.ok && listResult.data.length > 0) {
+		const paths = listResult.data
 			.filter((f) => f.name.startsWith(fileType))
 			.map((f) => `${roleId}/${f.name}`)
 		if (paths.length > 0) {
-			await supabase.storage.from(BUCKET).remove(paths)
+			await removeFiles(BUCKET, paths)
 		}
 	}
 

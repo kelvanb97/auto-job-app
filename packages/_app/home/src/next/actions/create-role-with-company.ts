@@ -1,6 +1,10 @@
 "use server"
 
 import { createCompany } from "@aja-api/company/api/create-company"
+import {
+	companySizeSchema,
+	companyStageSchema,
+} from "@aja-api/company/schema/company-schema"
 import { createRole } from "@aja-api/role/api/create-role"
 import {
 	locationTypeSchema,
@@ -15,8 +19,8 @@ const createRoleWithCompanySchema = z.object({
 			name: z.string().min(1),
 			website: z.string().optional(),
 			linkedinUrl: z.string().optional(),
-			size: z.string().optional(),
-			stage: z.string().optional(),
+			size: companySizeSchema.optional(),
+			stage: companyStageSchema.optional(),
 			industry: z.string().optional(),
 			notes: z.string().optional(),
 		})

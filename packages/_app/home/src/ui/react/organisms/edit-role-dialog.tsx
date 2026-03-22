@@ -1,6 +1,10 @@
 "use client"
 
-import type { TCompany } from "@aja-api/company/schema/company-schema"
+import type {
+	TCompany,
+	TCompanySize,
+	TCompanyStage,
+} from "@aja-api/company/schema/company-schema"
 import type { TInteraction } from "@aja-api/interaction/schema/interaction-schema"
 import type { TPerson } from "@aja-api/person/schema/person-schema"
 import type { TRolePerson } from "@aja-api/role-person/schema/role-person-schema"
@@ -481,8 +485,8 @@ export function EditRoleDialog({
 						name: companyFields.name,
 						website: companyFields.website || null,
 						linkedinUrl: companyFields.linkedinUrl || null,
-						size: companyFields.size || null,
-						stage: companyFields.stage || null,
+						size: (companyFields.size as TCompanySize) || null,
+						stage: (companyFields.stage as TCompanyStage) || null,
 						industry: companyFields.industry || null,
 						notes: companyFields.notes || null,
 					}

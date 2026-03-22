@@ -1,9 +1,10 @@
 import type { Database } from "@aja-app/supabase"
-import type {
-	TApplication,
-	TCreateApplication,
-	TMarshalledApplication,
-	TUpdateApplication,
+import {
+	applicationStatusSchema,
+	type TApplication,
+	type TCreateApplication,
+	type TMarshalledApplication,
+	type TUpdateApplication,
 } from "./application-schema"
 
 type ApplicationInsert = Database["app"]["Tables"]["application"]["Insert"]
@@ -13,7 +14,7 @@ export function unmarshalApplication(m: TMarshalledApplication): TApplication {
 	return {
 		id: m.id,
 		roleId: m.role_id,
-		status: m.status,
+		status: applicationStatusSchema.parse(m.status),
 		resumePath: m.resume_path,
 		coverLetterPath: m.cover_letter_path,
 		submittedAt: m.submitted_at,

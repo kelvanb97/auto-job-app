@@ -1,6 +1,10 @@
 "use client"
 
 import type {
+	TCompanySize,
+	TCompanyStage,
+} from "@aja-api/company/schema/company-schema"
+import type {
 	TLocationType,
 	TRoleSource,
 } from "@aja-api/role/schema/role-schema"
@@ -72,8 +76,8 @@ export function CreateRoleForm() {
 					name: company.name.trim(),
 					website: company.website || undefined,
 					linkedinUrl: company.linkedinUrl || undefined,
-					size: company.size || undefined,
-					stage: company.stage || undefined,
+					size: (company.size as TCompanySize) || undefined,
+					stage: (company.stage as TCompanyStage) || undefined,
 					industry: company.industry || undefined,
 					notes: company.notes || undefined,
 				}

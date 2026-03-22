@@ -1,0 +1,40 @@
+{
+	"name": "@aja-api/storage",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		"./api/*": "./src/api/*.ts"
+	},
+	"scripts": {
+		"check-types": "tsc --noEmit",
+		"lint": "eslint ./src"
+	},
+	"peerDependencies": {
+		"@aja-core/supabase": "workspace:*"
+	},
+	"dependencies": {
+		"@aja-core/result": "workspace:*"
+	},
+	"devDependencies": {
+		"@aja-app/supabase": "workspace:*",
+		"@aja-core/eslint": "workspace:*",
+		"@aja-core/supabase": "workspace:*",
+		"@aja-core/tsconfig": "workspace:*",
+		"eslint": "9.24.0",
+		"@types/node": "25.5.0",
+		"typescript": "5.9.3"
+	},
+	"imports": {
+		"#*": [
+			"./src/*",
+			"./src/*.ts",
+			"./src/*.tsx"
+		],
+		"#api*": [
+			"./src/api*",
+			"./src/api*.ts"
+		]
+	}
+}

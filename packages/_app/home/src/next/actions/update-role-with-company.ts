@@ -1,6 +1,10 @@
 "use server"
 
 import { updateCompany } from "@aja-api/company/api/update-company"
+import {
+	companySizeSchema,
+	companyStageSchema,
+} from "@aja-api/company/schema/company-schema"
 import { updateRole } from "@aja-api/role/api/update-role"
 import {
 	locationTypeSchema,
@@ -30,8 +34,8 @@ const updateRoleWithCompanySchema = z.object({
 			name: z.string().min(1).optional(),
 			website: z.string().nullable().optional(),
 			linkedinUrl: z.string().nullable().optional(),
-			size: z.string().nullable().optional(),
-			stage: z.string().nullable().optional(),
+			size: companySizeSchema.nullable().optional(),
+			stage: companyStageSchema.nullable().optional(),
 			industry: z.string().nullable().optional(),
 			notes: z.string().nullable().optional(),
 		})
