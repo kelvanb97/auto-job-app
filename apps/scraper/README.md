@@ -1,6 +1,6 @@
 # @aja-app/scraper
 
-Background service that scrapes job listings from remote job boards and inserts them into the `app.role` table in Supabase.
+CLI tool that scrapes job listings from remote job boards and inserts them into the `app.role` table in Supabase.
 
 ## Sources
 
@@ -21,67 +21,14 @@ cp .env.example .env
 
 ## Usage
 
-### One-off scrape
-
 ```bash
-pnpm scrape
+pnpm scrape                    # all sources
+pnpm scrape:himalayas          # single source
+pnpm scrape:remoteok
+pnpm scrape:weworkremotely
+pnpm scrape:jobicy
+pnpm scrape:google-jobs
 ```
-
-Runs all scrapers immediately, logs results, and exits.
-
-### Cron mode
-
-```bash
-pnpm start
-```
-
-Starts a long-running process that scrapes on a schedule using `node-cron`.
-
-## How the cron works
-
-The cron is **in-process** — `node-cron` is a JavaScript scheduler that runs inside the Node.js process, not a system-level cron job. This means:
-
-- **Your machine must be running** for scrapes to happen. If your laptop is asleep, shut down, or the process is killed, no scrapes will run. There is no catch-up mechanism — missed runs are simply skipped.
-- **The process must stay alive.** Running `pnpm start` keeps a Node.js process open. Close the terminal or kill the process and scheduling stops.
-- **It does not survive reboots.** You'd need to restart it manually after a reboot, or set it up as a system service (launchd on macOS, systemd on Linux) if you want it to auto-start.
-
-### Schedule format
-
-Set `SCRAPER_CRON_SCHEDULE` in your `.env` file. The format is standard cron:
-
-```
-┌───────────── minute (0-59)
-│ ┌───────────── hour (0-23)
-│ │ ┌───────────── day of month (1-31)
-│ │ │ ┌───────────── month (1-12)
-│ │ │ │ ┌───────────── day of week (0-7, 0 and 7 = Sunday)
-│ │ │ │ │
-* * * * *
-```
-
-Examples:
-
-| Schedule         | Meaning                      |
-| ---------------- | ---------------------------- |
-| `0 */1 * * *`    | Every hour (default)         |
-| `*/30 * * * *`   | Every 30 minutes             |
-| `0 9,18 * * 1-5` | 9 AM and 6 PM, weekdays only |
-| `0 */6 * * *`    | Every 6 hours                |
-
-### Practical recommendations
-
-For personal use on a laptop, `pnpm scrape` run manually (or via a macOS shortcut / alias) is the simplest approach. The cron mode is better suited for a machine that stays on — a home server, a cheap VPS, or a container running somewhere.
-
-If you want unattended scheduling on macOS without keeping a terminal open, you can create a launchd plist that runs `pnpm scrape` on a schedule — this uses the OS-level scheduler instead of an in-process one, so it handles sleep/wake more gracefully.
-
-## HTTP API
-
-In cron mode, the scraper also starts an HTTP server on port `3001` (configurable via `SCRAPER_HTTP_PORT` env var).
-
-| Method | Endpoint | Description |
-| ------ | ----------------------- | ---------------------------------------- |
-| POST | `/scrape` | Start a scrape run, returns `{ runId }` (202) |
-| GET | `/scrape/{runId}/status` | Check run status (`running`, `completed`, `failed`) |
 
 ## Deduplication
 
