@@ -13,3 +13,6 @@ log
 
 # local data (screenshots, downloaded docs)
 data
+
+# examples
+.examples

@@ -8,6 +8,7 @@ Background service that scrapes job listings from remote job boards and inserts 
 - **We Work Remotely** — RSS feed, filtered by title keywords
 - **Himalayas** — Paginated JSON API (up to 200 jobs per run)
 - **Jobicy** — JSON API, queried across multiple tags with dedup
+- **Google Jobs** — Browser-automated scraping via Patchright
 
 Each source runs independently via `Promise.allSettled` — if one fails, the others still complete.
 
@@ -62,7 +63,7 @@ Examples:
 
 | Schedule         | Meaning                      |
 | ---------------- | ---------------------------- |
-| `0 2 * * *`      | 2:00 AM daily (default)      |
+| `0 */1 * * *`    | Every hour (default)         |
 | `*/30 * * * *`   | Every 30 minutes             |
 | `0 9,18 * * 1-5` | 9 AM and 6 PM, weekdays only |
 | `0 */6 * * *`    | Every 6 hours                |
@@ -72,6 +73,15 @@ Examples:
 For personal use on a laptop, `pnpm scrape` run manually (or via a macOS shortcut / alias) is the simplest approach. The cron mode is better suited for a machine that stays on — a home server, a cheap VPS, or a container running somewhere.
 
 If you want unattended scheduling on macOS without keeping a terminal open, you can create a launchd plist that runs `pnpm scrape` on a schedule — this uses the OS-level scheduler instead of an in-process one, so it handles sleep/wake more gracefully.
+
+## HTTP API
+
+In cron mode, the scraper also starts an HTTP server on port `3001` (configurable via `SCRAPER_HTTP_PORT` env var).
+
+| Method | Endpoint | Description |
+| ------ | ----------------------- | ---------------------------------------- |
+| POST | `/scrape` | Start a scrape run, returns `{ runId }` (202) |
+| GET | `/scrape/{runId}/status` | Check run status (`running`, `completed`, `failed`) |
 
 ## Deduplication
 

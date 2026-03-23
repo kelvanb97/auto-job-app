@@ -5,15 +5,14 @@
 [![Turborepo](https://img.shields.io/badge/Turborepo-EF4444?logo=turborepo&logoColor=white)](https://turbo.build/)
 [![pnpm](https://img.shields.io/badge/pnpm-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Radix UI](https://img.shields.io/badge/Radix_UI-161618?logo=radixui&logoColor=white)](https://www.radix-ui.com/)
 [![Anthropic](https://img.shields.io/badge/Claude_AI-D4A574?logo=anthropic&logoColor=white)](https://www.anthropic.com/)
 
 # Auto Job App
 
-An AI-powered job search pipeline that scrapes, scores, and surfaces the best remote roles — so I can focus on interviewing, not searching.
+An AI-powered job search pipeline that scrapes, scores, generates tailored documents, and auto-applies to the best remote roles - so I can focus on interviewing, not searching.
 
----
-
-Job hunting is a full-time job. I got tired of refreshing five different job boards, skimming hundreds of listings, and losing track of which ones were actually worth applying to. So I built a system that does it for me — scrapes listings across multiple boards, scores every role against my actual preferences using Claude, and serves up a ranked dashboard of what's worth my time.
+Job hunting is a full-time job. I got tired of refreshing five different job boards, skimming hundreds of listings, and losing track of which ones were actually worth applying to. So I built a system that does it for me - scrapes listings across multiple boards, scores every role against my actual preferences using Claude, generates tailored resumes and cover letters, and auto-applies to the top matches.
 
 ## How It Works
 
@@ -24,29 +23,138 @@ flowchart LR
     C --> D[(Database)]
     D --> E[AI Scorer]
     E --> F[Dashboard]
+    F --> G[Resume & Cover Letter Gen]
+    G --> H[Auto-Apply]
+```
+
+## Architecture
+
+```
+Data Flow:
+[RemoteOK]    -|
+[WWR]         -|
+[Himalayas]   -|-> [Scraper] -> [Keyword Filter] -> [Dedupe] -> [Supabase DB]
+[Jobicy]      -|                                                      |
+[Google Jobs] -|                                               [AI Scorer]
+                                                                      |
+                                                               [Dashboard]
+                                                                      |
+                                                        [Resume/Cover Letter Gen]
+                                                                      |
+                                                              [Auto-Apply]
+```
+
+```
+Package Dependencies:
+apps/web -> @aja-app/home -> @aja-api/role -> @aja-core/result
+             @aja-app/apply   @aja-api/company  @aja-core/supabase
+             @aja-app/scraper @aja-api/score     @aja-core/types
+             @aja-app/score   @aja-api/resume
+                              @aja-api/cover-letter
+                              @aja-api/storage
+                              @aja-api/application
+                              @aja-api/person
+                              @aja-api/interaction
+                              @aja-api/role-person
+
+apps/scraper -> @aja-app/scraper -> @aja-api/role
+                                    @aja-api/company
+                                    @aja-integrations/patchright
+
+apps/score -> @aja-app/score -> @aja-api/role
+                                @aja-api/score
+                                @aja-integrations/anthropic
+
+@aja-config/user (consumed by score, resume, cover-letter, scraper)
+```
+
+## Repository Structure
+
+```
+auto-job-app/
+  apps/
+    web/                          Next.js 16 (App Router, Turbopack)
+    scraper/                      Node.js cron/one-shot job scraper
+    score/                        Node.js batch scorer via Claude
+    supabase/                     Supabase CLI project and migrations
+
+  packages/
+    _api/                         Entity CRUD operations (@aja-api/*)
+      application/                Application tracking
+      company/                    Company data
+      cover-letter/               AI cover letter generation (DOCX)
+      interaction/                Follow-up tracking
+      person/                     Contact management
+      resume/                     AI resume generation (DOCX)
+      role/                       Job role data and queries
+      role-person/                Role-contact relationships
+      score/                      AI scoring via Claude
+      storage/                    Document storage
+
+    _app/                         Feature modules (@aja-app/*)
+      apply/                      Auto-apply workflow
+      home/                       Dashboard screens and server actions
+      score/                      Batch scoring logic
+      scraper/                    Multi-source scraping logic
+      supabase/                   Supabase configuration
+
+    _config/                      User configuration (@aja-config/*)
+      user/                       Profile, skills, preferences
+
+    _core/                        Shared utilities (@aja-core/*)
+      dates/                      Date formatting
+      eslint/                     Shared ESLint configs
+      localstorage/               Browser storage wrapper
+      next-safe-action/           Server action framework
+      numbers/                    Number utilities
+      result/                     TResult pattern (ok/err)
+      supabase/                   Supabase admin client
+      tsconfig/                   Shared TypeScript configs
+      types/                      Shared type definitions
+      use-click-outside/          React hook
+      use-initial-load/           React hook
+
+    _design/                      Component library (@aja-design/*)
+      ui/                         Radix UI + Tailwind (40+ components)
+
+    _integrations/                Third-party wrappers (@aja-integrations/*)
+      anthropic/                  Claude AI SDK
+      patchright/                 Browser automation
 ```
 
 ## What Makes This Interesting
 
 ### LLM-Powered Scoring
 
-Claude evaluates every role against a weighted rubric — skills match, seniority fit, salary range, location requirements. This isn't keyword matching. It's contextual evaluation that understands "senior fullstack" and "staff frontend" are closer than "junior backend," even though they share no keywords.
+Claude evaluates every role against a weighted rubric - skills match, seniority fit, salary range, location requirements. This isn't keyword matching. It's contextual evaluation that understands "senior fullstack" and "staff frontend" are closer than "junior backend," even though they share no keywords.
+
+### AI-Tailored Documents
+
+For every high-scoring role, Claude generates a resume and cover letter specifically tailored to that position. The system extracts keywords from the job description, maps them to your experience, and produces DOCX files ready to submit.
+
+### Auto-Apply Pipeline
+
+The system finds the top-scored unapplied role, generates or retrieves resume and cover letter documents, navigates to the application page via browser automation, fills out the form, and pauses for confirmation before submitting.
 
 ### Autonomous Pipeline
 
-Five job boards scraped on a schedule, listings filtered and deduplicated, matches scored and ranked — all without intervention. The system runs continuously and the dashboard always reflects the latest state of the market.
+Five job boards scraped on a schedule, listings filtered and deduplicated, matches scored and ranked - all without intervention. The system runs continuously and the dashboard always reflects the latest state of the market.
+
+### SSE Real-Time Communication
+
+The web app communicates with scraper and scorer processes via Server-Sent Events, allowing the dashboard to trigger and monitor operations in real time.
 
 ### Monorepo at Scale
 
-Six-layer package architecture with strict dependency hierarchy, type-safe error handling via a Result pattern, and full CI enforcement across the board. Every package has clear boundaries and explicit contracts. [See the technical details →](./CLAUDE.md)
+Six-layer package architecture with strict dependency hierarchy, type-safe error handling via a Result pattern, and full CI enforcement across the board. Every package has clear boundaries and explicit contracts. [See the technical details](./CLAUDE.md)
 
 ## Roadmap
 
-- Auto-apply to high-scoring roles
-- AI-tailored resumes per role
-- AI-tailored cover letters per role
-- Analytics dashboard (success rates, score distributions)
+- [x] Auto-apply to high-scoring roles
+- [x] AI-tailored resumes per role
+- [x] AI-tailored cover letters per role
+- [ ] Analytics dashboard (success rates, score distributions)
 
----
+## Documentation
 
-For architecture details, dependency hierarchy, and code patterns, see [CLAUDE.md](./CLAUDE.md).
+- [CLAUDE.md](./CLAUDE.md) - Architecture details, dependency hierarchy, code patterns

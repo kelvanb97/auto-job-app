@@ -11,6 +11,5 @@ Supabase admin client factory and environment configuration.
 ### `./config`
 
 - `config()` — singleton getter for validated Supabase configuration (url, publishableKey, secretKey)
-- `Config` — configuration type
 
 Environment variables validated via Zod: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`.

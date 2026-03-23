@@ -13,6 +13,7 @@ CRUD operations for job roles with advanced filtering and sorting.
 - `deleteRole(id)` — delete by ID
 - `listRoleUrls(urls)` — check which URLs already exist in the database
 - `listUnscoredRoles()` — fetch all roles without a score (used by the score app)
+- `getTopUnappliedRole()` — fetch the highest-scored role that hasn't been applied to or marked `wont_do`
 
 All return `Promise<TResult<T>>`.
 

@@ -146,6 +146,15 @@ API functions use `supabaseAdminClient<Database>()` from `@aja-core/supabase`.
 - Migrations are in `apps/supabase/migrations/`
 - Local Supabase: `pnpm --filter supabase start` / `stop`
 
+## Documentation
+
+When making changes, update any README that is affected by the change. This includes:
+
+- The root `README.md` if the change affects architecture, features, roadmap, or repository structure
+- A package's `README.md` if the change modifies that package's API, purpose, or usage
+
+Keep READMEs factual and concise. Do not add speculative content or document things that haven't been built yet.
+
 ## Code Style
 
 - Tabs for indentation (not spaces)

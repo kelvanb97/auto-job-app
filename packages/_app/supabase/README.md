@@ -1,4 +1,4 @@
-# aja-app/supabase
+# @aja-app/supabase
 
 Used to generate types from supabase
 

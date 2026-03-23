@@ -4,7 +4,7 @@ Component library built on Radix UI primitives and styled with Tailwind CSS. Hea
 
 ## Features
 
-- 40+ UI components (button, card, dialog, input, toast, etc.)
+- 39 UI components (button, card, dialog, input, toast, etc.)
 - Layout primitives (`Flex`, `XStack`, `YStack`)
 - Icon set (GitHub, Discord, Google, Lucide icons)
 - Lottie animations

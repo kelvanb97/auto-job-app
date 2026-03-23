@@ -14,8 +14,9 @@ Copy `.env.example` to `.env` and fill in:
 | `SUPABASE_PUBLISHABLE_KEY` | Supabase anon key | — |
 | `SUPABASE_SECRET_KEY` | Supabase service role key | — |
 | `ANTHROPIC_API_KEY` | Anthropic API key | — |
-| `SCORE_MODEL` | Claude model ID to use | Haiku |
+| `SCORE_MODEL` | Claude model ID to use | `claude-haiku-4-5-20251001` |
 | `SCORE_RATE_LIMIT_MS` | Delay between API calls (ms) | `500` |
+| `SCORE_BATCH_SIZE` | Number of roles to score per batch | `5` |
 
 ---
 
