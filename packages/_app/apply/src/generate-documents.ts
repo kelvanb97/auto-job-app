@@ -94,6 +94,12 @@ export async function generateDocuments(
 	const coverLetterBuffer = await buildCoverLetterDocx(
 		USER_PROFILE.name,
 		coverLetterContent,
+		{
+			email: USER_PROFILE.email,
+			phone: USER_PROFILE.phone,
+			linkedIn: USER_PROFILE.linkedIn,
+			location: USER_PROFILE.location,
+		},
 	)
 
 	// Upload documents
