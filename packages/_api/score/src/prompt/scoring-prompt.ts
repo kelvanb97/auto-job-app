@@ -90,7 +90,8 @@ Scoring weights:
 
 Important scoring rules:
 - Evaluate skills by depth, not just keyword matches. The candidate's work history shows what they've actually built — weigh demonstrated experience over listed buzzwords.
-- A missing salary on the posting is neutral, not negative.
+- A missing salary on the posting is neutral, not negative. Do NOT list missing salary as a negative reason, do NOT reduce the score for it, and set isSalaryAcceptable to true.
+- For salary comparison, the candidate's range and the posting's range only need to **overlap** — any overlap is acceptable. Do not penalize a posting whose range partially falls outside the candidate's range. Only flag salary as a negative when the ranges have zero overlap.
 - Any dealbreaker match forces the score below 20.
 - Roles requiring skills entirely outside the candidate's stack should score below 40 regardless of title fit.
 - Roles with adjacent but non-preferred tech (e.g. Vue instead of React) should not be penalized as harshly as completely unrelated tech (e.g. Java, C#).
@@ -98,11 +99,6 @@ Important scoring rules:
 Respond with ONLY valid JSON:
 {
   "score": <number 0-100>,
-  "isTitleFit": <boolean>,
-  "isSeniorityAppropriate": <boolean>,
-  "doSkillsAlign": <boolean>,
-  "isLocationAcceptable": <boolean>,
-  "isSalaryAcceptable": <boolean>,
   "positive": [<1-4 concise reasons this is a good match>],
   "negative": [<1-4 concise reasons this is a poor match or concerns>]
 }`
