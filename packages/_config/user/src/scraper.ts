@@ -79,7 +79,7 @@ export const SCRAPER_CONFIG: TScraperConfig = {
 		"principal",
 		"staff",
 	],
-	blockedCompanies: ["flexionis"],
+	blockedCompanies: ["flexionis", "underdog.io", "jack & jill", "ukjobspoint"],
 	enabledSources: [
 		// "remoteok",
 		// "weworkremotely",
