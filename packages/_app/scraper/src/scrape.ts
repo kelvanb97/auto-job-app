@@ -4,6 +4,7 @@ import { insertRoles } from "#lib/insert"
 import * as googleJobs from "#sources/google-jobs/index"
 import * as himalayas from "#sources/himalayas"
 import * as jobicy from "#sources/jobicy"
+import * as linkedin from "#sources/linkedin/index"
 import * as remoteok from "#sources/remoteok"
 import * as weworkremotely from "#sources/weworkremotely"
 import type { ScrapedRole, TScrapeProgressCallback } from "#types"
@@ -18,6 +19,7 @@ const ALL_SOURCES: Record<TSourceName, SourceModule> = {
 	himalayas,
 	jobicy,
 	"google-jobs": googleJobs,
+	linkedin,
 }
 
 export type TScrapeSummary = {

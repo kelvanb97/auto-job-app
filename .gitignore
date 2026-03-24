@@ -16,3 +16,6 @@ data
 
 # examples
 .examples
+
+# playwright mcp
+.playwright-mcp

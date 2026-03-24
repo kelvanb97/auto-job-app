@@ -4,6 +4,7 @@ export type TSourceName =
 	| "himalayas"
 	| "jobicy"
 	| "google-jobs"
+	| "linkedin"
 
 export type TScraperConfig = {
 	relevantKeywords: string[]
@@ -14,30 +15,47 @@ export type TScraperConfig = {
 export const GOOGLE_JOBS_SEARCH = {
 	titles: [
 		"software engineer",
-		"frontend engineer",
-		"full-stack engineer",
-		"fullstack engineer",
-		"react engineer",
-		"typescript engineer",
-		"next.js engineer",
-		"web engineer",
-		"product engineer",
-		"design engineer",
-		"senior software engineer",
-		"senior frontend engineer",
-		"senior full-stack engineer",
-		"senior fullstack engineer",
-		"senior react engineer",
-		"senior typescript engineer",
-		"senior next.js engineer",
-		"senior web engineer",
-		"senior product engineer",
-		"senior design engineer",
+		// "frontend engineer",
+		// "full-stack engineer",
+		// "fullstack engineer",
+		// "react engineer",
+		// "typescript engineer",
+		// "next.js engineer",
+		// "web engineer",
+		// "product engineer",
+		// "design engineer",
+		// "senior software engineer",
+		// "senior frontend engineer",
+		// "senior full-stack engineer",
+		// "senior fullstack engineer",
+		// "senior react engineer",
+		// "senior typescript engineer",
+		// "senior next.js engineer",
+		// "senior web engineer",
+		// "senior product engineer",
+		// "senior design engineer",
 	],
 	remote: true,
 	fullTimeOnly: true,
 	freshnessdays: 3,
 	maxPagesPerQuery: 5,
+} as const
+
+export const LINKEDIN_SEARCH = {
+	keywords: [
+		"software engineer",
+		// "frontend engineer",
+		// "full-stack engineer",
+		// "fullstack engineer",
+		// "react engineer",
+		// "typescript engineer",
+		// "next.js engineer",
+		// "product engineer",
+	],
+	remote: true,
+	datePosted: "past-week" as "past-24h" | "past-week" | "past-month",
+	maxPages: 5,
+	maxPerPage: 25,
 } as const
 
 export const SCRAPER_CONFIG: TScraperConfig = {
@@ -66,6 +84,7 @@ export const SCRAPER_CONFIG: TScraperConfig = {
 		// "weworkremotely",
 		// "himalayas",
 		// "jobicy",
-		"google-jobs",
+		// "google-jobs",
+		"linkedin",
 	],
 }

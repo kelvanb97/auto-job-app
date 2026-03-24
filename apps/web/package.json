@@ -4,7 +4,6 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"analyze": "bash scripts/analyze-embed.sh",
 		"build": "next build",
 		"dev": "next dev --turbopack",
 		"lint": "eslint .",
