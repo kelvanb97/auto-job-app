@@ -9,6 +9,7 @@ export type TSourceName =
 export type TScraperConfig = {
 	relevantKeywords: string[]
 	blockedKeywords: string[]
+	blockedCompanies: string[]
 	enabledSources: TSourceName[]
 }
 
@@ -78,6 +79,7 @@ export const SCRAPER_CONFIG: TScraperConfig = {
 		"principal",
 		"staff",
 	],
+	blockedCompanies: ["flexionis"],
 	enabledSources: [
 		// "remoteok",
 		// "weworkremotely",
