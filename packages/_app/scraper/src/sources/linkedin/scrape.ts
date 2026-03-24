@@ -5,37 +5,13 @@ import {
 } from "@aja-integrations/patchright/browser"
 import { randomWait } from "@aja-integrations/patchright/interaction"
 import type { Locator, Page } from "@aja-integrations/patchright/page"
-import type { ScrapedRole } from "#types"
+import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 import { extractJobFromPanel } from "./extract"
 import {
 	CARD_SELECTOR,
 	PAGE_STATE_SELECTOR,
 	PAGINATION_SELECTOR,
 } from "./selectors"
-
-const DATE_POSTED_MAP: Record<string, string> = {
-	"past-24h": "r86400",
-	"past-week": "r604800",
-	"past-month": "r2592000",
-}
-
-function buildSearchUrl(keyword: string): string {
-	const params = new URLSearchParams({
-		keywords: keyword,
-		location: "Worldwide",
-	})
-
-	if (LINKEDIN_SEARCH.remote) {
-		params.set("f_WT", "2")
-	}
-
-	const tpr = DATE_POSTED_MAP[LINKEDIN_SEARCH.datePosted]
-	if (tpr) {
-		params.set("f_TPR", tpr)
-	}
-
-	return `https://www.linkedin.com/jobs/search/?${params.toString()}`
-}
 
 async function pageStateText(page: Page): Promise<string | null> {
 	try {
@@ -153,10 +129,10 @@ async function tryLoadMoreCards(page: Page, cards: Locator): Promise<boolean> {
 async function scrapeResultsPage(
 	page: Page,
 	cards: Locator,
-	roles: ScrapedRole[],
 	seen: Set<string>,
 	maxPerPage: number,
-) {
+): Promise<ScrapedRole[]> {
+	const pageRoles: ScrapedRole[] = []
 	const maxNoGrowth = 3
 	let i = 0
 	let noGrowth = 0
@@ -180,7 +156,7 @@ async function scrapeResultsPage(
 					const key = `${role.company ?? ""}|${role.title}`
 					if (!seen.has(key)) {
 						seen.add(key)
-						roles.push(role)
+						pageRoles.push(role)
 						console.log(
 							`[linkedin] Scraped: ${role.title} at ${role.company}`,
 						)
@@ -206,19 +182,26 @@ async function scrapeResultsPage(
 		noGrowth++
 		if (noGrowth >= maxNoGrowth) break
 	}
+
+	return pageRoles
 }
 
-export async function scrape(): Promise<ScrapedRole[]> {
+export async function scrape(
+	options?: TSourceScrapeOptions,
+): Promise<ScrapedRole[]> {
+	const { onBatch, signal } = options ?? {}
 	const context = await createBrowserContext()
 	const page = await context.newPage()
-	const roles: ScrapedRole[] = []
+	const allRoles: ScrapedRole[] = []
 	const seen = new Set<string>()
+	let totalPages = 0
 
 	try {
-		for (const keyword of LINKEDIN_SEARCH.keywords) {
-			console.log(`[linkedin] Searching: "${keyword}"`)
+		for (const searchUrl of LINKEDIN_SEARCH.urls) {
+			if (signal?.aborted) break
 
-			const searchUrl = buildSearchUrl(keyword)
+			console.log(`[linkedin] Navigating to: ${searchUrl}`)
+
 			await page.goto(searchUrl, { waitUntil: "domcontentloaded" })
 			await page.waitForTimeout(2000)
 
@@ -226,26 +209,38 @@ export async function scrape(): Promise<ScrapedRole[]> {
 			const cardCount = await cards.count()
 
 			if (cardCount === 0) {
-				console.log(`[linkedin] No job cards found for "${keyword}"`)
+				console.log(`[linkedin] No job cards found`)
 				continue
 			}
 
 			let pagesScraped = 0
 
 			while (pagesScraped < LINKEDIN_SEARCH.maxPages) {
+				if (signal?.aborted) break
+
 				const state =
 					(await pageStateText(page)) ?? `Page ${pagesScraped + 1}`
-				console.log(`[linkedin] ${state} for "${keyword}"`)
+				console.log(`[linkedin] ${state}`)
 
-				await scrapeResultsPage(
+				const pageRoles = await scrapeResultsPage(
 					page,
 					cards,
-					roles,
 					seen,
 					LINKEDIN_SEARCH.maxPerPage,
 				)
 
 				pagesScraped++
+				totalPages++
+
+				console.log(
+					`[linkedin] Page ${totalPages}: extracted ${pageRoles.length} roles`,
+				)
+
+				if (onBatch && pageRoles.length > 0) {
+					await onBatch(pageRoles)
+				} else {
+					allRoles.push(...pageRoles)
+				}
 
 				if (pagesScraped >= LINKEDIN_SEARCH.maxPages) break
 
@@ -262,8 +257,8 @@ export async function scrape(): Promise<ScrapedRole[]> {
 	}
 
 	console.log(
-		`[linkedin] Scraping complete, found ${roles.length} total roles`,
+		`[linkedin] Scraping complete, ${totalPages} pages, found ${onBatch ? "roles saved per-page" : `${allRoles.length} total roles`}`,
 	)
 
-	return roles
+	return allRoles
 }
