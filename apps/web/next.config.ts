@@ -1,4 +1,7 @@
+import { resolve } from "node:path"
 import type { NextConfig } from "next"
+
+process.loadEnvFile(resolve(import.meta.dirname, "../../.env"))
 
 const nextConfig: NextConfig = {
 	// NOTE: This is required to support PostHog trailing slash API requests

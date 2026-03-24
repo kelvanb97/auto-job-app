@@ -30,7 +30,7 @@ pnpm --filter @aja-app/scraper scrape:himalayas   # single source
 pnpm --filter @aja-app/score score                # score unscored roles
 ```
 
-Apps load env from `.env` files in their own directory. See each app's `.env.example`.
+All apps load env from the root `.env` file. See `.env.example` for available variables. Scraper and score use Node's `--env-file=../../.env` flag; web loads it via `process.loadEnvFile()` in `next.config.ts`.
 
 ## Architecture
 

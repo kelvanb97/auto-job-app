@@ -14,10 +14,7 @@ Each source runs independently via `Promise.allSettled` — if one fails, the ot
 
 ## Setup
 
-```bash
-cp .env.example .env
-# Fill in your Supabase credentials
-```
+Environment variables are loaded from the root `.env` file. See the root `.env.example` for required variables (Supabase credentials).
 
 ## Usage
 

@@ -4,17 +4,10 @@ Next.js 16 dashboard (App Router, Turbopack) for browsing scraped roles, trigger
 
 ## Setup
 
-```bash
-cp .env.example .env
-# Fill in your Supabase and Anthropic credentials
-```
+Environment variables are loaded from the root `.env` file via `process.loadEnvFile()` in `next.config.ts`. See the root `.env.example` for required and optional variables.
 
 | Variable | Description | Default |
 |---|---|---|
-| `SUPABASE_URL` | Supabase instance URL | `http://127.0.0.1:54331` (local) |
-| `SUPABASE_PUBLISHABLE_KEY` | Supabase anon key | -- |
-| `SUPABASE_SECRET_KEY` | Supabase service role key | -- |
-| `ANTHROPIC_API_KEY` | Anthropic API key | -- |
 | `APPLY_KEYWORD_MODEL` | Model for keyword extraction | `claude-haiku-4-5-20251001` |
 | `APPLY_RESUME_MODEL` | Model for resume/cover letter gen | `claude-opus-4-6-20250619` |
 

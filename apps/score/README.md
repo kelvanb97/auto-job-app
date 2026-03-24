@@ -6,14 +6,10 @@ Scores unscored job roles against a hardcoded candidate profile using Claude, wr
 
 ## Setup
 
-Copy `.env.example` to `.env` and fill in:
+Environment variables are loaded from the root `.env` file. See the root `.env.example` for required and optional variables.
 
 | Variable | Description | Default |
 |---|---|---|
-| `SUPABASE_URL` | Supabase instance URL | `http://127.0.0.1:54321` (local) |
-| `SUPABASE_PUBLISHABLE_KEY` | Supabase anon key | — |
-| `SUPABASE_SECRET_KEY` | Supabase service role key | — |
-| `ANTHROPIC_API_KEY` | Anthropic API key | — |
 | `SCORE_MODEL` | Claude model ID to use | `claude-haiku-4-5-20251001` |
 | `SCORE_RATE_LIMIT_MS` | Delay between API calls (ms) | `500` |
 | `SCORE_BATCH_SIZE` | Number of roles to score per batch | `5` |
