@@ -19,6 +19,13 @@ export async function GET(request: Request) {
 				)
 			}
 
+			const heartbeat = setInterval(() => {
+				send({
+					type: "heartbeat",
+					timestamp: new Date().toISOString(),
+				})
+			}, 5000)
+
 			try {
 				const options = sources
 					? { sources, signal: request.signal, onProgress: send }
@@ -35,6 +42,7 @@ export async function GET(request: Request) {
 					)
 				}
 			} finally {
+				clearInterval(heartbeat)
 				controller.close()
 			}
 		},
