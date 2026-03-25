@@ -10,7 +10,9 @@ import type { TScore } from "#schema/score-schema"
 import { upsertScore } from "./upsert-score"
 
 const SCORER_MODEL = (process.env["SCORE_MODEL"] ??
-	"claude-haiku-4-5-20251001") as TLLMModel
+	(process.env["LLM_PROVIDER"] === "ollama"
+		? (process.env["OLLAMA_MODEL"] ?? "llama3")
+		: "claude-haiku-4-5-20251001")) as TLLMModel
 
 export async function scoreRoleData(
 	role: TRole,

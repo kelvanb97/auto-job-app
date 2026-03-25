@@ -1,4 +1,4 @@
-import type { ScrapedRole } from "#types"
+import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 
 type HimalayasJob = {
 	title?: string
@@ -61,7 +61,12 @@ async function fetchPage(
 	return (await response.json()) as HimalayasResponse
 }
 
-export async function scrape(): Promise<ScrapedRole[]> {
+
+
+export async function scrape(
+	options?: TSourceScrapeOptions,
+): Promise<ScrapedRole[]> {
+	const { onProgress } = options ?? {}
 	const seen = new Set<string>()
 	const results: ScrapedRole[] = []
 
@@ -69,6 +74,12 @@ export async function scrape(): Promise<ScrapedRole[]> {
 		let page = 1
 
 		while (page <= MAX_PAGES) {
+			onProgress?.({
+				type: "source:status",
+				source: "himalayas",
+				status: `Searching for "${query}" (page ${page})...`,
+			})
+
 			const data = await fetchPage(query, page)
 
 			const jobs = data.jobs ?? []

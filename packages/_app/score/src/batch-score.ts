@@ -13,10 +13,10 @@ export type TScoreSummary = {
 }
 
 export type TBatchScoreOptions = {
-	signal?: AbortSignal
-	onProgress?: TScoreProgressCallback
-	batchSize?: number
-	rateLimitMs?: number
+	signal?: AbortSignal | undefined
+	onProgress?: TScoreProgressCallback | undefined
+	batchSize?: number | undefined
+	rateLimitMs?: number | undefined
 }
 
 export async function runBatchScore(

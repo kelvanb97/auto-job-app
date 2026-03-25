@@ -31,21 +31,42 @@ export async function createMessage<T>(
 ): Promise<T> {
 	const client = getClient()
 
-	const response = await client.generate({
+	const promptLength = params.system.length + params.user.length
+	console.log(
+		`[ollama] Sending request to model: "${params.model}" (Prompt length: ${promptLength} chars)`,
+	)
+
+	const response = await client.chat({
 		model: params.model,
-		system: params.system,
-		prompt: params.user,
+		messages: [
+			{ role: "system", content: params.system },
+			{ role: "user", content: params.user },
+		],
 		format: "json",
 		options: {
-			num_predict: params.maxTokens ?? 1024,
+			num_ctx: 8192,
+			num_predict: params.maxTokens ?? 2048,
 		},
 	})
 
+	const content = response.message.content
+
 	try {
-		const parsed = JSON.parse(response.response)
+		if (!content) {
+			console.error("[ollama] Received empty content from chat")
+			throw new Error("Empty response from Ollama")
+		}
+		const parsed = JSON.parse(content)
 		return params.schema.parse(parsed)
 	} catch (error) {
-		console.error("Failed to parse Ollama response:", response.response)
+		console.error("[ollama] Failed to parse response content:", content)
+		console.error("[ollama] Chat metadata:", {
+			done: response.done,
+			total_duration: response.total_duration,
+			load_duration: response.load_duration,
+			prompt_eval_count: response.prompt_eval_count,
+			eval_count: response.eval_count,
+		})
 		throw error
 	}
 }

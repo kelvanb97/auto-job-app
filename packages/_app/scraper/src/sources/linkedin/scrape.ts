@@ -189,7 +189,7 @@ async function scrapeResultsPage(
 export async function scrape(
 	options?: TSourceScrapeOptions,
 ): Promise<ScrapedRole[]> {
-	const { onBatch, signal } = options ?? {}
+	const { onBatch, onProgress, signal } = options ?? {}
 	const context = await createBrowserContext()
 	const page = await context.newPage()
 	const allRoles: ScrapedRole[] = []
@@ -200,7 +200,11 @@ export async function scrape(
 		for (const searchUrl of LINKEDIN_SEARCH.urls) {
 			if (signal?.aborted) break
 
-			console.log(`[linkedin] Navigating to: ${searchUrl}`)
+			onProgress?.({
+				type: "source:status",
+				source: "linkedin",
+				status: `Navigating to search results...`,
+			})
 
 			await page.goto(searchUrl, { waitUntil: "domcontentloaded" })
 			await page.waitForTimeout(2000)
@@ -209,7 +213,6 @@ export async function scrape(
 			const cardCount = await cards.count()
 
 			if (cardCount === 0) {
-				console.log(`[linkedin] No job cards found`)
 				continue
 			}
 
@@ -220,7 +223,12 @@ export async function scrape(
 
 				const state =
 					(await pageStateText(page)) ?? `Page ${pagesScraped + 1}`
-				console.log(`[linkedin] ${state}`)
+
+				onProgress?.({
+					type: "source:status",
+					source: "linkedin",
+					status: `Scraping ${state}...`,
+				})
 
 				const pageRoles = await scrapeResultsPage(
 					page,
@@ -232,10 +240,6 @@ export async function scrape(
 				pagesScraped++
 				totalPages++
 
-				console.log(
-					`[linkedin] Page ${totalPages}: extracted ${pageRoles.length} roles`,
-				)
-
 				if (onBatch && pageRoles.length > 0) {
 					await onBatch(pageRoles)
 				} else {
@@ -243,6 +247,12 @@ export async function scrape(
 				}
 
 				if (pagesScraped >= LINKEDIN_SEARCH.maxPages) break
+
+				onProgress?.({
+					type: "source:status",
+					source: "linkedin",
+					status: `Moving to next results page...`,
+				})
 
 				const moved = await goToNextResultsPage(page, cards)
 				if (!moved) break

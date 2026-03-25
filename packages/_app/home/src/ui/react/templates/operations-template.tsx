@@ -43,10 +43,16 @@ function formatScrapeEvent(data: Record<string, unknown>): string {
 			return `[${data["source"]}] Found ${data["count"]} roles`
 		case "source:inserted":
 			return `[${data["source"]}] Inserted ${data["inserted"]}, skipped ${data["skipped"]}`
+		case "source:status":
+			return `[${data["source"]}] ${data["status"]}`
 		case "source:error":
 			return `[${data["source"]}] Error: ${data["error"]}`
 		case "source:done":
 			return `[${data["source"]}] Done`
+		case "heartbeat":
+			return data["lastActivity"]
+				? `(Still working) ${data["lastActivity"]}`
+				: "Scraper is still working..."
 		case "done":
 			return "Scrape complete"
 		case "error":
@@ -66,6 +72,10 @@ function formatScoreEvent(data: Record<string, unknown>): string {
 			return `Error scoring "${data["title"]}": ${data["error"]}`
 		case "score:done":
 			return `Scoring complete: ${data["scored"]} scored, ${data["errors"]} errors out of ${data["total"]}`
+		case "heartbeat":
+			return data["lastActivity"]
+				? `(Still working) ${data["lastActivity"]}`
+				: "Scorer is still working..."
 		case "error":
 			return `Error: ${data["error"]}`
 		default:

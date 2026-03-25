@@ -17,7 +17,8 @@ export type ScrapedRole = {
 }
 
 export type TSourceScrapeOptions = {
-	onBatch?: (roles: ScrapedRole[]) => Promise<void>
+	onBatch?: (roles: ScrapedRole[]) => (Promise<void> | void) | undefined
+	onProgress?: TScrapeProgressCallback | undefined
 	signal?: AbortSignal | undefined
 }
 
@@ -41,7 +42,8 @@ export type TScrapeProgressEvent =
 	  }
 	| { type: "source:error"; source: string; error: string }
 	| { type: "source:done"; source: string }
-	| { type: "heartbeat"; timestamp: string }
+	| { type: "source:status"; source: string; status: string }
+	| { type: "heartbeat"; timestamp: string; lastActivity?: string }
 	| { type: "done" }
 
 export type TScrapeProgressCallback = (event: TScrapeProgressEvent) => void

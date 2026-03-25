@@ -9,7 +9,7 @@ import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 export async function scrape(
 	options?: TSourceScrapeOptions,
 ): Promise<ScrapedRole[]> {
-	const { onBatch, signal } = options ?? {}
+	const { onBatch, onProgress, signal } = options ?? {}
 	const context = await createBrowserContext()
 	const page = await context.newPage()
 	const allRoles: ScrapedRole[] = []
@@ -19,20 +19,34 @@ export async function scrape(
 		for (const baseUrl of JOBRIGHT_SEARCH.urls) {
 			if (signal?.aborted) break
 
-			console.log(`[jobright] Searching: ${baseUrl}`)
-			await page.goto(baseUrl, { waitUntil: "networkidle" })
+			onProgress?.({
+				type: "source:status",
+				source: "jobright",
+				status: `Navigating to ${new URL(baseUrl).searchParams.get("q") || "jobs"}...`,
+			})
 
-			// Wait for job cards to appear
-			// Note: We need to identify the correct selectors for Jobright.ai
-			// For now, using a generic approach or common selectors found on modern job sites
+			await page.goto(baseUrl, { waitUntil: "networkidle" })
 			await page.waitForTimeout(2000)
 
 			let pageCount = 0
 			while (pageCount < JOBRIGHT_SEARCH.maxPages) {
 				if (signal?.aborted) break
 
+				pageCount++
+				onProgress?.({
+					type: "source:status",
+					source: "jobright",
+					status: `Scrolling and waiting (page ${pageCount})...`,
+				})
+
 				await humanScroll(page, 500)
 				await page.waitForTimeout(1000)
+
+				onProgress?.({
+					type: "source:status",
+					source: "jobright",
+					status: `Extracting roles...`,
+				})
 
 				// Typical job card selectors for Jobright (this might need adjustment)
 				const cards = page.locator('a[href*="/jobs/"]')
@@ -73,7 +87,6 @@ export async function scrape(
 					allRoles.push(...pageRoles)
 				}
 
-				pageCount++
 				// Simulate next page if available, or just scroll
 				await humanScroll(page, 1000)
 				await randomWait(1000, 2000)

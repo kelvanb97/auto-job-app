@@ -49,9 +49,9 @@ export type TScrapeSummary = {
 }
 
 export type TScrapeOptions = {
-	sources?: TSourceName[]
-	signal?: AbortSignal
-	onProgress?: TScrapeProgressCallback
+	sources?: TSourceName[] | undefined
+	signal?: AbortSignal | undefined
+	onProgress?: TScrapeProgressCallback | undefined
 }
 
 export async function runScraper(
@@ -119,6 +119,7 @@ export async function runScraper(
 
 			const allRoles = await sourceModule.scrape({
 				onBatch,
+				onProgress,
 				signal,
 			})
 
