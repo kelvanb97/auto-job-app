@@ -114,7 +114,10 @@ export const generateApplicationDocsAction = actionClient
 
 		// Upload documents
 		const slug = sanitize(`${companyName}-${role.title}`)
-		const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)
+		const timestamp = new Date()
+			.toISOString()
+			.replace(/[:.]/g, "-")
+			.slice(0, 19)
 		const resumePath = `${roleId}/${timestamp}-${slug}-resume.docx`
 		const coverLetterPath = `${roleId}/${timestamp}-${slug}-cover-letter.docx`
 

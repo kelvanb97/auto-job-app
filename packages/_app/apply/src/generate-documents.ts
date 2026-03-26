@@ -108,7 +108,10 @@ export async function generateDocuments(
 
 	// Upload documents
 	const slug = sanitize(`${companyName}-${role.title}`)
-	const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)
+	const timestamp = new Date()
+		.toISOString()
+		.replace(/[:.]/g, "-")
+		.slice(0, 19)
 	const resumePath = `${role.id}/${timestamp}-${slug}-resume.docx`
 	const coverLetterPath = `${role.id}/${timestamp}-${slug}-cover-letter.docx`
 
