@@ -43,12 +43,12 @@ export function RolesTable({
 			<Table>
 				<TableHeader>
 					<TableRow>
+						<TableHead>Score</TableHead>
 						<TableHead>Title</TableHead>
 						<TableHead>Company</TableHead>
 						<TableHead>Status</TableHead>
 						<TableHead>Location</TableHead>
 						<TableHead>Salary</TableHead>
-						<TableHead>Score</TableHead>
 						<TableHead>Source</TableHead>
 						<TableHead>Posted</TableHead>
 						<TableHead>Added</TableHead>

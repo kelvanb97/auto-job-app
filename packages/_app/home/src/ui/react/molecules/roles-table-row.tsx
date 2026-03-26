@@ -53,6 +53,15 @@ export function RolesTableRow({
 }: IRolesTableRowProps) {
 	return (
 		<TableRow className="cursor-pointer" onClick={onClick}>
+			<TableCell>
+				{score !== null ? (
+					<span className={`font-medium ${scoreColor(score)}`}>
+						{score}
+					</span>
+				) : (
+					<span className="text-muted-foreground">—</span>
+				)}
+			</TableCell>
 			<TableCell className="font-medium">{role.title}</TableCell>
 			<TableCell>{companyName ?? "—"}</TableCell>
 			<TableCell>
@@ -67,15 +76,6 @@ export function RolesTableRow({
 			</TableCell>
 			<TableCell>
 				{formatSalary(role.salaryMin, role.salaryMax)}
-			</TableCell>
-			<TableCell>
-				{score !== null ? (
-					<span className={`font-medium ${scoreColor(score)}`}>
-						{score}
-					</span>
-				) : (
-					<span className="text-muted-foreground">—</span>
-				)}
 			</TableCell>
 			<TableCell>
 				{role.source ? (
