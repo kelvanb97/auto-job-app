@@ -97,7 +97,7 @@ async function scrollForMoreCards(
 export async function scrape(
 	options?: TSourceScrapeOptions,
 ): Promise<ScrapedRole[]> {
-	const { onBatch, signal } = options ?? {}
+	const { onBatch, onProgress, signal } = options ?? {}
 	const context = await createBrowserContext()
 	const page = await context.newPage()
 	const allRoles: ScrapedRole[] = []
@@ -107,7 +107,11 @@ export async function scrape(
 		for (const title of GOOGLE_JOBS_SEARCH.titles) {
 			if (signal?.aborted) break
 
-			console.log(`[google-jobs] Searching: "${title}"`)
+			onProgress?.({
+				type: "source:status",
+				source: "google-jobs",
+				status: `Searching for "${title}"...`,
+			})
 
 			const searchUrl = buildSearchUrl(title)
 			await page.goto(searchUrl, { waitUntil: "domcontentloaded" })
@@ -116,9 +120,11 @@ export async function scrape(
 				await checkForBlocks(page)
 			} catch (err) {
 				if (err instanceof CaptchaDetectedError) {
-					console.warn(
-						`[google-jobs] CAPTCHA detected for "${title}", skipping`,
-					)
+					onProgress?.({
+						type: "source:status",
+						source: "google-jobs",
+						status: `CAPTCHA blocked search for "${title}"`,
+					})
 					continue
 				}
 				throw err
@@ -135,13 +141,8 @@ export async function scrape(
 			const initialCount = await cards.count()
 
 			if (initialCount === 0) {
-				console.log(`[google-jobs] No listings found for "${title}"`)
 				continue
 			}
-
-			console.log(
-				`[google-jobs] Found ${initialCount} initial cards for "${title}"`,
-			)
 
 			const titleRoles: ScrapedRole[] = []
 			let i = 0
@@ -154,6 +155,12 @@ export async function scrape(
 				const cardCount = await cards.count()
 
 				if (i < cardCount) {
+					onProgress?.({
+						type: "source:status",
+						source: "google-jobs",
+						status: `Extracting card ${i + 1}/${cardCount} for "${title}"...`,
+					})
+
 					const card = cards.nth(i)
 
 					// Pre-extract card-level data

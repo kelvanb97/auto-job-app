@@ -1,10 +1,10 @@
-import { createMessage } from "@aja-integrations/anthropic/client"
-import type { TAnthropicModel } from "@aja-integrations/anthropic/client"
+import { createMessage } from "@aja-integrations/llm/client"
+import type { TLLMModel } from "@aja-integrations/llm/client"
 import { coverLetterResponseSchema } from "#schema/cover-letter-schema"
 import type { TCoverLetterResponse } from "#schema/cover-letter-schema"
 
 export async function generateCoverLetterContent(
-	model: TAnthropicModel,
+	model: TLLMModel,
 	system: string,
 	user: string,
 ): Promise<TCoverLetterResponse> {

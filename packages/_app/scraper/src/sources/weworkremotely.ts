@@ -1,4 +1,4 @@
-import type { ScrapedRole } from "#types"
+import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 import Parser from "rss-parser"
 
 function extractCompany(title: string): string | null {
@@ -7,11 +7,26 @@ function extractCompany(title: string): string | null {
 	return title.slice(0, colonIndex).trim()
 }
 
-export async function scrape(): Promise<ScrapedRole[]> {
+export async function scrape(
+	options?: TSourceScrapeOptions,
+): Promise<ScrapedRole[]> {
+	const { onProgress } = options ?? {}
+	onProgress?.({
+		type: "source:status",
+		source: "weworkremotely",
+		status: "Fetching RSS feed...",
+	})
+
 	const parser = new Parser()
 	const feed = await parser.parseURL(
 		"https://weworkremotely.com/categories/remote-programming-jobs.rss",
 	)
+
+	onProgress?.({
+		type: "source:status",
+		source: "weworkremotely",
+		status: `Parsing ${feed.items.length} roles...`,
+	})
 
 	return feed.items.map((item) => ({
 		title: item.title ?? "Untitled",

@@ -13,16 +13,35 @@ export async function GET(request: Request) {
 
 	const stream = new ReadableStream({
 		async start(controller) {
+			let lastActivity = "Starting scrape..."
+
 			const send = (event: TScrapeProgressEvent) => {
+				// Track state for heartbeats
+				if (event.type === "source:status") {
+					lastActivity = `[${event.source}] ${event.status}`
+				} else if (event.type === "source:start") {
+					lastActivity = `Starting ${event.source}...`
+				}
+
 				controller.enqueue(
 					encoder.encode(`data: ${JSON.stringify(event)}\n\n`),
 				)
 			}
 
+			const heartbeat = setInterval(() => {
+				send({
+					type: "heartbeat",
+					timestamp: new Date().toISOString(),
+					lastActivity,
+				})
+			}, 5000)
+
 			try {
-				const options = sources
-					? { sources, signal: request.signal, onProgress: send }
-					: { signal: request.signal, onProgress: send }
+				const options = {
+					sources: sources || undefined,
+					signal: request.signal,
+					onProgress: send,
+				}
 				await runScraper(options)
 			} catch (err) {
 				if (!request.signal.aborted) {
@@ -30,11 +49,12 @@ export async function GET(request: Request) {
 						err instanceof Error ? err.message : String(err)
 					controller.enqueue(
 						encoder.encode(
-							`data: ${JSON.stringify({ type: "error", error: message })}\n\n`,
+							`data: ${JSON.stringify({ type: "source:error", source: "api", error: message })}\n\n`,
 						),
 					)
 				}
 			} finally {
+				clearInterval(heartbeat)
 				controller.close()
 			}
 		},

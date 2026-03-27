@@ -1,4 +1,4 @@
-import type { ScrapedRole } from "#types"
+import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 
 type JobicyJob = {
 	jobTitle?: string
@@ -14,9 +14,18 @@ type JobicyResponse = {
 	jobs?: JobicyJob[]
 }
 
-export async function scrape(): Promise<ScrapedRole[]> {
+export async function scrape(
+	options?: TSourceScrapeOptions,
+): Promise<ScrapedRole[]> {
+	const { onProgress } = options ?? {}
 	const seen = new Set<string>()
 	const results: ScrapedRole[] = []
+
+	onProgress?.({
+		type: "source:status",
+		source: "jobicy",
+		status: "Fetching jobs...",
+	})
 
 	const response = await fetch(
 		`https://jobicy.com/api/v2/remote-jobs?count=50&&geo=usa&industry=engineering`,
@@ -31,6 +40,12 @@ export async function scrape(): Promise<ScrapedRole[]> {
 
 	const data = (await response.json()) as JobicyResponse
 	const jobs = data.jobs ?? []
+
+	onProgress?.({
+		type: "source:status",
+		source: "jobicy",
+		status: `Parsing ${jobs.length} jobs...`,
+	})
 
 	for (const job of jobs) {
 		const url = job.url ?? null

@@ -1,4 +1,4 @@
-import type { ScrapedRole } from "#types"
+import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 
 type RemoteOkJob = {
 	position?: string
@@ -11,7 +11,17 @@ type RemoteOkJob = {
 	tags?: string[]
 }
 
-export async function scrape(): Promise<ScrapedRole[]> {
+export async function scrape(
+	options?: TSourceScrapeOptions,
+): Promise<ScrapedRole[]> {
+	const { onProgress } = options ?? {}
+
+	onProgress?.({
+		type: "source:status",
+		source: "remoteok",
+		status: "Calling API...",
+	})
+
 	const response = await fetch("https://remoteok.com/api", {
 		headers: { "User-Agent": "aja-scraper/1.0" },
 	})
@@ -24,6 +34,12 @@ export async function scrape(): Promise<ScrapedRole[]> {
 
 	// First element is metadata, skip it
 	const jobs = data.slice(1) as RemoteOkJob[]
+
+	onProgress?.({
+		type: "source:status",
+		source: "remoteok",
+		status: `Parsing ${jobs.length} jobs...`,
+	})
 
 	return jobs.map((job) => ({
 		title: job.position ?? "Untitled",

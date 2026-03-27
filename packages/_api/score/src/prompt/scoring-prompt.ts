@@ -102,7 +102,8 @@ Respond with ONLY valid JSON:
   "score": <number 0-100>,
   "positive": [<1-4 concise reasons this is a good match>],
   "negative": [<1-4 concise reasons this is a poor match or concerns>]
-}`
+}
+`
 
 	const roleDetails = [
 		`Title: ${role.title}`,

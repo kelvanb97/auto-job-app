@@ -1,14 +1,9 @@
-import { createMessage } from "@aja-integrations/anthropic/client"
-import type { TAnthropicModel } from "@aja-integrations/anthropic/client"
+import { createMessage } from "@aja-integrations/llm/client"
+import type { TLLMModel } from "@aja-integrations/llm/client"
 import { z } from "zod"
 
 const scoreResponseSchema = z.object({
 	score: z.number().min(0).max(100),
-	isTitleFit: z.boolean(),
-	isSeniorityAppropriate: z.boolean(),
-	doSkillsAlign: z.boolean(),
-	isLocationAcceptable: z.boolean(),
-	isSalaryAcceptable: z.boolean(),
 	positive: z.array(z.string()),
 	negative: z.array(z.string()),
 })
@@ -16,7 +11,7 @@ const scoreResponseSchema = z.object({
 export type TScoreResponse = z.infer<typeof scoreResponseSchema>
 
 export async function scoreRole(
-	model: TAnthropicModel,
+	model: TLLMModel,
 	system: string,
 	user: string,
 ): Promise<TScoreResponse> {

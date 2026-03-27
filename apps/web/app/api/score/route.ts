@@ -6,11 +6,27 @@ export async function GET(request: Request) {
 
 	const stream = new ReadableStream({
 		async start(controller) {
+			let lastActivity = "Initializing batch score..."
+
 			const send = (event: TScoreProgressEvent) => {
+				if (event.type === "score:progress") {
+					lastActivity = `Scoring "${event.title}" (${event.current}/${event.total})`
+				} else if (event.type === "score:start") {
+					lastActivity = `Starting score of ${event.total} roles...`
+				}
+
 				controller.enqueue(
 					encoder.encode(`data: ${JSON.stringify(event)}\n\n`),
 				)
 			}
+
+			const heartbeat = setInterval(() => {
+				send({
+					type: "heartbeat",
+					timestamp: new Date().toISOString(),
+					lastActivity,
+				})
+			}, 5000)
 
 			try {
 				await runBatchScore({
@@ -28,6 +44,7 @@ export async function GET(request: Request) {
 					)
 				}
 			} finally {
+				clearInterval(heartbeat)
 				controller.close()
 			}
 		},
