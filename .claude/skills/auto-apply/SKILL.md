@@ -147,20 +147,20 @@ Use `browser_snapshot` to understand the current page structure. This returns an
 
 ### Personal information
 
-Fill these fields using the user's profile data. Read the file `packages/_config/user/src/experience.ts` for the `USER_PROFILE` constant:
+Read `packages/_config/user/src/experience.ts` for the `USER_PROFILE` constant. Use its fields to fill:
 
-| Form field | Value |
-|-----------|-------|
-| First name | `Kelvan` |
-| Last name | `Brandt` |
-| Full name | `Kelvan Brandt` |
-| Email | `kelvanb97@gmail.com` |
-| Phone | `(206) 508-1205` |
-| LinkedIn | `https://www.linkedin.com/in/kelvan-brandt-4409a0156/` |
-| GitHub | `https://github.com/kelvanb97` |
-| Website / Portfolio | `https://www.kelvanbrandt.com/` |
-| Location | `United States` |
-| Current title | `Senior Software Engineer` |
+| Form field | Source |
+|-----------|--------|
+| First name | First word of `USER_PROFILE.name` |
+| Last name | Last word of `USER_PROFILE.name` |
+| Full name | `USER_PROFILE.name` |
+| Email | `USER_PROFILE.email` |
+| Phone | `USER_PROFILE.phone` |
+| LinkedIn | `USER_PROFILE.linkedIn` |
+| GitHub | `USER_PROFILE.github` |
+| Website / Portfolio | `USER_PROFILE.personalWebsite` |
+| Location | `USER_PROFILE.location` |
+| Current title | `USER_PROFILE.jobTitle` |
 
 ### File uploads
 
@@ -172,28 +172,30 @@ Some forms only have one upload field. In that case, upload the resume only.
 
 ### EEO / Demographic questions
 
-Read the file `packages/_config/user/src/eeo.ts` for the `EEO_CONFIG` constant. Fuzzy-match these values against the options the form presents:
+Read `packages/_config/user/src/eeo.ts` for the `EEO_CONFIG` constant. Fuzzy-match these values against the options the form presents:
 
-| Question | Config value |
-|----------|-------------|
-| Gender | `Male` |
-| Race / Ethnicity | `White` |
-| Veteran status | `I am not a protected veteran` |
-| Disability status | `No, I do not have a disability` |
+| Question | Source |
+|----------|--------|
+| Gender | `EEO_CONFIG.gender` |
+| Race / Ethnicity | `EEO_CONFIG.ethnicity` |
+| Veteran status | `EEO_CONFIG.veteranStatus` |
+| Disability status | `EEO_CONFIG.disabilityStatus` |
 
-If the config value is `null`, select "Decline to self-identify" or the equivalent option.
+If a config value is `null`, select "Decline to self-identify" or the equivalent option.
 
 ### Work authorization
 
-| Question | Answer |
+Read `packages/_config/user/src/eeo.ts` for work authorization fields:
+
+| Question | Source |
 |----------|--------|
-| Are you authorized to work in the US? | Yes |
-| Will you require visa sponsorship? | No |
-| Citizenship status | US Citizen |
+| Are you authorized to work in the US? | `EEO_CONFIG.workAuthorization` (if non-null → Yes) |
+| Will you require visa sponsorship? | `EEO_CONFIG.requiresVisaSponsorship` |
+| Citizenship status | `EEO_CONFIG.workAuthorization` |
 
 ### Salary expectations
 
-If the form asks for salary expectations, use `150000` - `200000` (from `USER_PROFILE.salaryMin` and `USER_PROFILE.salaryMax`).
+If the form asks for salary expectations, use `USER_PROFILE.salaryMin` and `USER_PROFILE.salaryMax` from `packages/_config/user/src/experience.ts`.
 
 ### Free-text questions
 
