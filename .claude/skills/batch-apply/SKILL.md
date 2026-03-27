@@ -164,7 +164,9 @@ Read `packages/_config/user/src/experience.ts` for the `USER_PROFILE` constant. 
 | Location | `USER_PROFILE.location` |
 | Current title | `USER_PROFILE.jobTitle` |
 
-For fields like current company or mailing address that aren't in `USER_PROFILE`, derive from work experience (most recent company in `USER_PROFILE.workExperience`) or defer if unknown.
+| Address / Mailing address | `PRIVATE_CONFIG.address` from `packages/_config/user/src/private.ts` |
+
+For fields like current company that aren't in `USER_PROFILE`, derive from work experience (most recent company in `USER_PROFILE.workExperience`) or defer if unknown.
 
 #### File uploads
 
@@ -199,19 +201,21 @@ Read `packages/_config/user/src/eeo.ts` for work authorization fields:
 
 #### Salary expectations
 
-Use `USER_PROFILE.salaryMin` and `USER_PROFILE.salaryMax` from `packages/_config/user/src/experience.ts`.
+If the form asks for a salary range, use `USER_PROFILE.salaryMin` and `USER_PROFILE.salaryMax`. If it asks for a single desired/expected salary, use `USER_PROFILE.desiredSalary`. All from `packages/_config/user/src/experience.ts`.
 
 #### Common text fields
 
+Read `FORM_DEFAULTS` from `packages/_config/user/src/experience.ts` for these values:
+
 | Question | Source |
 |----------|--------|
-| Date available for work | 2 weeks from today's date |
-| Employment type | Full-Time |
-| How did you hear about this role? | Online job board |
-| Referral / referred by employee? | No |
-| Non-compete agreement? | No |
-| Previously employed by company? | No |
-| Professional references | Available upon request |
+| Date available for work | Compute by adding `USER_PROFILE.startDateWeeksOut` weeks to today's date |
+| Employment type | `FORM_DEFAULTS.employmentType` |
+| How did you hear about this role? | `FORM_DEFAULTS.howDidYouHear` |
+| Referral / referred by employee? | `FORM_DEFAULTS.referredByEmployee` |
+| Non-compete agreement? | `FORM_DEFAULTS.nonCompeteAgreement` |
+| Previously employed by company? | `FORM_DEFAULTS.previouslyEmployed` |
+| Professional references | `FORM_DEFAULTS.professionalReferences` |
 | Education level | Derive from `USER_PROFILE.education[0].degree` |
 | Education | Derive from `USER_PROFILE.education` (degree, field, institution) |
 

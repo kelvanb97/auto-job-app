@@ -43,6 +43,8 @@ export type TUserProfile = {
 	preferredLocations: string[]
 	salaryMin: number
 	salaryMax: number
+	desiredSalary: number
+	startDateWeeksOut: number
 	industries: string[]
 	dealbreakers: string[]
 	notes: string
@@ -170,6 +172,8 @@ export const USER_PROFILE: TUserProfile = {
 	preferredLocations: [],
 	salaryMin: 150_000,
 	salaryMax: 200_000,
+	desiredSalary: 175_000,
+	startDateWeeksOut: 3,
 	industries: [],
 
 	dealbreakers: ["Java", "Java/Spring Boot"],
@@ -434,4 +438,22 @@ export const USER_PROFILE: TUserProfile = {
 			institution: "Western Washington University",
 		},
 	],
+}
+
+export type TFormDefaults = {
+	howDidYouHear: string
+	referredByEmployee: string
+	nonCompeteAgreement: string
+	previouslyEmployed: string
+	professionalReferences: string
+	employmentType: string
+}
+
+export const FORM_DEFAULTS: TFormDefaults = {
+	howDidYouHear: "My project https://github.com/kelvanb97/auto-job-app",
+	referredByEmployee: "No",
+	nonCompeteAgreement: "No",
+	previouslyEmployed: "No",
+	professionalReferences: "Available upon request.",
+	employmentType: "Full-Time",
 }

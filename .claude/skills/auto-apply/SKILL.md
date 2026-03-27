@@ -161,6 +161,7 @@ Read `packages/_config/user/src/experience.ts` for the `USER_PROFILE` constant. 
 | Website / Portfolio | `USER_PROFILE.personalWebsite` |
 | Location | `USER_PROFILE.location` |
 | Current title | `USER_PROFILE.jobTitle` |
+| Address / Mailing address | `PRIVATE_CONFIG.address` from `packages/_config/user/src/private.ts` |
 
 ### File uploads
 
@@ -195,7 +196,7 @@ Read `packages/_config/user/src/eeo.ts` for work authorization fields:
 
 ### Salary expectations
 
-If the form asks for salary expectations, use `USER_PROFILE.salaryMin` and `USER_PROFILE.salaryMax` from `packages/_config/user/src/experience.ts`.
+If the form asks for a salary range, use `USER_PROFILE.salaryMin` and `USER_PROFILE.salaryMax`. If it asks for a single desired/expected salary, use `USER_PROFILE.desiredSalary`. All from `packages/_config/user/src/experience.ts`.
 
 ### Free-text questions
 
@@ -207,7 +208,7 @@ For open-ended questions like "Why do you want to work here?" or "Tell us about 
 ### Questions not covered by config
 
 If you encounter a form field that you cannot answer from the profile or EEO config, ask the user. Common examples:
-- Start date availability
+- Start date availability — compute by adding `USER_PROFILE.startDateWeeksOut` weeks to today's date
 - How did you hear about this role?
 - Referral name
 - Anything role-specific or unusual
