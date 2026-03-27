@@ -5,7 +5,8 @@
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
-		"./*": "./src/*.ts"
+		"./*": "./src/*.ts",
+		"./private": "./src/private.ts"
 	},
 	"scripts": {
 		"check-types": "tsc --noEmit",

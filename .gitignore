@@ -22,3 +22,6 @@ data
 
 # superpowers
 .superpowers
+
+# private config (contains PII)
+packages/_config/user/src/private.ts
