@@ -1,5 +1,11 @@
 import { runScraper } from "./scraper"
 
+try {
+	process.loadEnvFile("../../.env")
+} catch {
+	// Ignore if .env file is missing (e.g. in Docker)
+}
+
 function getArg(flag: string): string | undefined {
 	const idx = process.argv.indexOf(flag)
 	return idx !== -1 ? process.argv[idx + 1] : undefined

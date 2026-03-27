@@ -1,5 +1,11 @@
 import { runScore } from "./score"
 
+try {
+	process.loadEnvFile("../../.env")
+} catch {
+	// Ignore if .env file is missing (e.g. in Docker)
+}
+
 async function main() {
 	console.log("Running score...")
 	const summary = await runScore()
