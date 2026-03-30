@@ -1,5 +1,6 @@
-import type { Database } from "@aja-app/supabase"
 import { z } from "zod"
+
+export type { TCompany, TNewCompany } from "@aja-app/drizzle"
 
 export const COMPANY_SIZES = [
 	"1-10",
@@ -28,23 +29,8 @@ export type TCompanyStage = (typeof COMPANY_STAGES)[number]
 
 export const companyStageSchema = z.enum(COMPANY_STAGES)
 
-export type TCompany = {
-	id: string
-	name: string
-	website: string | null
-	linkedinUrl: string | null
-	size: TCompanySize | null
-	stage: TCompanyStage | null
-	industry: string | null
-	notes: string | null
-	createdAt: string | null
-	updatedAt: string | null
-}
-
-export type TMarshalledCompany = Database["app"]["Tables"]["company"]["Row"]
-
 export const getCompanySchema = z.object({
-	id: z.string(),
+	id: z.number(),
 })
 
 export const listCompaniesSchema = z.object({
@@ -71,7 +57,7 @@ export const createCompanySchema = z.object({
 export type TCreateCompany = z.infer<typeof createCompanySchema>
 
 export const updateCompanySchema = z.object({
-	id: z.string(),
+	id: z.number(),
 	name: z.string().min(1).optional(),
 	website: z.string().nullable().optional(),
 	linkedinUrl: z.string().nullable().optional(),
@@ -84,5 +70,5 @@ export const updateCompanySchema = z.object({
 export type TUpdateCompany = z.infer<typeof updateCompanySchema>
 
 export const deleteCompanySchema = z.object({
-	id: z.string(),
+	id: z.number(),
 })
