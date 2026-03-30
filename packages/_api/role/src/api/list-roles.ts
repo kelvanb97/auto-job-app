@@ -1,65 +1,87 @@
-import type { Database } from "@aja-app/supabase"
+import { company, role, score } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalRole } from "#schema/role-marshallers"
 import type { TListRoles, TRole } from "#schema/role-schema"
+import type { SQL } from "drizzle-orm"
+import {
+	and,
+	asc,
+	desc,
+	eq,
+	getTableColumns,
+	gte,
+	like,
+	lte,
+} from "drizzle-orm"
 
-export async function listRoles(
+export function listRoles(
 	input: TListRoles,
-): Promise<TResult<{ roles: TRole[]; hasNext: boolean }>> {
-	const supabase = supabaseAdminClient<Database>()
-	const sortByScore = input.sortBy === "score"
-	const ascending = (input.sortOrder ?? "desc") === "asc"
-	const needsCompanyJoin = !!input.search
-	const needsScoreJoin =
-		input.scoreMin !== undefined ||
-		input.scoreMax !== undefined ||
-		sortByScore
+): TResult<{ roles: TRole[]; hasNext: boolean }> {
+	try {
+		const sortByScore = input.sortBy === "score"
+		const ascending = (input.sortOrder ?? "desc") === "asc"
+		const needsCompanyJoin = !!input.search
+		const needsScoreJoin =
+			input.scoreMin !== undefined ||
+			input.scoreMax !== undefined ||
+			sortByScore
 
-	const start = (input.page - 1) * input.pageSize
-	const end = start + input.pageSize
+		const conditions: SQL[] = []
 
-	let query = supabase
-		.schema("app")
-		.from("role")
-		.select("*, score!inner(score), company!inner(name)")
+		if (input.status) conditions.push(eq(role.status, input.status))
+		if (input.locationType)
+			conditions.push(eq(role.locationType, input.locationType))
+		if (input.source) conditions.push(eq(role.source, input.source))
+		if (input.companyId)
+			conditions.push(eq(role.companyId, input.companyId))
+		if (input.search)
+			conditions.push(like(company.name, `%${input.search}%`))
+		if (needsScoreJoin && input.scoreMin !== undefined)
+			conditions.push(gte(score.score, input.scoreMin))
+		if (needsScoreJoin && input.scoreMax !== undefined)
+			conditions.push(lte(score.score, input.scoreMax))
 
-	if (needsScoreJoin && needsCompanyJoin) {
-		query = query.select("*, score!inner(score), company!inner(name)")
-	} else if (needsScoreJoin) {
-		query = query.select("*, score!inner(score)")
-	} else if (needsCompanyJoin) {
-		query = query.select("*, company!inner(name)")
-	}
+		const whereClause =
+			conditions.length > 0 ? and(...conditions) : undefined
 
-	if (needsScoreJoin) {
-		if (input.scoreMin !== undefined) {
-			query = query.gte("score.score", input.scoreMin)
+		const orderByDirection = ascending ? asc : desc
+		const orderByClause = sortByScore
+			? orderByDirection(score.score)
+			: orderByDirection(
+					role[
+						(input.sortBy ?? "created_at") === "created_at"
+							? "createdAt"
+							: (input.sortBy ?? "created_at") === "posted_at"
+								? "postedAt"
+								: (input.sortBy as "title" | "status")
+					],
+				)
+
+		let query = db()
+			.select({ ...getTableColumns(role) })
+			.from(role)
+			.$dynamic()
+
+		if (needsScoreJoin) {
+			query = query.innerJoin(score, eq(role.id, score.roleId))
 		}
-		if (input.scoreMax !== undefined) {
-			query = query.lte("score.score", input.scoreMax)
+		if (needsCompanyJoin) {
+			query = query.innerJoin(company, eq(role.companyId, company.id))
 		}
+
+		const results = query
+			.where(whereClause)
+			.orderBy(orderByClause, asc(role.id))
+			.limit(input.pageSize + 1)
+			.offset((input.page - 1) * input.pageSize)
+			.all()
+
+		const hasNext = results.length > input.pageSize
+		const roles = results.slice(0, input.pageSize)
+		return ok({ roles, hasNext })
+	} catch (e) {
+		return errFrom(
+			`Error listing roles: ${e instanceof Error ? e.message : String(e)}`,
+		)
 	}
-
-	if (input.search) query = query.ilike("company.name", `%${input.search}%`)
-	if (input.companyId) query = query.eq("company_id", input.companyId)
-	if (input.status) query = query.eq("status", input.status)
-	if (input.locationType)
-		query = query.eq("location_type", input.locationType)
-	if (input.source) query = query.eq("source", input.source)
-
-	if (sortByScore) {
-		query = query.order("score(score)", { ascending })
-	} else {
-		query = query.order(input.sortBy ?? "created_at", { ascending })
-	}
-
-	const { data, error } = await query.order("id").range(start, end)
-
-	if (error) return errFrom(`Error listing roles: ${error.message}`)
-
-	const rows = data
-	const hasNext = rows.length > input.pageSize
-	const roles = rows.slice(0, input.pageSize).map(unmarshalRole)
-	return ok({ roles, hasNext })
 }

@@ -1,38 +1,29 @@
-import type { Database } from "@aja-app/supabase"
+import { role, score } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalRole } from "#schema/role-marshallers"
 import type { TRole } from "#schema/role-schema"
-
-const POSTGREST_NO_ROWS = "PGRST116"
+import { desc, eq, getTableColumns } from "drizzle-orm"
 
 export type TRoleWithScore = TRole & { score: number }
 
-export async function getTopUnappliedRole(): Promise<
-	TResult<TRoleWithScore | null>
-> {
-	const supabase = supabaseAdminClient<Database>()
+export function getTopUnappliedRole(): TResult<TRoleWithScore | null> {
+	try {
+		const result = db()
+			.select({ ...getTableColumns(role), scoreValue: score.score })
+			.from(role)
+			.innerJoin(score, eq(role.id, score.roleId))
+			.where(eq(role.status, "pending"))
+			.orderBy(desc(score.score))
+			.limit(1)
+			.get()
 
-	const { data, error } = await supabase
-		.schema("app")
-		.from("role")
-		.select("*, score(score)")
-		.eq("status", "pending")
-		.not("score", "is", null)
-		.order("score(score)", { ascending: false })
-		.limit(1)
-		.single()
+		if (!result) return ok(null)
 
-	if (error) {
-		if (error.code === POSTGREST_NO_ROWS) return ok(null)
-		return errFrom(`Error fetching top unapplied role: ${error.message}`)
+		const { scoreValue, ...roleFields } = result
+		return ok({ ...roleFields, score: scoreValue })
+	} catch (e) {
+		return errFrom(
+			`Error fetching top unapplied role: ${e instanceof Error ? e.message : String(e)}`,
+		)
 	}
-
-	const { score, ...roleRow } = data
-	if (score == null) return ok(null)
-
-	return ok({
-		...unmarshalRole(roleRow),
-		score: score.score,
-	})
 }

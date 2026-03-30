@@ -1,21 +1,21 @@
-import type { Database } from "@aja-app/supabase"
+import { role } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
+import { inArray } from "drizzle-orm"
 
-export async function listRoleUrls(urls: string[]): Promise<TResult<string[]>> {
-	const supabase = supabaseAdminClient<Database>()
-
-	const { data, error } = await supabase
-		.schema("app")
-		.from("role")
-		.select("url")
-		.in("url", urls)
-
-	if (error) return errFrom(`Error listing role URLs: ${error.message}`)
-
-	const existing = data
-		.map((r) => r.url)
-		.filter((url): url is string => url !== null)
-
-	return ok(existing)
+export function listRoleUrls(urls: string[]): TResult<string[]> {
+	try {
+		const results = db()
+			.select({ url: role.url })
+			.from(role)
+			.where(inArray(role.url, urls))
+			.all()
+		return ok(
+			results.map((r) => r.url).filter((u): u is string => u !== null),
+		)
+	} catch (e) {
+		return errFrom(
+			`Error listing role URLs: ${e instanceof Error ? e.message : String(e)}`,
+		)
+	}
 }
