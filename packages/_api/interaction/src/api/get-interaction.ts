@@ -1,22 +1,21 @@
-import type { Database } from "@aja-app/supabase"
+import { interaction } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalInteraction } from "#schema/interaction-marshallers"
 import type { TInteraction } from "#schema/interaction-schema"
+import { eq } from "drizzle-orm"
 
-export async function getInteraction(
-	id: string,
-): Promise<TResult<TInteraction>> {
-	const supabase = supabaseAdminClient<Database>()
-
-	const { data, error } = await supabase
-		.schema("app")
-		.from("interaction")
-		.select()
-		.eq("id", id)
-		.single()
-
-	if (error) return errFrom(`Error fetching interaction: ${error.message}`)
-
-	return ok(unmarshalInteraction(data))
+export function getInteraction(id: number): TResult<TInteraction> {
+	try {
+		const row = db()
+			.select()
+			.from(interaction)
+			.where(eq(interaction.id, id))
+			.get()
+		if (!row) return errFrom(`Interaction not found: ${id}`)
+		return ok(row)
+	} catch (e) {
+		return errFrom(
+			`Error fetching interaction: ${e instanceof Error ? e.message : String(e)}`,
+		)
+	}
 }
