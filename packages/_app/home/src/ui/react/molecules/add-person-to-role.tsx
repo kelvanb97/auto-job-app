@@ -26,7 +26,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 const RELATIONSHIP_SUGGESTIONS = [...ROLE_PERSON_RELATIONSHIPS]
 
 interface IAddPersonToRoleProps {
-	roleId: string
+	roleId: number
 	onPersonLinked: () => void
 }
 

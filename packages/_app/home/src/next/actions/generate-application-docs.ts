@@ -32,7 +32,7 @@ function sanitize(text: string): string {
 }
 
 const generateApplicationDocsSchema = z.object({
-	roleId: z.string(),
+	roleId: z.number(),
 })
 
 export const generateApplicationDocsAction = actionClient
@@ -41,17 +41,15 @@ export const generateApplicationDocsAction = actionClient
 		const { roleId } = parsedInput
 
 		// Fetch role
-		const roleResult = await getRole(roleId)
+		const roleResult = getRole(roleId)
 		if (!roleResult.ok)
 			throw new SafeForClientError(roleResult.error.message)
 		const role = roleResult.data
 
 		// Fetch company
-		const company = role.companyId
-			? await getCompany(role.companyId).then((r) =>
-					r.ok ? r.data : null,
-				)
-			: null
+		const companyResult = role.companyId ? getCompany(role.companyId) : null
+		const company =
+			companyResult && companyResult.ok ? companyResult.data : null
 		const companyName = company?.name ?? "Unknown Company"
 
 		// Extract keywords
@@ -139,8 +137,8 @@ export const generateApplicationDocsAction = actionClient
 			throw new SafeForClientError(coverLetterUpload.error.message)
 
 		// Get or create application and update with paths
-		const application = await getOrCreateApplication(roleId)
-		const updateResult = await updateApplication({
+		const application = getOrCreateApplication(roleId)
+		const updateResult = updateApplication({
 			id: application.id,
 			resumePath,
 			coverLetterPath,

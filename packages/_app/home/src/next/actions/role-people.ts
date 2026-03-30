@@ -10,22 +10,20 @@ import { actionClient, SafeForClientError } from "@aja-core/next-safe-action"
 import { z } from "zod"
 
 export const listRolePeopleAction = actionClient
-	.inputSchema(z.object({ roleId: z.string() }))
+	.inputSchema(z.object({ roleId: z.number() }))
 	.action(async ({ parsedInput }) => {
-		const result = await listPersonsByRole(parsedInput.roleId)
+		const result = listPersonsByRole(parsedInput.roleId)
 		if (!result.ok) {
 			throw new SafeForClientError(result.error.message)
 		}
 
-		const people = await Promise.all(
-			result.data.map(async (rp) => {
-				const personResult = await getPerson(rp.personId)
-				if (!personResult.ok) {
-					throw new SafeForClientError(personResult.error.message)
-				}
-				return { rolePerson: rp, person: personResult.data }
-			}),
-		)
+		const people = result.data.map((rp) => {
+			const personResult = getPerson(rp.personId)
+			if (!personResult.ok) {
+				throw new SafeForClientError(personResult.error.message)
+			}
+			return { rolePerson: rp, person: personResult.data }
+		})
 
 		return people
 	})
@@ -33,13 +31,13 @@ export const listRolePeopleAction = actionClient
 export const linkPersonToRoleAction = actionClient
 	.inputSchema(
 		z.object({
-			roleId: z.string(),
-			personId: z.string(),
+			roleId: z.number(),
+			personId: z.number(),
 			relationship: z.string().nullable().optional(),
 		}),
 	)
 	.action(async ({ parsedInput }) => {
-		const result = await linkRolePerson(parsedInput)
+		const result = linkRolePerson(parsedInput)
 		if (!result.ok) {
 			throw new SafeForClientError(result.error.message)
 		}
@@ -47,9 +45,9 @@ export const linkPersonToRoleAction = actionClient
 	})
 
 export const unlinkPersonFromRoleAction = actionClient
-	.inputSchema(z.object({ roleId: z.string(), personId: z.string() }))
+	.inputSchema(z.object({ roleId: z.number(), personId: z.number() }))
 	.action(async ({ parsedInput }) => {
-		const result = await unlinkRolePerson(
+		const result = unlinkRolePerson(
 			parsedInput.roleId,
 			parsedInput.personId,
 		)
@@ -62,7 +60,7 @@ export const unlinkPersonFromRoleAction = actionClient
 export const searchPersonsAction = actionClient
 	.inputSchema(z.object({ search: z.string() }))
 	.action(async ({ parsedInput }) => {
-		const result = await listPersons({
+		const result = listPersons({
 			search: parsedInput.search,
 			page: 1,
 			pageSize: 10,
@@ -76,7 +74,7 @@ export const searchPersonsAction = actionClient
 export const createAndLinkPersonAction = actionClient
 	.inputSchema(
 		z.object({
-			roleId: z.string(),
+			roleId: z.number(),
 			name: z.string().min(1),
 			email: z.string().nullable().optional(),
 			title: z.string().nullable().optional(),
@@ -86,7 +84,7 @@ export const createAndLinkPersonAction = actionClient
 		}),
 	)
 	.action(async ({ parsedInput }) => {
-		const personResult = await createPerson({
+		const personResult = createPerson({
 			name: parsedInput.name,
 			email: parsedInput.email,
 			title: parsedInput.title,
@@ -97,7 +95,7 @@ export const createAndLinkPersonAction = actionClient
 			throw new SafeForClientError(personResult.error.message)
 		}
 
-		const linkResult = await linkRolePerson({
+		const linkResult = linkRolePerson({
 			roleId: parsedInput.roleId,
 			personId: personResult.data.id,
 			relationship: parsedInput.relationship,

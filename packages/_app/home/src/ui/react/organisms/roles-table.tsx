@@ -11,13 +11,13 @@ import { RolesTableRow } from "#molecules/roles-table-row"
 
 interface IRolesTableProps {
 	roles: TRole[]
-	companiesMap: Map<string, string>
-	scoresMap: Map<string, number>
-	onStatusChange: (roleId: string, status: TRoleStatus) => void
+	companiesMap: Map<number, string>
+	scoresMap: Map<number, number>
+	onStatusChange: (roleId: number, status: TRoleStatus) => void
 	onRowClick: (role: TRole) => void
 	sentinelRef: React.RefCallback<HTMLDivElement>
 	isLoadingMore: boolean
-	statusDisabledId: string | null
+	statusDisabledId: number | null
 }
 
 export function RolesTable({

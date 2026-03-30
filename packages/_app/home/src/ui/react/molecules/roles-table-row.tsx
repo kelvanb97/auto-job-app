@@ -12,9 +12,9 @@ function formatSalary(min: number | null, max: number | null): string {
 	return `Up to ${fmt(max!)}`
 }
 
-function formatDate(dateStr: string | null): string {
-	if (!dateStr) return "—"
-	return new Date(dateStr).toLocaleDateString("en-US", {
+function formatDate(date: Date | null): string {
+	if (!date) return "—"
+	return date.toLocaleDateString("en-US", {
 		month: "short",
 		day: "numeric",
 	})
@@ -38,7 +38,7 @@ interface IRolesTableRowProps {
 	role: TRole
 	companyName: string | null
 	score: number | null
-	onStatusChange: (roleId: string, status: TRoleStatus) => void
+	onStatusChange: (roleId: number, status: TRoleStatus) => void
 	onClick: () => void
 	statusDisabled?: boolean
 }
@@ -66,7 +66,7 @@ export function RolesTableRow({
 			<TableCell>{companyName ?? "—"}</TableCell>
 			<TableCell>
 				<RoleStatusSelect
-					value={role.status}
+					value={role.status as TRoleStatus}
 					onValueChange={(status) => onStatusChange(role.id, status)}
 					disabled={statusDisabled}
 				/>
