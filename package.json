@@ -24,6 +24,12 @@
 	"dependencies": {
 		"husky": "9.1.7"
 	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"better-sqlite3",
+			"esbuild"
+		]
+	},
 	"devDependencies": {
 		"@commitlint/cli": "20.4.4",
 		"@commitlint/config-conventional": "20.4.4",
