@@ -27,11 +27,13 @@ import { useState } from "react"
 interface IScraperConfigCardProps {
 	profileId: number
 	scraper: TScraperConfig | null
+	onSaved: () => void
 }
 
 export function ScraperConfigCard({
 	profileId,
 	scraper,
+	onSaved,
 }: IScraperConfigCardProps) {
 	const [relevantKeywords, setRelevantKeywords] = useState<string[]>(
 		scraper?.relevantKeywords ?? [],
@@ -47,7 +49,10 @@ export function ScraperConfigCard({
 	)
 
 	const { execute, result, status } = useAction(updateScraperConfigAction, {
-		onSuccess: () => toast.success("Saved!"),
+		onSuccess: () => {
+			toast.success("Saved!")
+			onSaved()
+		},
 	})
 	const error = useActionError(result)
 	useToastOnError(error, status)

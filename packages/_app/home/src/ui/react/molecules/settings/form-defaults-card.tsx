@@ -28,11 +28,13 @@ import { useState } from "react"
 interface IFormDefaultsCardProps {
 	profileId: number
 	formDefaults: TFormDefaults | null
+	onSaved: () => void
 }
 
 export function FormDefaultsCard({
 	profileId,
 	formDefaults,
+	onSaved,
 }: IFormDefaultsCardProps) {
 	const [howDidYouHear, setHowDidYouHear] = useState(
 		formDefaults?.howDidYouHear ?? "",
@@ -54,7 +56,10 @@ export function FormDefaultsCard({
 	)
 
 	const { execute, result, status } = useAction(updateFormDefaultsAction, {
-		onSuccess: () => toast.success("Saved!"),
+		onSuccess: () => {
+			toast.success("Saved!")
+			onSaved()
+		},
 	})
 	const error = useActionError(result)
 	useToastOnError(error, status)

@@ -28,9 +28,10 @@ import { useState } from "react"
 interface IEeoCardProps {
 	profileId: number
 	eeo: TEeoConfig | null
+	onSaved: () => void
 }
 
-export function EeoCard({ profileId, eeo }: IEeoCardProps) {
+export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 	const [gender, setGender] = useState(eeo?.gender ?? "")
 	const [ethnicity, setEthnicity] = useState(eeo?.ethnicity ?? "")
 	const [veteranStatus, setVeteranStatus] = useState(eeo?.veteranStatus ?? "")
@@ -45,7 +46,10 @@ export function EeoCard({ profileId, eeo }: IEeoCardProps) {
 	)
 
 	const { execute, result, status } = useAction(updateEeoAction, {
-		onSuccess: () => toast.success("Saved!"),
+		onSuccess: () => {
+			toast.success("Saved!")
+			onSaved()
+		},
 	})
 	const error = useActionError(result)
 	useToastOnError(error, status)

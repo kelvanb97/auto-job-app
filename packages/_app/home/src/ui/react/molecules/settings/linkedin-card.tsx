@@ -28,9 +28,14 @@ import { useState } from "react"
 interface ILinkedinCardProps {
 	profileId: number
 	scraper: TScraperConfig | null
+	onSaved: () => void
 }
 
-export function LinkedInCard({ profileId, scraper }: ILinkedinCardProps) {
+export function LinkedInCard({
+	profileId,
+	scraper,
+	onSaved,
+}: ILinkedinCardProps) {
 	const [linkedinUrls, setLinkedinUrls] = useState<string[]>(
 		scraper?.linkedinUrls ?? [],
 	)
@@ -42,7 +47,10 @@ export function LinkedInCard({ profileId, scraper }: ILinkedinCardProps) {
 	)
 
 	const { execute, result, status } = useAction(updateScraperConfigAction, {
-		onSuccess: () => toast.success("Saved!"),
+		onSuccess: () => {
+			toast.success("Saved!")
+			onSaved()
+		},
 	})
 	const error = useActionError(result)
 	useToastOnError(error, status)

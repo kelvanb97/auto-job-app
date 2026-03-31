@@ -1,5 +1,6 @@
 export {
 	BarChart3,
+	Braces,
 	Briefcase,
 	FileText,
 	Globe,

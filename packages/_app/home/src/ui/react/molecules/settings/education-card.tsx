@@ -40,6 +40,7 @@ interface IEducationEntry {
 interface IEducationCardProps {
 	profileId: number
 	education: IEducationEntry[]
+	onSaved: () => void
 }
 
 interface IEducationForm {
@@ -55,7 +56,11 @@ const EMPTY_FORM: IEducationForm = {
 	institution: "",
 }
 
-export function EducationCard({ profileId, education }: IEducationCardProps) {
+export function EducationCard({
+	profileId,
+	education,
+	onSaved,
+}: IEducationCardProps) {
 	const [entries, setEntries] = useState<IEducationEntry[]>(education)
 	const [editingId, setEditingId] = useState<number | null>(null)
 	const [isAdding, setIsAdding] = useState(false)
@@ -80,6 +85,7 @@ export function EducationCard({ profileId, education }: IEducationCardProps) {
 					toast.success("Education added!")
 				}
 				setForm(EMPTY_FORM)
+				onSaved()
 			}
 		},
 	})
@@ -94,6 +100,7 @@ export function EducationCard({ profileId, education }: IEducationCardProps) {
 	} = useAction(deleteEducationAction, {
 		onSuccess: () => {
 			toast.success("Education deleted!")
+			onSaved()
 		},
 	})
 	const deleteError = useActionError(deleteResult)

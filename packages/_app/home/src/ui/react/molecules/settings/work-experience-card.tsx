@@ -60,6 +60,7 @@ interface IWorkExperienceEntry {
 interface IWorkExperienceCardProps {
 	profileId: number
 	workExperience: IWorkExperienceEntry[]
+	onSaved: () => void
 }
 
 const TYPE_OPTIONS = [
@@ -84,6 +85,7 @@ const EMPTY_FORM = {
 export function WorkExperienceCard({
 	profileId,
 	workExperience,
+	onSaved,
 }: IWorkExperienceCardProps) {
 	const [entries, setEntries] =
 		useState<IWorkExperienceEntry[]>(workExperience)
@@ -136,6 +138,7 @@ export function WorkExperienceCard({
 					setEntries((prev) => [...prev, data])
 				}
 				closeDialog()
+				onSaved()
 			}
 		},
 	})
@@ -153,6 +156,7 @@ export function WorkExperienceCard({
 			if (data) {
 				toast.success("Work experience deleted!")
 				setEntries((prev) => prev.filter((e) => e.id !== data.id))
+				onSaved()
 			}
 		},
 	})

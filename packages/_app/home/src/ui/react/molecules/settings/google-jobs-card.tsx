@@ -29,9 +29,14 @@ import { useState } from "react"
 interface IGoogleJobsCardProps {
 	profileId: number
 	scraper: TScraperConfig | null
+	onSaved: () => void
 }
 
-export function GoogleJobsCard({ profileId, scraper }: IGoogleJobsCardProps) {
+export function GoogleJobsCard({
+	profileId,
+	scraper,
+	onSaved,
+}: IGoogleJobsCardProps) {
 	const [googleTitles, setGoogleTitles] = useState<string[]>(
 		scraper?.googleTitles ?? [],
 	)
@@ -49,7 +54,10 @@ export function GoogleJobsCard({ profileId, scraper }: IGoogleJobsCardProps) {
 	)
 
 	const { execute, result, status } = useAction(updateScraperConfigAction, {
-		onSuccess: () => toast.success("Saved!"),
+		onSuccess: () => {
+			toast.success("Saved!")
+			onSaved()
+		},
 	})
 	const error = useActionError(result)
 	useToastOnError(error, status)

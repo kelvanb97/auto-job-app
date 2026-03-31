@@ -41,53 +41,61 @@ const SENIORITY_OPTIONS = [
 ]
 
 interface IProfileCardProps {
-	profile: TUserProfileFull
+	profile: TUserProfileFull | null
+	onSaved: () => void
 }
 
-export function ProfileCard({ profile }: IProfileCardProps) {
-	const [name, setName] = useState(profile.name)
-	const [email, setEmail] = useState(profile.email)
-	const [phone, setPhone] = useState(profile.phone)
-	const [linkedin, setLinkedin] = useState(profile.linkedin)
-	const [github, setGithub] = useState(profile.github)
+export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
+	const [name, setName] = useState(profile?.name ?? "")
+	const [email, setEmail] = useState(profile?.email ?? "")
+	const [phone, setPhone] = useState(profile?.phone ?? "")
+	const [linkedin, setLinkedin] = useState(profile?.linkedin ?? "")
+	const [github, setGithub] = useState(profile?.github ?? "")
 	const [personalWebsite, setPersonalWebsite] = useState(
-		profile.personalWebsite,
+		profile?.personalWebsite ?? "",
 	)
-	const [location, setLocation] = useState(profile.location)
-	const [address, setAddress] = useState(profile.address)
-	const [jobTitle, setJobTitle] = useState(profile.jobTitle)
+	const [location, setLocation] = useState(profile?.location ?? "")
+	const [address, setAddress] = useState(profile?.address ?? "")
+	const [jobTitle, setJobTitle] = useState(profile?.jobTitle ?? "")
 	const [seniority, setSeniority] = useState<TSeniority>(
-		profile.seniority as TSeniority,
+		(profile?.seniority as TSeniority) ?? "mid",
 	)
 	const [yearsOfExperience, setYearsOfExperience] = useState(
-		profile.yearsOfExperience,
+		profile?.yearsOfExperience ?? 0,
 	)
-	const [summary, setSummary] = useState(profile.summary)
-	const [notes, setNotes] = useState(profile.notes)
-	const [skills, setSkills] = useState(profile.skills)
+	const [summary, setSummary] = useState(profile?.summary ?? "")
+	const [notes, setNotes] = useState(profile?.notes ?? "")
+	const [skills, setSkills] = useState(profile?.skills ?? [])
 	const [preferredSkills, setPreferredSkills] = useState(
-		profile.preferredSkills,
+		profile?.preferredSkills ?? [],
 	)
 	const [domainExpertise, setDomainExpertise] = useState(
-		profile.domainExpertise,
+		profile?.domainExpertise ?? [],
 	)
 	const [preferredLocationTypes, setPreferredLocationTypes] = useState(
-		profile.preferredLocationTypes,
+		profile?.preferredLocationTypes ?? [],
 	)
 	const [preferredLocations, setPreferredLocations] = useState(
-		profile.preferredLocations,
+		profile?.preferredLocations ?? [],
 	)
-	const [salaryMin, setSalaryMin] = useState(profile.salaryMin)
-	const [salaryMax, setSalaryMax] = useState(profile.salaryMax)
-	const [desiredSalary, setDesiredSalary] = useState(profile.desiredSalary)
+	const [salaryMin, setSalaryMin] = useState(profile?.salaryMin ?? 0)
+	const [salaryMax, setSalaryMax] = useState(profile?.salaryMax ?? 0)
+	const [desiredSalary, setDesiredSalary] = useState(
+		profile?.desiredSalary ?? 0,
+	)
 	const [startDateWeeksOut, setStartDateWeeksOut] = useState(
-		profile.startDateWeeksOut,
+		profile?.startDateWeeksOut ?? 2,
 	)
-	const [industries, setIndustries] = useState(profile.industries)
-	const [dealbreakers, setDealbreakers] = useState(profile.dealbreakers)
+	const [industries, setIndustries] = useState(profile?.industries ?? [])
+	const [dealbreakers, setDealbreakers] = useState(
+		profile?.dealbreakers ?? [],
+	)
 
 	const { execute, result, status } = useAction(updateProfileAction, {
-		onSuccess: () => toast.success("Profile saved!"),
+		onSuccess: () => {
+			toast.success("Profile saved!")
+			onSaved()
+		},
 	})
 	const error = useActionError(result)
 	useToastOnError(error, status)
@@ -95,7 +103,7 @@ export function ProfileCard({ profile }: IProfileCardProps) {
 
 	const handleSave = () => {
 		execute({
-			id: profile.id,
+			id: profile?.id,
 			name,
 			email,
 			phone,

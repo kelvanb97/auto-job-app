@@ -31,14 +31,13 @@ All apps load env from the root `.env` file. See `.env.example` for available va
 
 ## Architecture
 
-Turborepo monorepo with pnpm workspaces. Six package layers:
+Turborepo monorepo with pnpm workspaces. Five package layers:
 
 | Layer                     | Scope                 | Purpose                                                 |
 | ------------------------- | --------------------- | ------------------------------------------------------- |
 | `apps/`                   | —                     | Deployable applications (web)                           |
 | `packages/_api/`          | `@rja-api/*`          | Entity CRUD operations against SQLite via Drizzle       |
 | `packages/_app/`          | `@rja-app/*`          | Feature modules (React components, server actions)      |
-| `packages/_config/`       | `@rja-config/*`       | Legacy user config (being replaced by `@rja-api/settings`) |
 | `packages/_core/`         | `@rja-core/*`         | Shared utilities and config                             |
 | `packages/_design/`       | `@rja-design/*`       | Component library (Radix UI + Tailwind)                 |
 | `packages/_integrations/` | `@rja-integrations/*` | Third-party SDK wrappers (Anthropic, Patchright)        |
@@ -148,7 +147,7 @@ The next `pnpm dev` applies pending migrations automatically. CLI fallback: `pnp
 
 ### User Settings
 
-User configuration (profile, work experience, education, EEO, form defaults, scoring weights, scraper config) is stored in the database via `@rja-api/settings`. The settings page at `/settings` provides a UI for editing all values. For first-time setup, run `pnpm --filter @rja-app/drizzle seed` to populate the database from the legacy config files.
+User configuration (profile, work experience, education, EEO, form defaults, scoring weights, scraper config) is stored in the database via `@rja-api/settings`. The settings page at `/settings` provides a UI for editing all values.
 
 ## Documentation
 

@@ -2,6 +2,7 @@
 
 import { deleteEducation } from "@rja-api/settings/api/delete-education"
 import { deleteWorkExperience } from "@rja-api/settings/api/delete-work-experience"
+import { getUserProfile } from "@rja-api/settings/api/get-user-profile"
 import { upsertEducation } from "@rja-api/settings/api/upsert-education"
 import { upsertEeoConfig } from "@rja-api/settings/api/upsert-eeo-config"
 import { upsertFormDefaults } from "@rja-api/settings/api/upsert-form-defaults"
@@ -21,6 +22,7 @@ import {
 	upsertWorkExperienceSchema,
 } from "@rja-api/settings/schema/user-profile-schema"
 import { actionClient, SafeForClientError } from "@rja-core/next-safe-action"
+import { z } from "zod"
 
 export const updateProfileAction = actionClient
 	.inputSchema(upsertUserProfileSchema)
@@ -92,4 +94,97 @@ export const updateScraperConfigAction = actionClient
 		const result = upsertScraperConfig(parsedInput)
 		if (!result.ok) throw new SafeForClientError(result.error.message)
 		return result.data
+	})
+
+export const saveAllSettingsAction = actionClient
+	.inputSchema(z.object({ json: z.string() }))
+	.action(async ({ parsedInput }) => {
+		const data = JSON.parse(parsedInput.json)
+
+		// Profile
+		const profileResult = upsertUserProfile(data.profile)
+		if (!profileResult.ok)
+			throw new SafeForClientError(profileResult.error.message)
+		const profileId = profileResult.data.id
+
+		// Work experience: delete existing, re-insert from JSON
+		const existing = getUserProfile()
+		if (existing.ok) {
+			for (const exp of existing.data.workExperience) {
+				deleteWorkExperience(exp.id)
+			}
+			for (const edu of existing.data.education) {
+				deleteEducation(edu.id)
+			}
+		}
+
+		for (let i = 0; i < (data.workExperience ?? []).length; i++) {
+			const exp = data.workExperience[i]
+			const result = upsertWorkExperience({
+				userProfileId: profileId,
+				sortOrder: i,
+				company: exp.company,
+				title: exp.title,
+				startDate: exp.startDate,
+				endDate: exp.endDate,
+				type: exp.type,
+				platforms: exp.platforms ?? [],
+				techStack: exp.techStack ?? [],
+				summary: exp.summary ?? "",
+				highlights: exp.highlights ?? [],
+			})
+			if (!result.ok)
+				throw new SafeForClientError(result.error.message)
+		}
+
+		for (let i = 0; i < (data.education ?? []).length; i++) {
+			const edu = data.education[i]
+			const result = upsertEducation({
+				userProfileId: profileId,
+				sortOrder: i,
+				degree: edu.degree,
+				field: edu.field,
+				institution: edu.institution,
+			})
+			if (!result.ok)
+				throw new SafeForClientError(result.error.message)
+		}
+
+		if (data.eeo) {
+			const result = upsertEeoConfig({
+				userProfileId: profileId,
+				...data.eeo,
+			})
+			if (!result.ok)
+				throw new SafeForClientError(result.error.message)
+		}
+
+		if (data.formDefaults) {
+			const result = upsertFormDefaults({
+				userProfileId: profileId,
+				...data.formDefaults,
+			})
+			if (!result.ok)
+				throw new SafeForClientError(result.error.message)
+		}
+
+		if (data.scoring) {
+			const result = upsertScoringConfig({
+				userProfileId: profileId,
+				...data.scoring,
+			})
+			if (!result.ok)
+				throw new SafeForClientError(result.error.message)
+		}
+
+		if (data.scraper) {
+			const result = upsertScraperConfig({
+				userProfileId: profileId,
+				...data.scraper,
+			})
+			if (!result.ok)
+				throw new SafeForClientError(result.error.message)
+		}
+
+		return { ok: true }
 	})
