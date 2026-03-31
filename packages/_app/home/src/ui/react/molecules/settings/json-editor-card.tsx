@@ -248,6 +248,8 @@ export function JsonEditorCard(props: IJsonEditorCardProps) {
 						.jse-num { color: #b5cea8; }
 						.jse-bool { color: #569cd6; }
 						.jse-punct { color: #808080; }
+						.jse-textarea { scrollbar-width: none; }
+						.jse-textarea::-webkit-scrollbar { display: none; }
 					`,
 				}}
 			/>
@@ -283,19 +285,20 @@ export function JsonEditorCard(props: IJsonEditorCardProps) {
 				{/* Editor */}
 				<div
 					className={cn(
-						"relative flex flex-1 overflow-hidden rounded-t-lg border",
+						"relative flex flex-1 rounded-t-lg border",
 						parseError ? "border-destructive" : "border-border",
 					)}
-					style={{ background: "#1e1e1e" }}
+					style={{ background: "#1e1e1e", overflow: "hidden" }}
 				>
 					{/* Line numbers gutter */}
 					<div
 						ref={lineNumbersRef}
 						aria-hidden
-						className="shrink-0 overflow-hidden select-none"
+						className="shrink-0 select-none"
 						style={{
 							background: "#1e1e1e",
 							borderRight: "1px solid #2d2d2d",
+							overflow: "hidden",
 						}}
 					>
 						{lines.map((_, i) => (
@@ -327,18 +330,19 @@ export function JsonEditorCard(props: IJsonEditorCardProps) {
 					</div>
 
 					{/* Code area: highlight layer + textarea */}
-					<div className="relative flex-1 overflow-hidden">
+					<div className="relative flex-1" style={{ overflow: "hidden" }}>
 						{/* Syntax-highlighted overlay with per-line active highlight */}
 						<pre
 							ref={highlightRef}
 							aria-hidden
-							className="pointer-events-none absolute inset-0 overflow-hidden font-mono"
-							style={{
-								margin: 0,
-								padding: 0,
-								tabSize: 4,
-							}}
-						>
+							className="pointer-events-none absolute inset-0 font-mono"
+						style={{
+							margin: 0,
+							padding: 0,
+							tabSize: 4,
+							overflow: "hidden",
+						}}
+					>
 							{highlightedLines.map((html, i) => (
 								<div
 									key={i}
@@ -385,7 +389,7 @@ export function JsonEditorCard(props: IJsonEditorCardProps) {
 							onMouseUp={updateActiveLine}
 							onFocus={updateActiveLine}
 							spellCheck={false}
-							className="relative block h-full w-full resize-none font-mono outline-none"
+							className="jse-textarea relative block h-full w-full resize-none font-mono outline-none"
 							style={{
 								fontSize: "12px",
 								lineHeight: 1.625,
