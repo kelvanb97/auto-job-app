@@ -5,7 +5,7 @@ import { actionClient, SafeForClientError } from "@aja-core/next-safe-action"
 import { z } from "zod"
 
 const scoreRoleSchema = z.object({
-	roleId: z.string(),
+	roleId: z.number(),
 })
 
 export const scoreRoleAction = actionClient

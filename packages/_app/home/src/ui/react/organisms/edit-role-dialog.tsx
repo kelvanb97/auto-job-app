@@ -89,11 +89,11 @@ function companyToFieldValues(company: TCompany | null): ICompanyFieldsValues {
 
 // --- People Tab ---
 
-function RolePeopleTab({ roleId }: { roleId: string }) {
+function RolePeopleTab({ roleId }: { roleId: number }) {
 	const [people, setPeople] = useState<
 		Array<{ rolePerson: TRolePerson; person: TPerson }>
 	>([])
-	const [unlinkingId, setUnlinkingId] = useState<string | null>(null)
+	const [unlinkingId, setUnlinkingId] = useState<number | null>(null)
 
 	const { execute: fetchPeople } = useAction(listRolePeopleAction, {
 		onSuccess: ({ data }) => {
@@ -122,7 +122,7 @@ function RolePeopleTab({ roleId }: { roleId: string }) {
 		fetchPeople({ roleId })
 	}, [roleId, fetchPeople])
 
-	const handleUnlink = (personId: string) => {
+	const handleUnlink = (personId: number) => {
 		setUnlinkingId(personId)
 		executeUnlink({ roleId, personId })
 	}
@@ -144,15 +144,15 @@ function RolePeopleTab({ roleId }: { roleId: string }) {
 
 // --- Interactions Tab ---
 
-function RoleInteractionsTab({ roleId }: { roleId: string }) {
+function RoleInteractionsTab({ roleId }: { roleId: number }) {
 	const [interactions, setInteractions] = useState<TInteraction[]>([])
-	const [personNames, setPersonNames] = useState<Map<string, string>>(
+	const [personNames, setPersonNames] = useState<Map<number, string>>(
 		new Map(),
 	)
-	const [deletingId, setDeletingId] = useState<string | null>(null)
+	const [deletingId, setDeletingId] = useState<number | null>(null)
 
 	const [linkedPeople, setLinkedPeople] = useState<
-		Array<{ personId: string; name: string }>
+		Array<{ personId: number; name: string }>
 	>([])
 
 	const { execute: fetchInteractions } = useAction(
@@ -173,7 +173,7 @@ function RoleInteractionsTab({ roleId }: { roleId: string }) {
 						name: d.person.name,
 					})),
 				)
-				const names = new Map<string, string>()
+				const names = new Map<number, string>()
 				for (const d of data) {
 					names.set(d.person.id, d.person.name)
 				}
@@ -208,7 +208,7 @@ function RoleInteractionsTab({ roleId }: { roleId: string }) {
 		setInteractions((prev) => [interaction, ...prev])
 	}
 
-	const handleDelete = (id: string) => {
+	const handleDelete = (id: number) => {
 		setDeletingId(id)
 		executeDelete({ id })
 	}
@@ -232,8 +232,8 @@ function RoleInteractionsTab({ roleId }: { roleId: string }) {
 
 // --- Application Tab ---
 
-function useRoleApplication(roleId: string | null) {
-	const [applicationId, setApplicationId] = useState<string | null>(null)
+function useRoleApplication(roleId: number | null) {
+	const [applicationId, setApplicationId] = useState<number | null>(null)
 	const [resumeUrl, setResumeUrl] = useState<string | null>(null)
 	const [coverLetterUrl, setCoverLetterUrl] = useState<string | null>(null)
 	const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null)
@@ -301,7 +301,7 @@ function useRoleApplication(roleId: string | null) {
 		setUploadingType(fileType)
 		try {
 			const formData = new FormData()
-			formData.append("roleId", roleId)
+			formData.append("roleId", String(roleId))
 			formData.append("fileType", fileType)
 			formData.append("file", file)
 			const result = await uploadApplicationFile(formData)
@@ -367,7 +367,7 @@ function RoleScoreTab({
 	onScoreUpdated,
 }: {
 	score: TScore | null
-	roleId: string
+	roleId: number
 	onScoreUpdated: (score: TScore) => void
 }) {
 	const {
@@ -470,7 +470,7 @@ interface IEditRoleDialogProps {
 	company: TCompany | null
 	score: TScore | null
 	onSaved: (role: TRole) => void
-	onScoreUpdated: (roleId: string, score: TScore) => void
+	onScoreUpdated: (roleId: number, score: TScore) => void
 }
 
 export function EditRoleDialog({
@@ -554,7 +554,7 @@ export function EditRoleDialog({
 				: undefined
 
 		execute({
-			role: roleInput as { id: string },
+			role: roleInput as { id: number },
 			company: companyInput,
 		})
 	}

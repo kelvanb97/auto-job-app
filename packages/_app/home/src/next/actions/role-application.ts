@@ -21,9 +21,9 @@ function storageUrl(path: string | null): string | null {
 }
 
 export const getRoleApplicationAction = actionClient
-	.inputSchema(z.object({ roleId: z.string() }))
+	.inputSchema(z.object({ roleId: z.number() }))
 	.action(async ({ parsedInput }) => {
-		const result = await listApplications({
+		const result = listApplications({
 			roleId: parsedInput.roleId,
 			page: 1,
 			pageSize: 1,
@@ -44,14 +44,14 @@ export const getRoleApplicationAction = actionClient
 export const saveRoleApplicationAction = actionClient
 	.inputSchema(
 		z.object({
-			id: z.string().optional(),
-			roleId: z.string(),
+			id: z.number().optional(),
+			roleId: z.number(),
 			notes: z.string().nullable().optional(),
 		}),
 	)
 	.action(async ({ parsedInput }) => {
 		if (parsedInput.id) {
-			const result = await updateApplication({
+			const result = updateApplication({
 				id: parsedInput.id,
 				notes: parsedInput.notes,
 			})
@@ -61,7 +61,7 @@ export const saveRoleApplicationAction = actionClient
 			return result.data
 		}
 
-		const result = await createApplication({
+		const result = createApplication({
 			roleId: parsedInput.roleId,
 			notes: parsedInput.notes,
 		})
@@ -72,9 +72,9 @@ export const saveRoleApplicationAction = actionClient
 	})
 
 export async function getOrCreateApplication(
-	roleId: string,
+	roleId: number,
 ): Promise<TApplication> {
-	const listResult = await listApplications({
+	const listResult = listApplications({
 		roleId,
 		page: 1,
 		pageSize: 1,
@@ -86,7 +86,7 @@ export async function getOrCreateApplication(
 		return listResult.data.applications[0]
 	}
 
-	const createResult = await createApplication({ roleId })
+	const createResult = createApplication({ roleId })
 	if (!createResult.ok) {
 		throw new Error(createResult.error.message)
 	}
@@ -101,20 +101,19 @@ function getExtension(filename: string): string {
 export async function uploadApplicationFile(
 	formData: FormData,
 ): Promise<{ url: string; application: TApplication }> {
-	const roleId = formData.get("roleId") as string
+	const roleIdStr = formData.get("roleId") as string
 	const fileType = formData.get("fileType") as "resume" | "cover_letter"
 	const file = formData.get("file") as File
 
-	if (!roleId || !fileType || !file) {
+	if (!roleIdStr || !fileType || !file) {
 		throw new Error("Missing required fields")
 	}
 
+	const roleId = Number(roleIdStr)
 	const ext = getExtension(file.name) || ".pdf"
 	const storagePath = `${roleId}/${fileType}${ext}`
 
-	const uploadResult = await uploadFile(BUCKET, storagePath, file, {
-		upsert: true,
-	})
+	const uploadResult = await uploadFile(BUCKET, storagePath, file)
 
 	if (!uploadResult.ok) {
 		throw new Error(`Upload failed: ${uploadResult.error.message}`)
@@ -127,7 +126,7 @@ export async function uploadApplicationFile(
 			? { resumePath: storagePath }
 			: { coverLetterPath: storagePath }
 
-	const updateResult = await updateApplication({
+	const updateResult = updateApplication({
 		id: application.id,
 		...updateFields,
 	})
@@ -142,25 +141,25 @@ export async function uploadApplicationFile(
 }
 
 export async function removeApplicationFile(
-	roleId: string,
-	applicationId: string,
+	roleId: number,
+	applicationId: number,
 	fileType: "resume" | "cover_letter",
 ): Promise<TApplication> {
-	const listResult = await listFiles(BUCKET, roleId, { search: fileType })
+	const listResult = listFiles(BUCKET, String(roleId), { search: fileType })
 
 	if (listResult.ok && listResult.data.length > 0) {
 		const paths = listResult.data
 			.filter((f) => f.name.startsWith(fileType))
 			.map((f) => `${roleId}/${f.name}`)
 		if (paths.length > 0) {
-			await removeFiles(BUCKET, paths)
+			removeFiles(BUCKET, paths)
 		}
 	}
 
 	const updateFields =
 		fileType === "resume" ? { resumePath: null } : { coverLetterPath: null }
 
-	const updateResult = await updateApplication({
+	const updateResult = updateApplication({
 		id: applicationId,
 		...updateFields,
 	})

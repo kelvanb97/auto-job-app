@@ -1,22 +1,20 @@
-import type { Database } from "@aja-app/supabase"
+import { score } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalScore } from "#schema/score-marshallers"
 import type { TScore } from "#schema/score-schema"
+import { eq } from "drizzle-orm"
 
-export async function getScoreByRole(
-	roleId: string,
-): Promise<TResult<TScore | null>> {
-	const supabase = supabaseAdminClient<Database>()
-
-	const { data, error } = await supabase
-		.schema("app")
-		.from("score")
-		.select()
-		.eq("role_id", roleId)
-		.maybeSingle()
-
-	if (error) return errFrom(`Error fetching score: ${error.message}`)
-
-	return ok(data ? unmarshalScore(data) : null)
+export function getScoreByRole(roleId: number): TResult<TScore | null> {
+	try {
+		const row = db()
+			.select()
+			.from(score)
+			.where(eq(score.roleId, roleId))
+			.get()
+		return ok(row ?? null)
+	} catch (e) {
+		return errFrom(
+			`Error fetching score: ${e instanceof Error ? e.message : String(e)}`,
+		)
+	}
 }

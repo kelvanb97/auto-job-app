@@ -39,7 +39,6 @@
 		"react-dom": "^19.2.4"
 	},
 	"devDependencies": {
-		"@aja-app/supabase": "workspace:*",
 		"@aja-core/eslint": "workspace:*",
 		"@aja-core/tsconfig": "workspace:*",
 		"@aja-design/ui": "workspace:*",

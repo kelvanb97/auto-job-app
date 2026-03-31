@@ -6,8 +6,8 @@ import { YStack } from "@aja-design/ui/primitives/y-stack"
 
 interface IRolePersonListProps {
 	people: Array<{ rolePerson: TRolePerson; person: TPerson }>
-	onUnlink: (personId: string) => void
-	unlinkingId: string | null
+	onUnlink: (personId: number) => void
+	unlinkingId: number | null
 }
 
 export function RolePersonList({

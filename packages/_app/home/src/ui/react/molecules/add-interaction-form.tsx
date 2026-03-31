@@ -28,8 +28,8 @@ const INTERACTION_TYPE_OPTIONS = INTERACTION_TYPES.map((t) => ({
 }))
 
 interface IAddInteractionFormProps {
-	roleId: string
-	linkedPeople: Array<{ personId: string; name: string }>
+	roleId: number
+	linkedPeople: Array<{ personId: number; name: string }>
 	onCreated: (interaction: TInteraction) => void
 }
 
@@ -62,14 +62,14 @@ export function AddInteractionForm({
 
 	const personOptions = linkedPeople.map((p) => ({
 		label: p.name,
-		value: p.personId,
+		value: String(p.personId),
 	}))
 
 	const handleAdd = () => {
 		if (!type) return
 		execute({
 			roleId,
-			personId: personId || null,
+			personId: personId ? Number(personId) : null,
 			type,
 			notes: notes.trim() || null,
 		})

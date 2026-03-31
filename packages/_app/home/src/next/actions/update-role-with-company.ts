@@ -16,7 +16,7 @@ import { z } from "zod"
 
 const updateRoleWithCompanySchema = z.object({
 	role: z.object({
-		id: z.string(),
+		id: z.number(),
 		title: z.string().min(1).optional(),
 		url: z.string().nullable().optional(),
 		description: z.string().nullable().optional(),
@@ -30,7 +30,7 @@ const updateRoleWithCompanySchema = z.object({
 	}),
 	company: z
 		.object({
-			id: z.string(),
+			id: z.number(),
 			name: z.string().min(1).optional(),
 			website: z.string().nullable().optional(),
 			linkedinUrl: z.string().nullable().optional(),
@@ -46,13 +46,13 @@ export const updateRoleWithCompanyAction = actionClient
 	.inputSchema(updateRoleWithCompanySchema)
 	.action(async ({ parsedInput }) => {
 		if (parsedInput.company) {
-			const companyResult = await updateCompany(parsedInput.company)
+			const companyResult = updateCompany(parsedInput.company)
 			if (!companyResult.ok) {
 				throw new SafeForClientError(companyResult.error.message)
 			}
 		}
 
-		const roleResult = await updateRole(parsedInput.role)
+		const roleResult = updateRole(parsedInput.role)
 		if (!roleResult.ok) {
 			throw new SafeForClientError(roleResult.error.message)
 		}

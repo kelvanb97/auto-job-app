@@ -10,7 +10,7 @@ import { actionClient, SafeForClientError } from "@aja-core/next-safe-action"
 export const listRolesWithCompaniesAction = actionClient
 	.inputSchema(listRolesSchema)
 	.action(async ({ parsedInput }) => {
-		const result = await listRoles(parsedInput)
+		const result = listRoles(parsedInput)
 		if (!result.ok) {
 			throw new SafeForClientError(result.error.message)
 		}
@@ -21,14 +21,12 @@ export const listRolesWithCompaniesAction = actionClient
 			...new Set(
 				result.data.roles
 					.map((r) => r.companyId)
-					.filter((id): id is string => id !== null),
+					.filter((id): id is number => id !== null),
 			),
 		]
 
-		const [companyResults, scoresResult] = await Promise.all([
-			Promise.all(companyIds.map((id) => getCompany(id))),
-			listScoresByRoles(roleIds),
-		])
+		const companyResults = companyIds.map((id) => getCompany(id))
+		const scoresResult = listScoresByRoles(roleIds)
 
 		const companies = companyResults.filter((r) => r.ok).map((r) => r.data)
 

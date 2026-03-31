@@ -1,41 +1,46 @@
-import type { Database } from "@aja-app/supabase"
+import { interaction } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalInteraction } from "#schema/interaction-marshallers"
 import type {
 	TInteraction,
 	TListInteractions,
 } from "#schema/interaction-schema"
+import { and, desc, eq } from "drizzle-orm"
 
-export async function listInteractions(
+export function listInteractions(
 	input: TListInteractions,
-): Promise<TResult<{ interactions: TInteraction[]; hasNext: boolean }>> {
-	const supabase = supabaseAdminClient<Database>()
+): TResult<{ interactions: TInteraction[]; hasNext: boolean }> {
+	try {
+		const conditions = []
 
-	const start = (input.page - 1) * input.pageSize
-	const end = start + input.pageSize
+		if (input.roleId) {
+			conditions.push(eq(interaction.roleId, input.roleId))
+		}
+		if (input.personId) {
+			conditions.push(eq(interaction.personId, input.personId))
+		}
+		if (input.type) {
+			conditions.push(eq(interaction.type, input.type))
+		}
 
-	let query = supabase.schema("app").from("interaction").select()
+		const offset = (input.page - 1) * input.pageSize
 
-	if (input.roleId) {
-		query = query.eq("role_id", input.roleId)
+		const rows = db()
+			.select()
+			.from(interaction)
+			.where(conditions.length > 0 ? and(...conditions) : undefined)
+			.orderBy(desc(interaction.createdAt), interaction.id)
+			.limit(input.pageSize + 1)
+			.offset(offset)
+			.all()
+
+		const hasNext = rows.length > input.pageSize
+		const interactions = rows.slice(0, input.pageSize)
+
+		return ok({ interactions, hasNext })
+	} catch (e) {
+		return errFrom(
+			`Error listing interactions: ${e instanceof Error ? e.message : String(e)}`,
+		)
 	}
-	if (input.personId) {
-		query = query.eq("person_id", input.personId)
-	}
-	if (input.type) {
-		query = query.eq("type", input.type)
-	}
-
-	const { data, error } = await query
-		.order("created_at", { ascending: false })
-		.order("id")
-		.range(start, end)
-
-	if (error) return errFrom(`Error listing interactions: ${error.message}`)
-
-	const hasNext = data.length > input.pageSize
-	const interactions = data.slice(0, input.pageSize).map(unmarshalInteraction)
-
-	return ok({ interactions, hasNext })
 }

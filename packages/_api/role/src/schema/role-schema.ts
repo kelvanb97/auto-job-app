@@ -1,5 +1,6 @@
-import type { Database } from "@aja-app/supabase"
 import { z } from "zod"
+
+export type { TRole, TNewRole } from "@aja-app/drizzle"
 
 export const ROLE_SOURCES = [
 	"himalayas",
@@ -37,35 +38,15 @@ export type TRoleStatus = (typeof ROLE_STATUSES)[number]
 
 export const roleStatusSchema = z.enum(ROLE_STATUSES)
 
-export type TRole = {
-	id: string
-	companyId: string | null
-	title: string
-	url: string | null
-	description: string | null
-	source: TRoleSource | null
-	locationType: TLocationType | null
-	location: string | null
-	salaryMin: number | null
-	salaryMax: number | null
-	status: TRoleStatus
-	postedAt: string | null
-	notes: string | null
-	createdAt: string | null
-	updatedAt: string | null
-}
-
-export type TMarshalledRole = Database["app"]["Tables"]["role"]["Row"]
-
 export const getRoleSchema = z.object({
-	id: z.string(),
+	id: z.number(),
 })
 
 export const listRolesSchema = z.object({
 	page: z.number().min(1).default(1),
 	pageSize: z.number().min(1).max(100).default(25),
 	search: z.string().optional(),
-	companyId: z.string().optional(),
+	companyId: z.number().optional(),
 	status: roleStatusSchema.optional(),
 	locationType: locationTypeSchema.optional(),
 	source: roleSourceSchema.optional(),
@@ -81,7 +62,7 @@ export const listRolesSchema = z.object({
 export type TListRoles = z.infer<typeof listRolesSchema>
 
 export const createRoleSchema = z.object({
-	companyId: z.string().nullable().optional(),
+	companyId: z.number().nullable().optional(),
 	title: z.string().min(1),
 	url: z.string().nullable().optional(),
 	description: z.string().nullable().optional(),
@@ -91,15 +72,15 @@ export const createRoleSchema = z.object({
 	salaryMin: z.number().nullable().optional(),
 	salaryMax: z.number().nullable().optional(),
 	status: roleStatusSchema.optional(),
-	postedAt: z.string().nullable().optional(),
+	postedAt: z.date().nullable().optional(),
 	notes: z.string().nullable().optional(),
 })
 
 export type TCreateRole = z.infer<typeof createRoleSchema>
 
 export const updateRoleSchema = z.object({
-	id: z.string(),
-	companyId: z.string().nullable().optional(),
+	id: z.number(),
+	companyId: z.number().nullable().optional(),
 	title: z.string().min(1).optional(),
 	url: z.string().nullable().optional(),
 	description: z.string().nullable().optional(),
@@ -109,12 +90,12 @@ export const updateRoleSchema = z.object({
 	salaryMin: z.number().nullable().optional(),
 	salaryMax: z.number().nullable().optional(),
 	status: roleStatusSchema.optional(),
-	postedAt: z.string().nullable().optional(),
+	postedAt: z.date().nullable().optional(),
 	notes: z.string().nullable().optional(),
 })
 
 export type TUpdateRole = z.infer<typeof updateRoleSchema>
 
 export const deleteRoleSchema = z.object({
-	id: z.string(),
+	id: z.number(),
 })

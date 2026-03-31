@@ -1,20 +1,17 @@
-import type { Database } from "@aja-app/supabase"
+import { company } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalCompany } from "#schema/company-marshallers"
 import type { TCompany } from "#schema/company-schema"
+import { eq } from "drizzle-orm"
 
-export async function getCompany(id: string): Promise<TResult<TCompany>> {
-	const supabase = supabaseAdminClient<Database>()
-
-	const { data, error } = await supabase
-		.schema("app")
-		.from("company")
-		.select()
-		.eq("id", id)
-		.single()
-
-	if (error) return errFrom(`Error fetching company: ${error.message}`)
-
-	return ok(unmarshalCompany(data))
+export function getCompany(id: number): TResult<TCompany> {
+	try {
+		const row = db().select().from(company).where(eq(company.id, id)).get()
+		if (!row) return errFrom(`Company not found: ${id}`)
+		return ok(row)
+	} catch (e) {
+		return errFrom(
+			`Error fetching company: ${e instanceof Error ? e.message : String(e)}`,
+		)
+	}
 }

@@ -1,17 +1,15 @@
-import type { Database } from "@aja-app/supabase"
+import { role } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
+import { eq } from "drizzle-orm"
 
-export async function deleteRole(id: string): Promise<TResult<{ id: string }>> {
-	const supabase = supabaseAdminClient<Database>()
-
-	const { error } = await supabase
-		.schema("app")
-		.from("role")
-		.delete()
-		.eq("id", id)
-
-	if (error) return errFrom(`Error deleting role: ${error.message}`)
-
-	return ok({ id })
+export function deleteRole(id: number): TResult<{ id: number }> {
+	try {
+		db().delete(role).where(eq(role.id, id)).run()
+		return ok({ id })
+	} catch (e) {
+		return errFrom(
+			`Error deleting role: ${e instanceof Error ? e.message : String(e)}`,
+		)
+	}
 }

@@ -1,25 +1,15 @@
-import type { Database } from "@aja-app/supabase"
+import { company } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import {
-	marshalCreateCompany,
-	unmarshalCompany,
-} from "#schema/company-marshallers"
 import type { TCompany, TCreateCompany } from "#schema/company-schema"
 
-export async function createCompany(
-	input: TCreateCompany,
-): Promise<TResult<TCompany>> {
-	const supabase = supabaseAdminClient<Database>()
-
-	const { data, error } = await supabase
-		.schema("app")
-		.from("company")
-		.insert(marshalCreateCompany(input))
-		.select()
-		.single()
-
-	if (error) return errFrom(`Error creating company: ${error.message}`)
-
-	return ok(unmarshalCompany(data))
+export function createCompany(input: TCreateCompany): TResult<TCompany> {
+	try {
+		const row = db().insert(company).values(input).returning().get()
+		return ok(row)
+	} catch (e) {
+		return errFrom(
+			`Error creating company: ${e instanceof Error ? e.message : String(e)}`,
+		)
+	}
 }

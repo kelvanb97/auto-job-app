@@ -41,8 +41,8 @@ function parseSortOption(sort: TSortOption): {
 
 interface IState {
 	roles: TRole[]
-	companies: Map<string, TCompany>
-	scores: Map<string, TScore>
+	companies: Map<number, TCompany>
+	scores: Map<number, TScore>
 	filters: IRolesFilters
 	page: number
 	hasNext: boolean
@@ -61,7 +61,7 @@ type TAction =
 			page: number
 	  }
 	| { type: "UPDATE_ROLE"; role: TRole }
-	| { type: "UPDATE_SCORE"; roleId: string; score: TScore }
+	| { type: "UPDATE_SCORE"; roleId: number; score: TScore }
 	| { type: "OPEN_DIALOG"; role: TRole }
 	| { type: "CLOSE_DIALOG" }
 
@@ -182,7 +182,7 @@ export function RolesTemplate() {
 
 	const statusError = useActionError(statusResult)
 	useToastOnError(statusError, statusStatus)
-	const statusUpdatingId = useRef<string | null>(null)
+	const statusUpdatingId = useRef<number | null>(null)
 
 	const doFetch = useCallback(
 		(page: number) => {
@@ -236,7 +236,7 @@ export function RolesTemplate() {
 		dispatch({ type: "SET_FILTERS", filters })
 	}
 
-	const handleStatusChange = (roleId: string, status: TRoleStatus) => {
+	const handleStatusChange = (roleId: number, status: TRoleStatus) => {
 		statusUpdatingId.current = roleId
 		updateStatus({ id: roleId, status })
 	}
@@ -253,12 +253,12 @@ export function RolesTemplate() {
 		dispatch({ type: "UPDATE_ROLE", role })
 	}
 
-	const companiesNameMap = new Map<string, string>()
+	const companiesNameMap = new Map<number, string>()
 	for (const [id, company] of state.companies) {
 		companiesNameMap.set(id, company.name)
 	}
 
-	const scoresMap = new Map<string, number>()
+	const scoresMap = new Map<number, number>()
 	for (const [roleId, score] of state.scores) {
 		scoresMap.set(roleId, score.score)
 	}
@@ -288,7 +288,7 @@ export function RolesTemplate() {
 				onOpenChange={handleDialogOpenChange}
 				role={state.selectedRole}
 				company={selectedCompany}
-				score={state.scores.get(state.selectedRole?.id ?? "") ?? null}
+				score={state.scores.get(state.selectedRole?.id ?? -1) ?? null}
 				onSaved={handleRoleSaved}
 				onScoreUpdated={(roleId, score) =>
 					dispatch({ type: "UPDATE_SCORE", roleId, score })

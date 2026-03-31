@@ -1,41 +1,46 @@
-import type { Database } from "@aja-app/supabase"
+import { company } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import { unmarshalCompany } from "#schema/company-marshallers"
 import type { TCompany, TListCompanies } from "#schema/company-schema"
+import { and, desc, eq, like } from "drizzle-orm"
 
-export async function listCompanies(
+export function listCompanies(
 	input: TListCompanies,
-): Promise<TResult<{ companies: TCompany[]; hasNext: boolean }>> {
-	const supabase = supabaseAdminClient<Database>()
+): TResult<{ companies: TCompany[]; hasNext: boolean }> {
+	try {
+		const conditions = []
 
-	const start = (input.page - 1) * input.pageSize
-	const end = start + input.pageSize
+		if (input.search) {
+			conditions.push(like(company.name, `%${input.search}%`))
+		}
+		if (input.industry) {
+			conditions.push(eq(company.industry, input.industry))
+		}
+		if (input.stage) {
+			conditions.push(eq(company.stage, input.stage))
+		}
+		if (input.size) {
+			conditions.push(eq(company.size, input.size))
+		}
 
-	let query = supabase.schema("app").from("company").select()
+		const offset = (input.page - 1) * input.pageSize
 
-	if (input.search) {
-		query = query.ilike("name", `%${input.search}%`)
+		const rows = db()
+			.select()
+			.from(company)
+			.where(conditions.length > 0 ? and(...conditions) : undefined)
+			.orderBy(desc(company.createdAt), company.id)
+			.limit(input.pageSize + 1)
+			.offset(offset)
+			.all()
+
+		const hasNext = rows.length > input.pageSize
+		const companies = rows.slice(0, input.pageSize)
+
+		return ok({ companies, hasNext })
+	} catch (e) {
+		return errFrom(
+			`Error listing companies: ${e instanceof Error ? e.message : String(e)}`,
+		)
 	}
-	if (input.industry) {
-		query = query.eq("industry", input.industry)
-	}
-	if (input.stage) {
-		query = query.eq("stage", input.stage)
-	}
-	if (input.size) {
-		query = query.eq("size", input.size)
-	}
-
-	const { data, error } = await query
-		.order("created_at", { ascending: false })
-		.order("id")
-		.range(start, end)
-
-	if (error) return errFrom(`Error listing companies: ${error.message}`)
-
-	const hasNext = data.length > input.pageSize
-	const companies = data.slice(0, input.pageSize).map(unmarshalCompany)
-
-	return ok({ companies, hasNext })
 }

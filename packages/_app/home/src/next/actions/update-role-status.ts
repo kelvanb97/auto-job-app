@@ -6,14 +6,14 @@ import { actionClient, SafeForClientError } from "@aja-core/next-safe-action"
 import { z } from "zod"
 
 const updateRoleStatusSchema = z.object({
-	id: z.string(),
+	id: z.number(),
 	status: roleStatusSchema,
 })
 
 export const updateRoleStatusAction = actionClient
 	.inputSchema(updateRoleStatusSchema)
 	.action(async ({ parsedInput }) => {
-		const result = await updateRole(parsedInput)
+		const result = updateRole(parsedInput)
 		if (!result.ok) {
 			throw new SafeForClientError(result.error.message)
 		}

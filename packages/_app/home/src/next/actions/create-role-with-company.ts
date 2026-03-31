@@ -39,17 +39,17 @@ const createRoleWithCompanySchema = z.object({
 export const createRoleWithCompanyAction = actionClient
 	.inputSchema(createRoleWithCompanySchema)
 	.action(async ({ parsedInput }) => {
-		let companyId: string | undefined
+		let companyId: number | undefined
 
 		if (parsedInput.company) {
-			const companyResult = await createCompany(parsedInput.company)
+			const companyResult = createCompany(parsedInput.company)
 			if (!companyResult.ok) {
 				throw new SafeForClientError(companyResult.error.message)
 			}
 			companyId = companyResult.data.id
 		}
 
-		const roleResult = await createRole({
+		const roleResult = createRole({
 			companyId,
 			title: parsedInput.title,
 			url: parsedInput.url,

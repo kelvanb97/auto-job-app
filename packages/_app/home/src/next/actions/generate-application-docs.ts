@@ -20,8 +20,6 @@ import { getOrCreateApplication } from "./role-application"
 const KEYWORD_MODEL = "claude-haiku-4-5-20251001" as const
 const RESUME_MODEL = "claude-opus-4-6" as const
 const STORAGE_BUCKET = "applications"
-const DOCX_CONTENT_TYPE =
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
 function sanitize(text: string): string {
 	return text
@@ -32,7 +30,7 @@ function sanitize(text: string): string {
 }
 
 const generateApplicationDocsSchema = z.object({
-	roleId: z.string(),
+	roleId: z.number(),
 })
 
 export const generateApplicationDocsAction = actionClient
@@ -41,17 +39,15 @@ export const generateApplicationDocsAction = actionClient
 		const { roleId } = parsedInput
 
 		// Fetch role
-		const roleResult = await getRole(roleId)
+		const roleResult = getRole(roleId)
 		if (!roleResult.ok)
 			throw new SafeForClientError(roleResult.error.message)
 		const role = roleResult.data
 
 		// Fetch company
-		const company = role.companyId
-			? await getCompany(role.companyId).then((r) =>
-					r.ok ? r.data : null,
-				)
-			: null
+		const companyResult = role.companyId ? getCompany(role.companyId) : null
+		const company =
+			companyResult && companyResult.ok ? companyResult.data : null
 		const companyName = company?.name ?? "Unknown Company"
 
 		// Extract keywords
@@ -124,7 +120,6 @@ export const generateApplicationDocsAction = actionClient
 			STORAGE_BUCKET,
 			resumePath,
 			resumeBuffer,
-			{ contentType: DOCX_CONTENT_TYPE, upsert: true },
 		)
 		if (!resumeUpload.ok)
 			throw new SafeForClientError(resumeUpload.error.message)
@@ -133,14 +128,13 @@ export const generateApplicationDocsAction = actionClient
 			STORAGE_BUCKET,
 			coverLetterPath,
 			coverLetterBuffer,
-			{ contentType: DOCX_CONTENT_TYPE, upsert: true },
 		)
 		if (!coverLetterUpload.ok)
 			throw new SafeForClientError(coverLetterUpload.error.message)
 
 		// Get or create application and update with paths
 		const application = await getOrCreateApplication(roleId)
-		const updateResult = await updateApplication({
+		const updateResult = updateApplication({
 			id: application.id,
 			resumePath,
 			coverLetterPath,

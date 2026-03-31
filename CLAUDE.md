@@ -24,13 +24,10 @@ pnpm --filter @aja-api/role lint
 ## Running Apps
 
 ```bash
-pnpm dev                                          # all apps (Turbo)
-pnpm --filter @aja-app/scraper scrape             # one-shot scrape (all sources)
-pnpm --filter @aja-app/scraper scrape:himalayas   # single source
-pnpm --filter @aja-app/score score                # score unscored roles
+pnpm dev                                          # web app (Turbo)
 ```
 
-All apps load env from the root `.env` file. See `.env.example` for available variables. Scraper and score use Node's `--env-file=../../.env` flag; web loads it via `process.loadEnvFile()` in `next.config.ts`.
+All apps load env from the root `.env` file. See `.env.example` for available variables. Web loads env via `process.loadEnvFile()` in `next.config.ts`.
 
 ## Architecture
 
@@ -38,8 +35,8 @@ Turborepo monorepo with pnpm workspaces. Six package layers:
 
 | Layer                     | Scope                 | Purpose                                                 |
 | ------------------------- | --------------------- | ------------------------------------------------------- |
-| `apps/`                   | —                     | Deployable applications (web, scraper, score, supabase) |
-| `packages/_api/`          | `@aja-api/*`          | Entity CRUD operations against Supabase                 |
+| `apps/`                   | —                     | Deployable applications (web)                           |
+| `packages/_api/`          | `@aja-api/*`          | Entity CRUD operations against SQLite via Drizzle       |
 | `packages/_app/`          | `@aja-app/*`          | Feature modules (React components, server actions)      |
 | `packages/_config/`       | `@aja-config/*`       | User-specific configuration (profile, scoring, scraper) |
 | `packages/_core/`         | `@aja-core/*`         | Shared utilities and config                             |
@@ -54,7 +51,7 @@ apps → _app → _api → _core
                _design
 
 _api and apps → _integrations
-apps (scraper, score) → _config
+apps → _config
 ```
 
 API and core packages are **dependencies** (not peerDependencies) in app packages.
@@ -83,15 +80,12 @@ Internal imports within a package use `#` aliases defined in the `imports` field
 ### Apps
 
 - **web** — Next.js 16 (App Router, Turbopack). Routes delegate to screens from `@aja-app/home`.
-- **scraper** — Node.js process. Cron mode (default) or one-shot (`--now`). Sources: Remote OK, We Work Remotely, Himalayas, Jobicy, Google Jobs. HTTP endpoint on configurable port.
-- **score** — Node.js process. Fetches unscored roles, scores each via Anthropic, rate-limited.
-- **supabase** — Supabase CLI project. Migrations, local dev config.
 
 ## Key Patterns
 
 ### TResult
 
-All API functions return `Promise<TResult<T>>`. Defined in `@aja-core/result`:
+Database API functions return `TResult<T>` (synchronous). Functions calling external services (Anthropic API) return `Promise<TResult<T>>`. Defined in `@aja-core/result`:
 
 ```typescript
 type TResult<T, E = Error> =
@@ -100,14 +94,6 @@ type TResult<T, E = Error> =
 ```
 
 Use helpers: `ok(data)`, `err(error)`, `errFrom("message")`
-
-### Marshallers
-
-Each API entity has marshallers in `src/schema/{entity}-marshallers.ts` that convert between camelCase (API types) and snake_case (database columns):
-
-- `unmarshalX(row)` — database row → API type
-- `marshalCreateX(input)` — create input → database insert
-- `marshalUpdateX(input)` — update input → database update
 
 ### Server Actions
 
@@ -118,7 +104,7 @@ Located in `packages/_app/*/src/next/actions/`. Pattern:
 export const doThing = actionClient
     .inputSchema(zodSchema)
     .action(async ({ parsedInput }) => {
-        const result = await apiFunction(parsedInput)
+        const result = apiFunction(parsedInput)
         if (!result.ok) throw new SafeForClientError(result.error.message)
         return result.data
     })
@@ -133,18 +119,33 @@ Each entity package follows this structure:
 ```
 src/
   api/        # CRUD functions returning TResult
-  schema/     # Zod schemas, TypeScript types, marshallers
+  schema/     # Zod schemas, TypeScript types, constants
 ```
 
-API functions use `supabaseAdminClient<Database>()` from `@aja-core/supabase`.
+API functions use `db()` from `@aja-core/drizzle` and table schemas from `@aja-app/drizzle`.
 
-## Supabase
+## Database
 
-- All application tables live in the `app` schema (not `public`)
-- Local dev URLs: `http://127.0.0.1:54321` (scraper/score), `localhost:3000` (web)
-- Env vars: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`
-- Migrations are in `apps/supabase/migrations/`
-- Local Supabase: `pnpm --filter supabase start` / `stop`
+SQLite database via Drizzle ORM + better-sqlite3. No Docker or external services required.
+
+- Database file: `data/aja.db` (auto-created on first run, gitignored)
+- File storage: `data/storage/` (local filesystem, gitignored)
+- Schema defined in `packages/_app/drizzle/src/schema.ts`
+- Connection factory in `packages/_core/drizzle/src/db.ts`
+- Types inferred from Drizzle schema (`$inferSelect` / `$inferInsert`)
+- All primary keys are auto-increment integers
+- Foreign keys use `PRAGMA foreign_keys = ON` (enabled per connection)
+- WAL mode enabled for read concurrency
+
+### Migrations
+
+Migrations run automatically on app startup via `apps/web/instrumentation.ts`. After changing the schema:
+
+```bash
+pnpm --filter @aja-app/drizzle generate   # generate a new migration SQL file
+```
+
+The next `pnpm dev` applies pending migrations automatically. CLI fallback: `pnpm --filter @aja-app/drizzle migrate`.
 
 ## Documentation
 

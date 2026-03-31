@@ -20,8 +20,6 @@ const KEYWORD_MODEL = (process.env["APPLY_KEYWORD_MODEL"] ??
 const RESUME_MODEL = (process.env["APPLY_RESUME_MODEL"] ??
 	"claude-opus-4-6") as TAnthropicModel
 const STORAGE_BUCKET = "applications"
-const DOCX_CONTENT_TYPE =
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
 function sanitize(text: string): string {
 	return text
@@ -32,21 +30,20 @@ function sanitize(text: string): string {
 }
 
 type TGenerateDocumentsInput = {
-	roleId: string
-	applicationId: string
+	roleId: number
+	applicationId: number
 }
 
 export async function generateDocuments(
 	input: TGenerateDocumentsInput,
 ): Promise<TResult<TGenerateDocumentsResult>> {
-	const roleResult = await getRole(input.roleId)
+	const roleResult = getRole(input.roleId)
 	if (!roleResult.ok)
 		return errFrom(`Failed to fetch role: ${roleResult.error.message}`)
 	const role = roleResult.data
 
-	const company = role.companyId
-		? await getCompany(role.companyId).then((r) => (r.ok ? r.data : null))
-		: null
+	const companyResult = role.companyId ? getCompany(role.companyId) : null
+	const company = companyResult?.ok ? companyResult.data : null
 	const companyName = company?.name ?? "Unknown Company"
 
 	// Extract keywords
@@ -119,7 +116,6 @@ export async function generateDocuments(
 		STORAGE_BUCKET,
 		resumePath,
 		resumeBuffer,
-		{ contentType: DOCX_CONTENT_TYPE, upsert: true },
 	)
 	if (!resumeUpload.ok)
 		return errFrom(`Failed to upload resume: ${resumeUpload.error.message}`)
@@ -128,7 +124,6 @@ export async function generateDocuments(
 		STORAGE_BUCKET,
 		coverLetterPath,
 		coverLetterBuffer,
-		{ contentType: DOCX_CONTENT_TYPE, upsert: true },
 	)
 	if (!coverLetterUpload.ok)
 		return errFrom(
@@ -136,7 +131,7 @@ export async function generateDocuments(
 		)
 
 	// Update application record with document paths
-	const appUpdate = await updateApplication({
+	const appUpdate = updateApplication({
 		id: input.applicationId,
 		resumePath,
 		coverLetterPath,

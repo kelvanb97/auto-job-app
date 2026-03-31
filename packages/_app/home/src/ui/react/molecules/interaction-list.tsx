@@ -3,9 +3,9 @@ import { Button } from "@aja-design/ui/library/button"
 import { XStack } from "@aja-design/ui/primitives/x-stack"
 import { YStack } from "@aja-design/ui/primitives/y-stack"
 
-function formatDate(dateStr: string | null): string {
-	if (!dateStr) return "—"
-	return new Date(dateStr).toLocaleDateString("en-US", {
+function formatDate(date: Date | null): string {
+	if (!date) return "—"
+	return date.toLocaleDateString("en-US", {
 		month: "short",
 		day: "numeric",
 		year: "numeric",
@@ -14,9 +14,9 @@ function formatDate(dateStr: string | null): string {
 
 interface IInteractionListProps {
 	interactions: TInteraction[]
-	personNames: Map<string, string>
-	onDelete: (id: string) => void
-	deletingId: string | null
+	personNames: Map<number, string>
+	onDelete: (id: number) => void
+	deletingId: number | null
 }
 
 export function InteractionList({

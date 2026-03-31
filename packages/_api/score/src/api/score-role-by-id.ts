@@ -4,17 +4,15 @@ import { errFrom, type TResult } from "@aja-core/result"
 import type { TScore } from "#schema/score-schema"
 import { scoreRoleData } from "./score-role-data"
 
-export async function scoreRoleById(roleId: string): Promise<TResult<TScore>> {
+export async function scoreRoleById(roleId: number): Promise<TResult<TScore>> {
 	try {
 		const roleResult = await getRole(roleId)
 		if (!roleResult.ok) return errFrom(roleResult.error.message)
 
 		const role = roleResult.data
-		const company = role.companyId
-			? await getCompany(role.companyId).then((r) =>
-					r.ok ? r.data : null,
-				)
-			: null
+		const companyResult = role.companyId ? getCompany(role.companyId) : null
+		const company =
+			companyResult && companyResult.ok ? companyResult.data : null
 
 		return scoreRoleData(role, company)
 	} catch (err) {

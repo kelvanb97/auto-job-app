@@ -1,28 +1,20 @@
-import type { Database } from "@aja-app/supabase"
+import { interaction } from "@aja-app/drizzle"
+import { db } from "@aja-core/drizzle"
 import { errFrom, ok, type TResult } from "@aja-core/result"
-import { supabaseAdminClient } from "@aja-core/supabase/admin"
-import {
-	marshalCreateInteraction,
-	unmarshalInteraction,
-} from "#schema/interaction-marshallers"
 import type {
 	TCreateInteraction,
 	TInteraction,
 } from "#schema/interaction-schema"
 
-export async function createInteraction(
+export function createInteraction(
 	input: TCreateInteraction,
-): Promise<TResult<TInteraction>> {
-	const supabase = supabaseAdminClient<Database>()
-
-	const { data, error } = await supabase
-		.schema("app")
-		.from("interaction")
-		.insert(marshalCreateInteraction(input))
-		.select()
-		.single()
-
-	if (error) return errFrom(`Error creating interaction: ${error.message}`)
-
-	return ok(unmarshalInteraction(data))
+): TResult<TInteraction> {
+	try {
+		const row = db().insert(interaction).values(input).returning().get()
+		return ok(row)
+	} catch (e) {
+		return errFrom(
+			`Error creating interaction: ${e instanceof Error ? e.message : String(e)}`,
+		)
+	}
 }
