@@ -38,7 +38,7 @@ Turborepo monorepo with pnpm workspaces. Six package layers:
 | `apps/`                   | —                     | Deployable applications (web)                           |
 | `packages/_api/`          | `@rja-api/*`          | Entity CRUD operations against SQLite via Drizzle       |
 | `packages/_app/`          | `@rja-app/*`          | Feature modules (React components, server actions)      |
-| `packages/_config/`       | `@rja-config/*`       | User-specific configuration (profile, scoring, scraper) |
+| `packages/_config/`       | `@rja-config/*`       | Legacy user config (being replaced by `@rja-api/settings`) |
 | `packages/_core/`         | `@rja-core/*`         | Shared utilities and config                             |
 | `packages/_design/`       | `@rja-design/*`       | Component library (Radix UI + Tailwind)                 |
 | `packages/_integrations/` | `@rja-integrations/*` | Third-party SDK wrappers (Anthropic, Patchright)        |
@@ -51,7 +51,6 @@ apps → _app → _api → _core
                _design
 
 _api and apps → _integrations
-apps → _config
 ```
 
 API and core packages are **dependencies** (not peerDependencies) in app packages.
@@ -146,6 +145,10 @@ pnpm --filter @rja-app/drizzle generate   # generate a new migration SQL file
 ```
 
 The next `pnpm dev` applies pending migrations automatically. CLI fallback: `pnpm --filter @rja-app/drizzle migrate`.
+
+### User Settings
+
+User configuration (profile, work experience, education, EEO, form defaults, scoring weights, scraper config) is stored in the database via `@rja-api/settings`. The settings page at `/settings` provides a UI for editing all values. For first-time setup, run `pnpm --filter @rja-app/drizzle seed` to populate the database from the legacy config files.
 
 ## Documentation
 

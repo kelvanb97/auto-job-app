@@ -10,17 +10,21 @@
 		"check-types": "tsc --noEmit",
 		"generate": "drizzle-kit generate",
 		"migrate": "drizzle-kit migrate",
+		"seed": "tsx seed.ts",
 		"lint": "eslint ."
 	},
 	"dependencies": {
 		"drizzle-orm": "0.44.2"
 	},
 	"devDependencies": {
+		"@rja-config/user": "workspace:*",
+		"@rja-core/drizzle": "workspace:*",
 		"@rja-core/eslint": "workspace:*",
 		"@rja-core/tsconfig": "workspace:*",
 		"@types/node": "25.5.0",
 		"drizzle-kit": "0.31.5",
 		"eslint": "9.24.0",
+		"tsx": "4.19.4",
 		"typescript": "5.9.3"
 	}
 }
