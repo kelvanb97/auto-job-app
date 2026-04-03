@@ -21,7 +21,6 @@
 		"@rja-api/storage": "workspace:*",
 		"@rja-app/apply": "workspace:*",
 		"@rja-app/home": "workspace:*",
-		"@rja-app/scraper": "workspace:*",
 		"@rja-core/drizzle": "workspace:*",
 		"@rja-design/ui": "workspace:*",
 		"next": "16.1.6",

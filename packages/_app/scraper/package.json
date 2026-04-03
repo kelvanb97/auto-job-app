@@ -6,17 +6,18 @@
 	"sideEffects": false,
 	"exports": {
 		"./scrape": "./src/scrape.ts",
-		"./scrape-task": "./src/scrape-task.ts",
 		"./types": "./src/types.ts"
 	},
 	"scripts": {
 		"check-types": "tsc --noEmit",
-		"lint": "eslint ./src"
+		"lint": "eslint ./src",
+		"scrape": "node --import=tsx src/cli.ts"
 	},
 	"dependencies": {
 		"@rja-api/company": "workspace:*",
 		"@rja-api/role": "workspace:*",
 		"@rja-api/settings": "workspace:*",
+		"@rja-core/drizzle": "workspace:*",
 		"@rja-integrations/patchright": "workspace:*",
 		"rss-parser": "3.13.0"
 	},
@@ -24,6 +25,7 @@
 		"@rja-core/eslint": "workspace:*",
 		"@rja-core/tsconfig": "workspace:*",
 		"eslint": "9.24.0",
+		"tsx": "4.21.0",
 		"typescript": "5.9.3"
 	},
 	"imports": {

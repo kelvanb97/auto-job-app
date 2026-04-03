@@ -78,9 +78,6 @@ importers:
       '@rja-app/home':
         specifier: workspace:*
         version: link:../../packages/_app/home
-      '@rja-app/scraper':
-        specifier: workspace:*
-        version: link:../../packages/_app/scraper
       '@rja-core/drizzle':
         specifier: workspace:*
         version: link:../../packages/_core/drizzle
@@ -627,6 +624,9 @@ importers:
       '@rja-api/settings':
         specifier: workspace:*
         version: link:../../_api/settings
+      '@rja-core/drizzle':
+        specifier: workspace:*
+        version: link:../../_core/drizzle
       '@rja-integrations/patchright':
         specifier: workspace:*
         version: link:../../_integrations/patchright
@@ -643,6 +643,9 @@ importers:
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
+      tsx:
+        specifier: 4.21.0
+        version: 4.21.0
       typescript:
         specifier: 5.9.3
         version: 5.9.3

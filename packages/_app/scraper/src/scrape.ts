@@ -8,11 +8,7 @@ import * as jobicy from "#sources/jobicy"
 import * as linkedin from "#sources/linkedin/index"
 import * as remoteok from "#sources/remoteok"
 import * as weworkremotely from "#sources/weworkremotely"
-import type {
-	ScrapedRole,
-	TScrapeProgressCallback,
-	TSourceScrapeOptions,
-} from "#types"
+import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 
 type SourceModule = {
 	scrape: (options?: TSourceScrapeOptions) => Promise<ScrapedRole[]>
@@ -50,7 +46,6 @@ export type TScrapeSummary = {
 export type TScrapeOptions = {
 	sources?: TSourceName[]
 	signal?: AbortSignal
-	onProgress?: TScrapeProgressCallback
 }
 
 export async function runScraper(
@@ -68,11 +63,7 @@ export async function runScraper(
 
 	const config = configResult.data
 
-	const {
-		sources = config.enabledSources as TSourceName[],
-		signal,
-		onProgress,
-	} = options
+	const { sources = config.enabledSources as TSourceName[], signal } = options
 
 	const filterConfig = {
 		relevantKeywords: config.relevantKeywords,
@@ -96,7 +87,7 @@ export async function runScraper(
 			continue
 		}
 
-		onProgress?.({ type: "source:start", source: name })
+		console.log(`[${name}] Starting...`)
 
 		try {
 			const sourceSummary = {
@@ -116,13 +107,6 @@ export async function runScraper(
 				)
 				if (removedCount > 0) {
 					sourceSummary.filtered++
-					onProgress?.({
-						type: "source:role",
-						source: name,
-						title: role.title,
-						company: role.company,
-						status: "filtered",
-					})
 					return
 				}
 
@@ -138,14 +122,6 @@ export async function runScraper(
 						sourceSummary.skipped++
 						break
 				}
-
-				onProgress?.({
-					type: "source:role",
-					source: name,
-					title: role.title,
-					company: role.company,
-					status: result,
-				})
 			}
 
 			const scrapeOptions: TSourceScrapeOptions = { onRole, signal }
@@ -174,13 +150,6 @@ export async function runScraper(
 				await sourceModule.scrape(scrapeOptions)
 			}
 
-			onProgress?.({
-				type: "source:inserted",
-				source: name,
-				inserted: sourceSummary.inserted,
-				skipped: sourceSummary.skipped,
-			})
-
 			summary.sources[name] = sourceSummary
 			summary.total.found += sourceSummary.found
 			summary.total.filtered += sourceSummary.filtered
@@ -200,18 +169,13 @@ export async function runScraper(
 				error,
 			}
 			summary.total.errors += 1
-			onProgress?.({ type: "source:error", source: name, error })
 			console.error(`[${name}] error: ${error}`)
 		}
-
-		onProgress?.({ type: "source:done", source: name })
 	}
 
 	console.log(
 		`[total] found=${summary.total.found} filtered=${summary.total.filtered} inserted=${summary.total.inserted} skipped=${summary.total.skipped} errors=${summary.total.errors}`,
 	)
-
-	onProgress?.({ type: "done" })
 
 	return summary
 }
