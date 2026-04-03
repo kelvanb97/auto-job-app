@@ -24,7 +24,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 // ---------------------------------------------------------------------------
 
 interface IJsonEditorCardProps {
-	profile: TUserProfileFull
+	profile: TUserProfileFull | null
 	eeo: TEeoConfig | null
 	formDefaults: TFormDefaults | null
 	scoring: TScoringConfig | null
@@ -71,49 +71,55 @@ function buildJsonView(props: IJsonEditorCardProps) {
 	const { profile, eeo, formDefaults, scoring, scraper } = props
 
 	return {
-		profile: {
-			id: profile.id,
-			name: profile.name,
-			email: profile.email,
-			phone: profile.phone,
-			linkedin: profile.linkedin,
-			github: profile.github,
-			personalWebsite: profile.personalWebsite,
-			location: profile.location,
-			address: profile.address,
-			jobTitle: profile.jobTitle,
-			seniority: profile.seniority,
-			yearsOfExperience: profile.yearsOfExperience,
-			summary: profile.summary,
-			notes: profile.notes,
-			skills: profile.skills,
-			preferredSkills: profile.preferredSkills,
-			preferredLocationTypes: profile.preferredLocationTypes,
-			preferredLocations: profile.preferredLocations,
-			salaryMin: profile.salaryMin,
-			salaryMax: profile.salaryMax,
-			desiredSalary: profile.desiredSalary,
-			startDateWeeksOut: profile.startDateWeeksOut,
-			industries: profile.industries,
-			dealbreakers: profile.dealbreakers,
-			domainExpertise: profile.domainExpertise,
-		},
-		workExperience: profile.workExperience.map((exp) => ({
-			company: exp.company,
-			title: exp.title,
-			startDate: exp.startDate,
-			endDate: exp.endDate,
-			type: exp.type,
-			platforms: exp.platforms,
-			techStack: exp.techStack,
-			summary: exp.summary,
-			highlights: exp.highlights,
-		})),
-		education: profile.education.map((edu) => ({
-			degree: edu.degree,
-			field: edu.field,
-			institution: edu.institution,
-		})),
+		profile: profile
+			? {
+					id: profile.id,
+					name: profile.name,
+					email: profile.email,
+					phone: profile.phone,
+					linkedin: profile.linkedin,
+					github: profile.github,
+					personalWebsite: profile.personalWebsite,
+					location: profile.location,
+					address: profile.address,
+					jobTitle: profile.jobTitle,
+					seniority: profile.seniority,
+					yearsOfExperience: profile.yearsOfExperience,
+					summary: profile.summary,
+					notes: profile.notes,
+					skills: profile.skills,
+					preferredSkills: profile.preferredSkills,
+					preferredLocationTypes: profile.preferredLocationTypes,
+					preferredLocations: profile.preferredLocations,
+					salaryMin: profile.salaryMin,
+					salaryMax: profile.salaryMax,
+					desiredSalary: profile.desiredSalary,
+					startDateWeeksOut: profile.startDateWeeksOut,
+					industries: profile.industries,
+					dealbreakers: profile.dealbreakers,
+					domainExpertise: profile.domainExpertise,
+				}
+			: null,
+		workExperience: profile
+			? profile.workExperience.map((exp) => ({
+					company: exp.company,
+					title: exp.title,
+					startDate: exp.startDate,
+					endDate: exp.endDate,
+					type: exp.type,
+					platforms: exp.platforms,
+					techStack: exp.techStack,
+					summary: exp.summary,
+					highlights: exp.highlights,
+				}))
+			: [],
+		education: profile
+			? profile.education.map((edu) => ({
+					degree: edu.degree,
+					field: edu.field,
+					institution: edu.institution,
+				}))
+			: [],
 		eeo: eeo
 			? {
 					gender: eeo.gender,

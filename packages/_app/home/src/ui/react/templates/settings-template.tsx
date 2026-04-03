@@ -114,7 +114,9 @@ export function SettingsTemplate({
 							const Icon = tab.icon
 							const isActive = activeTab === tab.key
 							const isDisabled =
-								!hasProfile && tab.key !== "profile"
+								!hasProfile &&
+								tab.key !== "profile" &&
+								tab.key !== "json"
 							return (
 								<button
 									key={tab.key}
@@ -207,7 +209,7 @@ export function SettingsTemplate({
 						onSaved={onSaved}
 					/>
 				)}
-				{activeTab === "json" && profile && (
+				{activeTab === "json" && (
 					<JsonEditorCard
 						profile={profile}
 						eeo={eeo}
