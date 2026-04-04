@@ -10,7 +10,6 @@ import {
 	Braces,
 	Briefcase,
 	FileText,
-	Globe,
 	GraduationCap,
 	Linkedin,
 	Search,
@@ -24,7 +23,6 @@ import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { EducationCard } from "#molecules/settings/education-card"
 import { EeoCard } from "#molecules/settings/eeo-card"
 import { FormDefaultsCard } from "#molecules/settings/form-defaults-card"
-import { GoogleJobsCard } from "#molecules/settings/google-jobs-card"
 import { JsonEditorCard } from "#molecules/settings/json-editor-card"
 import { LinkedInCard } from "#molecules/settings/linkedin-card"
 import { ProfileCard } from "#molecules/settings/profile-card"
@@ -66,7 +64,6 @@ const SECTIONS: TSection[] = [
 		label: "Scraper",
 		tabs: [
 			{ key: "scraper", label: "Scraper Config", icon: Search },
-			{ key: "google-jobs", label: "Google Jobs", icon: Globe },
 			{ key: "linkedin", label: "LinkedIn", icon: Linkedin },
 		],
 	},
@@ -190,13 +187,6 @@ export function SettingsTemplate({
 				)}
 				{activeTab === "scraper" && profile && (
 					<ScraperConfigCard
-						profileId={profile.id}
-						scraper={scraper}
-						onSaved={onSaved}
-					/>
-				)}
-				{activeTab === "google-jobs" && profile && (
-					<GoogleJobsCard
 						profileId={profile.id}
 						scraper={scraper}
 						onSaved={onSaved}

@@ -9,14 +9,7 @@ process.chdir(resolve(import.meta.dirname, "../../../../apps/web"))
 // Load env from root .env
 process.loadEnvFile(resolve(import.meta.dirname, "../../../../.env"))
 
-const VALID_SOURCES: TSourceName[] = [
-	"google-jobs",
-	"linkedin",
-	"remoteok",
-	"weworkremotely",
-	"himalayas",
-	"jobicy",
-]
+const VALID_SOURCES: TSourceName[] = ["linkedin"]
 
 function printUsage() {
 	console.log("Usage: pnpm --filter @rja-app/scraper run scrape <source>")

@@ -3,11 +3,6 @@ import { z } from "zod"
 export type { TRole, TNewRole } from "@rja-app/drizzle"
 
 export const ROLE_SOURCES = [
-	"himalayas",
-	"jobicy",
-	"remoteok",
-	"weworkremotely",
-	"google-jobs",
 	"linkedin",
 	"indeed",
 	"company-website",

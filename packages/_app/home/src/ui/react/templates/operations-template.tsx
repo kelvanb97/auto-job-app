@@ -20,7 +20,7 @@ export function OperationsTemplate() {
 				<TextBody size="sm" variant="muted-foreground">
 					Or run directly via CLI:{" "}
 					<code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-						pnpm --filter @rja-app/scraper run scrape google-jobs
+						pnpm --filter @rja-app/scraper run scrape linkedin
 					</code>
 				</TextBody>
 			</YStack>

@@ -2,12 +2,7 @@ import { getScraperConfig } from "@rja-api/settings/api/get-scraper-config"
 import type { TSourceName } from "@rja-api/settings/schema/scraper-config-schema"
 import { filterRoles } from "#lib/filter"
 import { insertRole } from "#lib/insert"
-import * as googleJobs from "#sources/google-jobs/index"
-import * as himalayas from "#sources/himalayas"
-import * as jobicy from "#sources/jobicy"
 import * as linkedin from "#sources/linkedin/index"
-import * as remoteok from "#sources/remoteok"
-import * as weworkremotely from "#sources/weworkremotely"
 import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 
 type SourceModule = {
@@ -15,11 +10,6 @@ type SourceModule = {
 }
 
 const ALL_SOURCES: Record<TSourceName, SourceModule> = {
-	remoteok,
-	weworkremotely,
-	himalayas,
-	jobicy,
-	"google-jobs": googleJobs as unknown as SourceModule,
 	linkedin: linkedin as unknown as SourceModule,
 }
 
@@ -126,29 +116,14 @@ export async function runScraper(
 
 			const scrapeOptions: TSourceScrapeOptions = { onRole, signal }
 
-			if (name === "google-jobs") {
-				await googleJobs.scrape(
-					{
-						titles: config.googleTitles,
-						remote: config.googleRemote,
-						fullTimeOnly: config.googleFullTimeOnly,
-						freshnessDays: config.googleFreshnessDays,
-						maxPagesPerQuery: config.googleMaxPages,
-					},
-					scrapeOptions,
-				)
-			} else if (name === "linkedin") {
-				await linkedin.scrape(
-					{
-						urls: config.linkedinUrls,
-						maxPages: config.linkedinMaxPages,
-						maxPerPage: config.linkedinMaxPerPage,
-					},
-					scrapeOptions,
-				)
-			} else {
-				await sourceModule.scrape(scrapeOptions)
-			}
+			await linkedin.scrape(
+				{
+					urls: config.linkedinUrls,
+					maxPages: config.linkedinMaxPages,
+					maxPerPage: config.linkedinMaxPerPage,
+				},
+				scrapeOptions,
+			)
 
 			summary.sources[name] = sourceSummary
 			summary.total.found += sourceSummary.found

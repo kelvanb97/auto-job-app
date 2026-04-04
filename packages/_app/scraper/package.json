@@ -18,8 +18,7 @@
 		"@rja-api/role": "workspace:*",
 		"@rja-api/settings": "workspace:*",
 		"@rja-core/drizzle": "workspace:*",
-		"@rja-integrations/patchright": "workspace:*",
-		"rss-parser": "3.13.0"
+		"@rja-integrations/patchright": "workspace:*"
 	},
 	"devDependencies": {
 		"@rja-core/eslint": "workspace:*",
