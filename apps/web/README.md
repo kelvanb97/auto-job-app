@@ -1,6 +1,6 @@
 # web
 
-Next.js 16 dashboard (App Router, Turbopack) for browsing scraped roles, triggering scrapes/scores, and managing the auto-apply pipeline.
+Next.js 16 dashboard (App Router, Turbopack) for browsing scraped roles, managing scores, and running the auto-apply pipeline.
 
 ## Setup
 
@@ -28,13 +28,12 @@ Environment variables are loaded from the root `.env` file via `process.loadEnvF
 | `/people` | Contact management |
 | `/follow-ups` | Interaction tracking |
 | `/create` | Manual role creation |
-| `/operations` | Scraper and scorer controls |
+| `/operations` | CLI instructions for scraping and scoring |
 
 ## API Endpoints
 
 | Method | Path | Purpose |
 |---|---|---|
-| POST | `/api/scrape` | Trigger a scrape run |
 | POST | `/api/score` | Trigger batch scoring |
 | GET | `/api/apply/top-role` | Fetch top unapplied role |
 | POST | `/api/apply/documents/generate` | Generate resume/cover letter |
@@ -49,6 +48,5 @@ Environment variables are loaded from the root `.env` file via `process.loadEnvF
 - `@rja-app/home` — dashboard screens
 - `@rja-app/apply` — auto-apply workflow
 - `@rja-app/score` — batch scoring
-- `@rja-app/scraper` — scrape triggering
 - `@rja-config/user` — user profile
 - `@rja-design/ui` — component library

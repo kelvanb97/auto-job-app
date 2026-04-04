@@ -1,30 +1,16 @@
 import { getScraperConfig } from "@rja-api/settings/api/get-scraper-config"
 import type { TSourceName } from "@rja-api/settings/schema/scraper-config-schema"
 import { filterRoles } from "#lib/filter"
-import { insertRoles } from "#lib/insert"
-import * as googleJobs from "#sources/google-jobs/index"
-import * as himalayas from "#sources/himalayas"
-import * as jobicy from "#sources/jobicy"
+import { insertRole } from "#lib/insert"
 import * as linkedin from "#sources/linkedin/index"
-import * as remoteok from "#sources/remoteok"
-import * as weworkremotely from "#sources/weworkremotely"
-import type {
-	ScrapedRole,
-	TScrapeProgressCallback,
-	TSourceScrapeOptions,
-} from "#types"
+import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 
 type SourceModule = {
-	scrape: (...args: never[]) => Promise<ScrapedRole[]>
+	scrape: (options?: TSourceScrapeOptions) => Promise<ScrapedRole[]>
 }
 
 const ALL_SOURCES: Record<TSourceName, SourceModule> = {
-	remoteok,
-	weworkremotely,
-	himalayas,
-	jobicy,
-	"google-jobs": googleJobs,
-	linkedin,
+	linkedin: linkedin as unknown as SourceModule,
 }
 
 export type TScrapeSummary = {
@@ -50,7 +36,6 @@ export type TScrapeSummary = {
 export type TScrapeOptions = {
 	sources?: TSourceName[]
 	signal?: AbortSignal
-	onProgress?: TScrapeProgressCallback
 }
 
 export async function runScraper(
@@ -68,17 +53,15 @@ export async function runScraper(
 
 	const config = configResult.data
 
-	const {
-		sources = config.enabledSources as TSourceName[],
-		signal,
-		onProgress,
-	} = options
+	const { sources = config.enabledSources as TSourceName[], signal } = options
 
 	const filterConfig = {
 		relevantKeywords: config.relevantKeywords,
 		blockedKeywords: config.blockedKeywords,
 		blockedCompanies: config.blockedCompanies,
 	}
+
+	const companyCache = new Map<string, number>()
 
 	const summary: TScrapeSummary = {
 		total: { found: 0, filtered: 0, inserted: 0, skipped: 0, errors: 0 },
@@ -94,10 +77,9 @@ export async function runScraper(
 			continue
 		}
 
-		onProgress?.({ type: "source:start", source: name })
+		console.log(`[${name}] Starting...`)
 
 		try {
-			let batchPageCount = 0
 			const sourceSummary = {
 				found: 0,
 				filtered: 0,
@@ -105,102 +87,43 @@ export async function runScraper(
 				skipped: 0,
 			}
 
-			const onBatch = async (roles: ScrapedRole[]) => {
-				batchPageCount++
-				sourceSummary.found += roles.length
+			const onRole = async (role: ScrapedRole) => {
+				sourceSummary.found++
 
+				// Filter
 				const { filtered, removedCount } = filterRoles(
-					roles,
+					[role],
 					filterConfig,
 				)
-				const { inserted, skipped } = await insertRoles(
-					filtered,
-					signal,
-				)
+				if (removedCount > 0) {
+					sourceSummary.filtered++
+					return
+				}
 
-				sourceSummary.filtered += removedCount
-				sourceSummary.inserted += inserted
-				sourceSummary.skipped += skipped
-
-				onProgress?.({
-					type: "source:page",
-					source: name,
-					page: batchPageCount,
-					found: roles.length,
-					inserted,
-					skipped,
-					filtered: removedCount,
-				})
-
-				console.log(
-					`[${name}] page ${batchPageCount}: found=${roles.length} filtered=${removedCount} inserted=${inserted} skipped=${skipped}`,
-				)
+				// Insert immediately
+				const result = insertRole(filtered[0]!, companyCache)
+				switch (result) {
+					case "inserted":
+						sourceSummary.inserted++
+						break
+					case "duplicate":
+					case "skipped":
+					case "filtered":
+						sourceSummary.skipped++
+						break
+				}
 			}
 
-			const scrapeOptions: TSourceScrapeOptions = { onBatch, signal }
+			const scrapeOptions: TSourceScrapeOptions = { onRole, signal }
 
-			let allRoles: ScrapedRole[]
-			if (name === "google-jobs") {
-				allRoles = await googleJobs.scrape(
-					{
-						titles: config.googleTitles,
-						remote: config.googleRemote,
-						fullTimeOnly: config.googleFullTimeOnly,
-						freshnessDays: config.googleFreshnessDays,
-						maxPagesPerQuery: config.googleMaxPages,
-					},
-					scrapeOptions,
-				)
-			} else if (name === "linkedin") {
-				allRoles = await linkedin.scrape(
-					{
-						urls: config.linkedinUrls,
-						maxPages: config.linkedinMaxPages,
-						maxPerPage: config.linkedinMaxPerPage,
-					},
-					scrapeOptions,
-				)
-			} else {
-				allRoles = await (
-					sourceModule.scrape as (
-						options?: TSourceScrapeOptions,
-					) => Promise<ScrapedRole[]>
-				)(scrapeOptions)
-			}
-
-			if (batchPageCount === 0 && allRoles.length > 0) {
-				// Source did not use onBatch — process in bulk
-				onProgress?.({
-					type: "source:found",
-					source: name,
-					count: allRoles.length,
-				})
-
-				const { filtered: roles, removedCount } = filterRoles(
-					allRoles,
-					filterConfig,
-				)
-				const { inserted, skipped } = await insertRoles(roles, signal)
-
-				sourceSummary.found = allRoles.length
-				sourceSummary.filtered = removedCount
-				sourceSummary.inserted = inserted
-				sourceSummary.skipped = skipped
-
-				onProgress?.({
-					type: "source:inserted",
-					source: name,
-					inserted,
-					skipped,
-				})
-			} else if (batchPageCount > 0) {
-				onProgress?.({
-					type: "source:inserted",
-					source: name,
-					inserted: sourceSummary.inserted,
-					skipped: sourceSummary.skipped,
-				})
-			}
+			await linkedin.scrape(
+				{
+					urls: config.linkedinUrls,
+					maxPages: config.linkedinMaxPages,
+					maxPerPage: config.linkedinMaxPerPage,
+				},
+				scrapeOptions,
+			)
 
 			summary.sources[name] = sourceSummary
 			summary.total.found += sourceSummary.found
@@ -221,18 +144,13 @@ export async function runScraper(
 				error,
 			}
 			summary.total.errors += 1
-			onProgress?.({ type: "source:error", source: name, error })
 			console.error(`[${name}] error: ${error}`)
 		}
-
-		onProgress?.({ type: "source:done", source: name })
 	}
 
 	console.log(
 		`[total] found=${summary.total.found} filtered=${summary.total.filtered} inserted=${summary.total.inserted} skipped=${summary.total.skipped} errors=${summary.total.errors}`,
 	)
-
-	onProgress?.({ type: "done" })
 
 	return summary
 }

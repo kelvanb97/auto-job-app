@@ -17,20 +17,14 @@ import { toast } from "@rja-design/ui/library/toast"
 import { XStack } from "@rja-design/ui/primitives/x-stack"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { saveAllSettingsAction } from "#actions/settings-actions"
-import {
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 interface IJsonEditorCardProps {
-	profile: TUserProfileFull
+	profile: TUserProfileFull | null
 	eeo: TEeoConfig | null
 	formDefaults: TFormDefaults | null
 	scoring: TScoringConfig | null
@@ -45,7 +39,14 @@ interface IJsonEditorCardProps {
 function highlightJson(json: string): string {
 	return json.replace(
 		/("(?:\\.|[^"\\])*")\s*(:)?|(\b(?:true|false|null)\b)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|([{}[\],])/g,
-		(match, str?: string, colon?: string, bool?: string, num?: string, punct?: string) => {
+		(
+			match,
+			str?: string,
+			colon?: string,
+			bool?: string,
+			num?: string,
+			punct?: string,
+		) => {
 			if (str) {
 				if (colon) {
 					// key
@@ -70,49 +71,55 @@ function buildJsonView(props: IJsonEditorCardProps) {
 	const { profile, eeo, formDefaults, scoring, scraper } = props
 
 	return {
-		profile: {
-			id: profile.id,
-			name: profile.name,
-			email: profile.email,
-			phone: profile.phone,
-			linkedin: profile.linkedin,
-			github: profile.github,
-			personalWebsite: profile.personalWebsite,
-			location: profile.location,
-			address: profile.address,
-			jobTitle: profile.jobTitle,
-			seniority: profile.seniority,
-			yearsOfExperience: profile.yearsOfExperience,
-			summary: profile.summary,
-			notes: profile.notes,
-			skills: profile.skills,
-			preferredSkills: profile.preferredSkills,
-			preferredLocationTypes: profile.preferredLocationTypes,
-			preferredLocations: profile.preferredLocations,
-			salaryMin: profile.salaryMin,
-			salaryMax: profile.salaryMax,
-			desiredSalary: profile.desiredSalary,
-			startDateWeeksOut: profile.startDateWeeksOut,
-			industries: profile.industries,
-			dealbreakers: profile.dealbreakers,
-			domainExpertise: profile.domainExpertise,
-		},
-		workExperience: profile.workExperience.map((exp) => ({
-			company: exp.company,
-			title: exp.title,
-			startDate: exp.startDate,
-			endDate: exp.endDate,
-			type: exp.type,
-			platforms: exp.platforms,
-			techStack: exp.techStack,
-			summary: exp.summary,
-			highlights: exp.highlights,
-		})),
-		education: profile.education.map((edu) => ({
-			degree: edu.degree,
-			field: edu.field,
-			institution: edu.institution,
-		})),
+		profile: profile
+			? {
+					id: profile.id,
+					name: profile.name,
+					email: profile.email,
+					phone: profile.phone,
+					linkedin: profile.linkedin,
+					github: profile.github,
+					personalWebsite: profile.personalWebsite,
+					location: profile.location,
+					address: profile.address,
+					jobTitle: profile.jobTitle,
+					seniority: profile.seniority,
+					yearsOfExperience: profile.yearsOfExperience,
+					summary: profile.summary,
+					notes: profile.notes,
+					skills: profile.skills,
+					preferredSkills: profile.preferredSkills,
+					preferredLocationTypes: profile.preferredLocationTypes,
+					preferredLocations: profile.preferredLocations,
+					salaryMin: profile.salaryMin,
+					salaryMax: profile.salaryMax,
+					desiredSalary: profile.desiredSalary,
+					startDateWeeksOut: profile.startDateWeeksOut,
+					industries: profile.industries,
+					dealbreakers: profile.dealbreakers,
+					domainExpertise: profile.domainExpertise,
+				}
+			: null,
+		workExperience: profile
+			? profile.workExperience.map((exp) => ({
+					company: exp.company,
+					title: exp.title,
+					startDate: exp.startDate,
+					endDate: exp.endDate,
+					type: exp.type,
+					platforms: exp.platforms,
+					techStack: exp.techStack,
+					summary: exp.summary,
+					highlights: exp.highlights,
+				}))
+			: [],
+		education: profile
+			? profile.education.map((edu) => ({
+					degree: edu.degree,
+					field: edu.field,
+					institution: edu.institution,
+				}))
+			: [],
 		eeo: eeo
 			? {
 					gender: eeo.gender,
@@ -316,9 +323,7 @@ export function JsonEditorCard(props: IJsonEditorCardProps) {
 										i === activeLine
 											? "rgba(255, 255, 255, 0.06)"
 											: "transparent",
-									...(i === 0
-										? { paddingTop: "12px" }
-										: {}),
+									...(i === 0 ? { paddingTop: "12px" } : {}),
 									...(i === lines.length - 1
 										? { paddingBottom: "12px" }
 										: {}),
@@ -330,19 +335,22 @@ export function JsonEditorCard(props: IJsonEditorCardProps) {
 					</div>
 
 					{/* Code area: highlight layer + textarea */}
-					<div className="relative flex-1" style={{ overflow: "hidden" }}>
+					<div
+						className="relative flex-1"
+						style={{ overflow: "hidden" }}
+					>
 						{/* Syntax-highlighted overlay with per-line active highlight */}
 						<pre
 							ref={highlightRef}
 							aria-hidden
 							className="pointer-events-none absolute inset-0 font-mono"
-						style={{
-							margin: 0,
-							padding: 0,
-							tabSize: 4,
-							overflow: "hidden",
-						}}
-					>
+							style={{
+								margin: 0,
+								padding: 0,
+								tabSize: 4,
+								overflow: "hidden",
+							}}
+						>
 							{highlightedLines.map((html, i) => (
 								<div
 									key={i}
@@ -417,9 +425,7 @@ export function JsonEditorCard(props: IJsonEditorCardProps) {
 				>
 					<span>{parseError ?? "Valid JSON"}</span>
 					<XStack className="gap-4">
-						<span>
-							Ln {activeLine + 1}
-						</span>
+						<span>Ln {activeLine + 1}</span>
 						<span>{lines.length} lines</span>
 					</XStack>
 				</XStack>

@@ -1,4 +1,4 @@
-CREATE TABLE `education` (
+CREATE TABLE IF NOT EXISTS `education` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`user_profile_id` integer NOT NULL,
 	`sort_order` integer DEFAULT 0 NOT NULL,
@@ -10,8 +10,8 @@ CREATE TABLE `education` (
 	FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE INDEX `idx_education_user_profile_id` ON `education` (`user_profile_id`);--> statement-breakpoint
-CREATE TABLE `eeo_config` (
+CREATE INDEX IF NOT EXISTS `idx_education_user_profile_id` ON `education` (`user_profile_id`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `eeo_config` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`user_profile_id` integer NOT NULL,
 	`gender` text,
@@ -25,8 +25,8 @@ CREATE TABLE `eeo_config` (
 	FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `eeo_config_user_profile_id_unique` ON `eeo_config` (`user_profile_id`);--> statement-breakpoint
-CREATE TABLE `form_defaults` (
+CREATE UNIQUE INDEX IF NOT EXISTS `eeo_config_user_profile_id_unique` ON `eeo_config` (`user_profile_id`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `form_defaults` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`user_profile_id` integer NOT NULL,
 	`how_did_you_hear` text DEFAULT '' NOT NULL,
@@ -40,8 +40,8 @@ CREATE TABLE `form_defaults` (
 	FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `form_defaults_user_profile_id_unique` ON `form_defaults` (`user_profile_id`);--> statement-breakpoint
-CREATE TABLE `scoring_config` (
+CREATE UNIQUE INDEX IF NOT EXISTS `form_defaults_user_profile_id_unique` ON `form_defaults` (`user_profile_id`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `scoring_config` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`user_profile_id` integer NOT NULL,
 	`title_and_seniority` text DEFAULT 'high' NOT NULL,
@@ -54,8 +54,8 @@ CREATE TABLE `scoring_config` (
 	FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `scoring_config_user_profile_id_unique` ON `scoring_config` (`user_profile_id`);--> statement-breakpoint
-CREATE TABLE `scraper_config` (
+CREATE UNIQUE INDEX IF NOT EXISTS `scoring_config_user_profile_id_unique` ON `scoring_config` (`user_profile_id`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `scraper_config` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`user_profile_id` integer NOT NULL,
 	`relevant_keywords` text DEFAULT '[]' NOT NULL,
@@ -75,8 +75,8 @@ CREATE TABLE `scraper_config` (
 	FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `scraper_config_user_profile_id_unique` ON `scraper_config` (`user_profile_id`);--> statement-breakpoint
-CREATE TABLE `user_profile` (
+CREATE UNIQUE INDEX IF NOT EXISTS `scraper_config_user_profile_id_unique` ON `scraper_config` (`user_profile_id`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `user_profile` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL,
 	`email` text NOT NULL,
@@ -106,7 +106,7 @@ CREATE TABLE `user_profile` (
 	`updated_at` integer
 );
 --> statement-breakpoint
-CREATE TABLE `work_experience` (
+CREATE TABLE IF NOT EXISTS `work_experience` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`user_profile_id` integer NOT NULL,
 	`sort_order` integer DEFAULT 0 NOT NULL,
@@ -124,4 +124,4 @@ CREATE TABLE `work_experience` (
 	FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE INDEX `idx_work_experience_user_profile_id` ON `work_experience` (`user_profile_id`);
+CREATE INDEX IF NOT EXISTS `idx_work_experience_user_profile_id` ON `work_experience` (`user_profile_id`);
