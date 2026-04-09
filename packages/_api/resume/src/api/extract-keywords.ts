@@ -1,15 +1,15 @@
-import { createMessage } from "@rja-integrations/anthropic/client"
-import type { TAnthropicModel } from "@rja-integrations/anthropic/client"
+import { getLlmConfigForUseCase } from "@rja-api/settings/api/get-llm-config-for-use-case"
+import { createMessage } from "@rja-integrations/llm/client"
 import { keywordExtractionSchema } from "#schema/keyword-schema"
 import type { TKeywordExtraction } from "#schema/keyword-schema"
 
 export async function extractKeywords(
-	model: TAnthropicModel,
 	system: string,
 	user: string,
 ): Promise<TKeywordExtraction> {
-	return createMessage({
-		model,
+	const configResult = getLlmConfigForUseCase("keyword")
+	if (!configResult.ok) throw configResult.error
+	return createMessage(configResult.data, {
 		system,
 		user,
 		maxTokens: 1024,

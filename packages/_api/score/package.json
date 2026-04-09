@@ -24,7 +24,7 @@
 		"@rja-api/settings": "workspace:*",
 		"@rja-core/drizzle": "workspace:*",
 		"@rja-core/result": "workspace:*",
-		"@rja-integrations/anthropic": "workspace:*",
+		"@rja-integrations/llm": "workspace:*",
 		"drizzle-orm": "0.44.2"
 	},
 	"devDependencies": {

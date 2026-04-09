@@ -137,13 +137,13 @@ SQLite database via Drizzle ORM + better-sqlite3. No Docker or external services
 
 ### Migrations
 
-Migrations run automatically on app startup via `apps/web/instrumentation.ts`. After changing the schema:
+`pnpm dev` and `pnpm start` (in `apps/web`) chain `pnpm --filter @rja-app/drizzle migrate` before launching Next.js, so pending migrations are applied automatically before the server starts. After changing the schema:
 
 ```bash
 pnpm --filter @rja-app/drizzle generate   # generate a new migration SQL file
 ```
 
-The next `pnpm dev` applies pending migrations automatically. CLI fallback: `pnpm --filter @rja-app/drizzle migrate`.
+To apply migrations without starting the server: `pnpm --filter @rja-app/drizzle migrate`.
 
 ### User Settings
 

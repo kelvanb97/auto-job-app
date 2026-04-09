@@ -12,13 +12,8 @@ import { getRole } from "@rja-api/role/api/get-role"
 import { getUserProfile } from "@rja-api/settings/api/get-user-profile"
 import { uploadFile } from "@rja-api/storage/api/upload-file"
 import { errFrom, ok, type TResult } from "@rja-core/result"
-import type { TAnthropicModel } from "@rja-integrations/anthropic/client"
 import type { TGenerateDocumentsResult } from "./types"
 
-const KEYWORD_MODEL = (process.env["APPLY_KEYWORD_MODEL"] ??
-	"claude-haiku-4-5-20251001") as TAnthropicModel
-const RESUME_MODEL = (process.env["APPLY_RESUME_MODEL"] ??
-	"claude-opus-4-6") as TAnthropicModel
 const STORAGE_BUCKET = "applications"
 
 function sanitize(text: string): string {
@@ -56,7 +51,6 @@ export async function generateDocuments(
 	// Extract keywords
 	const keywordPrompt = buildKeywordPrompt(role, company)
 	const keywords = await extractKeywords(
-		KEYWORD_MODEL,
 		keywordPrompt.system,
 		keywordPrompt.user,
 	)
@@ -64,7 +58,6 @@ export async function generateDocuments(
 	// Generate resume
 	const resumePrompt = buildResumePrompt(role, company, profile, keywords)
 	const resumeContent = await generateResumeContent(
-		RESUME_MODEL,
 		resumePrompt.system,
 		resumePrompt.user,
 	)
@@ -80,7 +73,6 @@ export async function generateDocuments(
 	// Generate cover letter
 	const coverLetterPrompt = buildCoverLetterPrompt(role, company, profile)
 	const coverLetterContent = await generateCoverLetterContent(
-		RESUME_MODEL,
 		coverLetterPrompt.system,
 		coverLetterPrompt.user,
 	)

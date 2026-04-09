@@ -1,7 +1,7 @@
-import type { Locator, Page, Response } from "patchright"
+import type { BrowserContext, Locator, Page, Response } from "patchright"
 import { BotBlockedError, CaptchaDetectedError } from "./errors"
 
-export type { Locator, Page, Response }
+export type { BrowserContext, Locator, Page, Response }
 
 export async function checkForBlocks(page: Page): Promise<void> {
 	const url = page.url()

@@ -1,5 +1,5 @@
-import { createMessage } from "@rja-integrations/anthropic/client"
-import type { TAnthropicModel } from "@rja-integrations/anthropic/client"
+import { getLlmConfigForUseCase } from "@rja-api/settings/api/get-llm-config-for-use-case"
+import { createMessage } from "@rja-integrations/llm/client"
 import { z } from "zod"
 
 const scoreResponseSchema = z.object({
@@ -16,12 +16,12 @@ const scoreResponseSchema = z.object({
 export type TScoreResponse = z.infer<typeof scoreResponseSchema>
 
 export async function scoreRole(
-	model: TAnthropicModel,
 	system: string,
 	user: string,
 ): Promise<TScoreResponse> {
-	return createMessage({
-		model,
+	const configResult = getLlmConfigForUseCase("scoring")
+	if (!configResult.ok) throw configResult.error
+	return createMessage(configResult.data, {
 		system,
 		user,
 		schema: scoreResponseSchema,

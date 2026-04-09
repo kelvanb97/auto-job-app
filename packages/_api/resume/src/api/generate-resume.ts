@@ -1,15 +1,15 @@
-import { createMessage } from "@rja-integrations/anthropic/client"
-import type { TAnthropicModel } from "@rja-integrations/anthropic/client"
+import { getLlmConfigForUseCase } from "@rja-api/settings/api/get-llm-config-for-use-case"
+import { createMessage } from "@rja-integrations/llm/client"
 import { resumeResponseSchema } from "#schema/resume-schema"
 import type { TResumeResponse } from "#schema/resume-schema"
 
 export async function generateResumeContent(
-	model: TAnthropicModel,
 	system: string,
 	user: string,
 ): Promise<TResumeResponse> {
-	return createMessage({
-		model,
+	const configResult = getLlmConfigForUseCase("resume")
+	if (!configResult.ok) throw configResult.error
+	return createMessage(configResult.data, {
 		system,
 		user,
 		maxTokens: 4096,

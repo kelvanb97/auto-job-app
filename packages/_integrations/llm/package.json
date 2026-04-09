@@ -1,24 +1,24 @@
 {
-	"name": "@rja-app/score",
+	"name": "@rja-integrations/llm",
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
-	"sideEffects": false,
 	"exports": {
-		"./batch-score": "./src/batch-score.ts",
-		"./types": "./src/types.ts"
+		"./client": "./src/client.ts"
 	},
 	"scripts": {
 		"check-types": "tsc --noEmit",
-		"lint": "eslint ./src"
+		"lint": "eslint ."
 	},
 	"dependencies": {
-		"@rja-api/role": "workspace:*",
-		"@rja-api/score": "workspace:*"
+		"@rja-integrations/anthropic": "workspace:*",
+		"@rja-integrations/openai": "workspace:*",
+		"zod": "4.3.6"
 	},
 	"devDependencies": {
 		"@rja-core/eslint": "workspace:*",
 		"@rja-core/tsconfig": "workspace:*",
+		"@types/node": "25.5.0",
 		"eslint": "9.24.0",
 		"typescript": "5.9.3"
 	}

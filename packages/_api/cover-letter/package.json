@@ -16,7 +16,7 @@
 		"@rja-api/company": "workspace:*",
 		"@rja-api/role": "workspace:*",
 		"@rja-api/settings": "workspace:*",
-		"@rja-integrations/anthropic": "workspace:*",
+		"@rja-integrations/llm": "workspace:*",
 		"docx": "9.5.0"
 	},
 	"peerDependencies": {

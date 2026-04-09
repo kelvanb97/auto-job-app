@@ -1,0 +1,24 @@
+{
+	"name": "@rja-integrations/openai",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"exports": {
+		"./client": "./src/client.ts"
+	},
+	"scripts": {
+		"check-types": "tsc --noEmit",
+		"lint": "eslint ."
+	},
+	"dependencies": {
+		"openai": "6.33.0",
+		"zod": "4.3.6"
+	},
+	"devDependencies": {
+		"@rja-core/eslint": "workspace:*",
+		"@rja-core/tsconfig": "workspace:*",
+		"@types/node": "25.5.0",
+		"eslint": "9.24.0",
+		"typescript": "5.9.3"
+	}
+}

@@ -1,5 +1,6 @@
 import { getEeoConfig } from "@rja-api/settings/api/get-eeo-config"
 import { getFormDefaults } from "@rja-api/settings/api/get-form-defaults"
+import { getLlmConfig } from "@rja-api/settings/api/get-llm-config"
 import { getScoringConfig } from "@rja-api/settings/api/get-scoring-config"
 import { getScraperConfig } from "@rja-api/settings/api/get-scraper-config"
 import { getUserProfile } from "@rja-api/settings/api/get-user-profile"
@@ -12,6 +13,7 @@ export async function SettingsScreen() {
 	const formDefaultsResult = getFormDefaults()
 	const scoringResult = getScoringConfig()
 	const scraperResult = getScraperConfig()
+	const llmResult = getLlmConfig()
 
 	return (
 		<AppShell activePage="settings">
@@ -23,6 +25,7 @@ export async function SettingsScreen() {
 				}
 				scoring={scoringResult.ok ? scoringResult.data : null}
 				scraper={scraperResult.ok ? scraperResult.data : null}
+				llm={llmResult.ok ? llmResult.data : null}
 			/>
 		</AppShell>
 	)

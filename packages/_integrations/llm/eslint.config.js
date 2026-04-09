@@ -1,3 +1,3 @@
 import { coreEslintConfig } from "@rja-core/eslint/core"
 
-export default coreEslintConfig
+export default [...coreEslintConfig]

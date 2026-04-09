@@ -63,7 +63,7 @@ apps/scraper -> @rja-app/scraper -> @rja-api/role
 
 apps/score -> @rja-app/score -> @rja-api/role
                                 @rja-api/score
-                                @rja-integrations/anthropic
+                                @rja-integrations/llm
 
 @rja-config/user (consumed by score, resume, cover-letter, scraper)
 ```
@@ -118,7 +118,9 @@ rocket-jobs-app/
       ui/                         Radix UI + Tailwind (40+ components)
 
     _integrations/                Third-party wrappers (@rja-integrations/*)
-      anthropic/                  Claude AI SDK
+      anthropic/                  Claude SDK (direct)
+      openai/                     OpenAI SDK (direct)
+      llm/                        Provider-agnostic LLM dispatch
       patchright/                 Browser automation
 ```
 

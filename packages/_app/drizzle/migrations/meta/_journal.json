@@ -15,6 +15,20 @@
 			"when": 1774938214992,
 			"tag": "0001_mature_blizzard",
 			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "6",
+			"when": 1775510481000,
+			"tag": "0002_normal_spitfire",
+			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "6",
+			"when": 1775628559256,
+			"tag": "0003_eminent_black_widow",
+			"breakpoints": true
 		}
 	]
 }

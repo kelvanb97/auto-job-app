@@ -2,15 +2,10 @@ import { existsSync, mkdirSync } from "node:fs"
 import { dirname, resolve } from "node:path"
 import Database from "better-sqlite3"
 import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3"
-import { migrate } from "drizzle-orm/better-sqlite3/migrator"
 
 let _db: BetterSQLite3Database | null = null
 
-type InitDbOptions = {
-	migrationsFolder?: string
-}
-
-export function initDb(options?: InitDbOptions): BetterSQLite3Database {
+export function initDb(): BetterSQLite3Database {
 	if (_db) return _db
 
 	const dbPath = resolve(process.cwd(), "data", "rja.db")
@@ -25,15 +20,9 @@ export function initDb(options?: InitDbOptions): BetterSQLite3Database {
 	sqlite.pragma("journal_mode = WAL")
 
 	_db = drizzle(sqlite)
-
-	if (options?.migrationsFolder) {
-		migrate(_db, { migrationsFolder: options.migrationsFolder })
-	}
-
 	return _db
 }
 
 export function db(): BetterSQLite3Database {
-	if (_db) return _db
-	return initDb()
+	return _db ?? initDb()
 }

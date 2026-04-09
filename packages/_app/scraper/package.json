@@ -6,24 +6,26 @@
 	"sideEffects": false,
 	"exports": {
 		"./scrape": "./src/scrape.ts",
-		"./types": "./src/types.ts"
+		"./types": "./src/types.ts",
+		"./errors": "./src/errors.ts"
 	},
 	"scripts": {
 		"check-types": "tsc --noEmit",
-		"lint": "eslint ./src"
+		"lint": "eslint ./src",
+		"login": "node --import=tsx src/cli/login.ts"
 	},
 	"dependencies": {
 		"@rja-api/company": "workspace:*",
 		"@rja-api/role": "workspace:*",
 		"@rja-api/score": "workspace:*",
 		"@rja-api/settings": "workspace:*",
-		"@rja-integrations/patchright": "workspace:*",
-		"rss-parser": "3.13.0"
+		"@rja-integrations/patchright": "workspace:*"
 	},
 	"devDependencies": {
 		"@rja-core/eslint": "workspace:*",
 		"@rja-core/tsconfig": "workspace:*",
 		"eslint": "9.24.0",
+		"tsx": "4.21.0",
 		"typescript": "5.9.3"
 	},
 	"imports": {

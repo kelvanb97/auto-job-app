@@ -2,6 +2,7 @@
 
 import type { TEeoConfig } from "@rja-api/settings/schema/eeo-config-schema"
 import type { TFormDefaults } from "@rja-api/settings/schema/form-defaults-schema"
+import type { TLlmConfig } from "@rja-api/settings/schema/llm-config-schema"
 import type { TScoringConfig } from "@rja-api/settings/schema/scoring-config-schema"
 import type { TScraperConfig } from "@rja-api/settings/schema/scraper-config-schema"
 import type { TUserProfileFull } from "@rja-api/settings/schema/user-profile-schema"
@@ -10,11 +11,11 @@ import {
 	Braces,
 	Briefcase,
 	FileText,
-	Globe,
 	GraduationCap,
 	Linkedin,
 	Search,
 	Shield,
+	Sparkles,
 	User,
 	type LucideIcon,
 } from "@rja-design/ui/assets/lucide"
@@ -24,9 +25,9 @@ import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { EducationCard } from "#molecules/settings/education-card"
 import { EeoCard } from "#molecules/settings/eeo-card"
 import { FormDefaultsCard } from "#molecules/settings/form-defaults-card"
-import { GoogleJobsCard } from "#molecules/settings/google-jobs-card"
 import { JsonEditorCard } from "#molecules/settings/json-editor-card"
 import { LinkedInCard } from "#molecules/settings/linkedin-card"
+import { LlmConfigCard } from "#molecules/settings/llm-config-card"
 import { ProfileCard } from "#molecules/settings/profile-card"
 import { ScoringWeightsCard } from "#molecules/settings/scoring-weights-card"
 import { ScraperConfigCard } from "#molecules/settings/scraper-config-card"
@@ -63,10 +64,13 @@ const SECTIONS: TSection[] = [
 		],
 	},
 	{
+		label: "Integrations",
+		tabs: [{ key: "llm", label: "LLM Provider", icon: Sparkles }],
+	},
+	{
 		label: "Scraper",
 		tabs: [
 			{ key: "scraper", label: "Scraper Config", icon: Search },
-			{ key: "google-jobs", label: "Google Jobs", icon: Globe },
 			{ key: "linkedin", label: "LinkedIn", icon: Linkedin },
 		],
 	},
@@ -84,6 +88,7 @@ interface ISettingsTemplateProps {
 	formDefaults: TFormDefaults | null
 	scoring: TScoringConfig | null
 	scraper: TScraperConfig | null
+	llm: TLlmConfig | null
 }
 
 export function SettingsTemplate({
@@ -92,6 +97,7 @@ export function SettingsTemplate({
 	formDefaults,
 	scoring,
 	scraper,
+	llm,
 }: ISettingsTemplateProps) {
 	const [activeTab, setActiveTab] = useState<TTabKey>("profile")
 	const router = useRouter()
@@ -114,7 +120,9 @@ export function SettingsTemplate({
 							const Icon = tab.icon
 							const isActive = activeTab === tab.key
 							const isDisabled =
-								!hasProfile && tab.key !== "profile"
+								!hasProfile &&
+								tab.key !== "profile" &&
+								tab.key !== "json"
 							return (
 								<button
 									key={tab.key}
@@ -186,15 +194,15 @@ export function SettingsTemplate({
 						onSaved={onSaved}
 					/>
 				)}
-				{activeTab === "scraper" && profile && (
-					<ScraperConfigCard
+				{activeTab === "llm" && profile && (
+					<LlmConfigCard
 						profileId={profile.id}
-						scraper={scraper}
+						llm={llm}
 						onSaved={onSaved}
 					/>
 				)}
-				{activeTab === "google-jobs" && profile && (
-					<GoogleJobsCard
+				{activeTab === "scraper" && profile && (
+					<ScraperConfigCard
 						profileId={profile.id}
 						scraper={scraper}
 						onSaved={onSaved}
@@ -207,13 +215,14 @@ export function SettingsTemplate({
 						onSaved={onSaved}
 					/>
 				)}
-				{activeTab === "json" && profile && (
+				{activeTab === "json" && (
 					<JsonEditorCard
 						profile={profile}
 						eeo={eeo}
 						formDefaults={formDefaults}
 						scoring={scoring}
 						scraper={scraper}
+						llm={llm}
 						onSaved={onSaved}
 					/>
 				)}

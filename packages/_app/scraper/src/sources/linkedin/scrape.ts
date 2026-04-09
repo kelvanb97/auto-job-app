@@ -1,9 +1,9 @@
-import {
-	closeBrowserContext,
-	createBrowserContext,
-} from "@rja-integrations/patchright/browser"
 import { randomWait } from "@rja-integrations/patchright/interaction"
-import type { Locator, Page } from "@rja-integrations/patchright/page"
+import type {
+	BrowserContext,
+	Locator,
+	Page,
+} from "@rja-integrations/patchright/page"
 import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 import { extractJobFromPanel } from "./extract"
 import {
@@ -192,11 +192,11 @@ export type TLinkedinConfig = {
 }
 
 export async function scrape(
+	context: BrowserContext,
 	config: TLinkedinConfig,
 	options?: TSourceScrapeOptions,
 ): Promise<ScrapedRole[]> {
-	const { onBatch, signal } = options ?? {}
-	const context = await createBrowserContext()
+	const { onRole, signal } = options ?? {}
 	const page = await context.newPage()
 	const allRoles: ScrapedRole[] = []
 	const seen = new Set<string>()
@@ -242,11 +242,10 @@ export async function scrape(
 					`[linkedin] Page ${totalPages}: extracted ${pageRoles.length} roles`,
 				)
 
-				if (onBatch && pageRoles.length > 0) {
-					await onBatch(pageRoles)
-				} else {
-					allRoles.push(...pageRoles)
+				for (const role of pageRoles) {
+					await onRole?.(role)
 				}
+				allRoles.push(...pageRoles)
 
 				if (pagesScraped >= config.maxPages) break
 
@@ -259,11 +258,11 @@ export async function scrape(
 			await randomWait(3_000, 8_000)
 		}
 	} finally {
-		await closeBrowserContext(context)
+		await page.close().catch(() => {})
 	}
 
 	console.log(
-		`[linkedin] Scraping complete, ${totalPages} pages, found ${onBatch ? "roles saved per-page" : `${allRoles.length} total roles`}`,
+		`[linkedin] Scraping complete, ${totalPages} pages, found ${allRoles.length} total roles`,
 	)
 
 	return allRoles

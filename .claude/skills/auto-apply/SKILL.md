@@ -1,11 +1,11 @@
 ---
 name: auto-apply
 description: >
-  Automate job applications. Finds the top-scored unapplied role, generates
-  or retrieves resume/cover letter, navigates to the application page via
-  Playwright MCP, fills out the form, and pauses for user confirmation
-  before submitting. Use when user says "auto-apply", "apply to jobs",
-  or "submit application".
+    Automate job applications. Finds the top-scored unapplied role, generates
+    or retrieves resume/cover letter, navigates to the application page via
+    Playwright MCP, fills out the form, and pauses for user confirmation
+    before submitting. Use when user says "auto-apply", "apply to jobs",
+    or "submit application".
 user-invocable: true
 ---
 
@@ -15,11 +15,10 @@ Automate a single job application end-to-end. Follow these steps sequentially.
 
 ## Prerequisites
 
-- Supabase must be running locally (`pnpm --filter supabase start`)
 - The web app must be running (`pnpm dev`)
 - Scored roles must exist in the database
 - The Playwright MCP server must be available (configured in `.claude/settings.json`)
-- For ATS platforms requiring login, the user should have pre-authenticated in the shared Chrome profile (`~/.chrome-profile`)
+- For ATS platforms requiring login, the user should have pre-authenticated in the shared Chrome profile (`data/chrome-profile`, gitignored, at the repo root)
 
 ## API Base URL
 
@@ -34,27 +33,28 @@ curl -s http://localhost:3000/api/apply/top-role
 **Response:** `{ "data": { "id", "title", "companyName", "score", "url", "description", "location", "locationType", "salaryMin", "salaryMax" } }` or `{ "data": null }` if no roles.
 
 **After running:**
+
 - If `data` is `null`: inform the user that all scored roles have been applied to or no roles have been scored yet. Stop.
 - **URL legitimacy check (auto-skip):** Before showing the role to the user, verify the application page is legitimate.
-  1. **Resolve the URL:** Use `url`. If it is null, skip the role with reason "No URL available" and loop back to fetch the next role.
-  2. **Navigate:** Call `browser_navigate` with the resolved URL. If navigation fails (network error, timeout), skip the role with reason "Page failed to load" and loop.
-  3. **Capture content:** Call `browser_snapshot` to read the page content.
-  4. **Evaluate:** Determine whether the page contains or leads to a legitimate job application. The page is **legitimate** if it shows a job listing, a company career page, an ATS platform (Greenhouse, Lever, Workday, Ashby, BambooHR, etc.), or a job board page (LinkedIn, Indeed, etc.). The page is **illegitimate** if it matches any of these:
-     - Parked domain, domain-for-sale, or default hosting placeholder
-     - Primarily ads, spam, or SEO-farm content with no job listing
-     - Requests payment or financial information to apply
-     - Content entirely unrelated to employment (e-commerce, gaming, crypto, etc.)
-     - Broken page — blank, error page (404, 500), or no meaningful content in the snapshot
-     - Phishing indicators — mismatched branding, requests for SSN or bank details upfront
-     - When in doubt, err on the side of **legitimate** — the user will review before submitting
-  5. **If illegitimate**, skip the role automatically:
-     ```bash
-     curl -s -X POST -H 'Content-Type: application/json' \
-       -d '{"roleId":"ROLE_ID","reason":"DESCRIPTIVE_REASON"}' \
-       http://localhost:3000/api/apply/skip
-     ```
-     Use a specific reason (e.g., "Parked domain with no job content", "Page failed to load (404)"). Log: "Skipped: TITLE at COMPANY — REASON". Then loop back to the beginning of Step A to fetch the next role.
-  6. **If legitimate**, continue to the next bullet (display role info to user).
+    1. **Resolve the URL:** Use `url`. If it is null, skip the role with reason "No URL available" and loop back to fetch the next role.
+    2. **Navigate:** Call `browser_navigate` with the resolved URL. If navigation fails (network error, timeout), skip the role with reason "Page failed to load" and loop.
+    3. **Capture content:** Call `browser_snapshot` to read the page content.
+    4. **Evaluate:** Determine whether the page contains or leads to a legitimate job application. The page is **legitimate** if it shows a job listing, a company career page, an ATS platform (Greenhouse, Lever, Workday, Ashby, BambooHR, etc.), or a job board page (LinkedIn, Indeed, etc.). The page is **illegitimate** if it matches any of these:
+        - Parked domain, domain-for-sale, or default hosting placeholder
+        - Primarily ads, spam, or SEO-farm content with no job listing
+        - Requests payment or financial information to apply
+        - Content entirely unrelated to employment (e-commerce, gaming, crypto, etc.)
+        - Broken page — blank, error page (404, 500), or no meaningful content in the snapshot
+        - Phishing indicators — mismatched branding, requests for SSN or bank details upfront
+        - When in doubt, err on the side of **legitimate** — the user will review before submitting
+    5. **If illegitimate**, skip the role automatically:
+        ```bash
+        curl -s -X POST -H 'Content-Type: application/json' \
+          -d '{"roleId":"ROLE_ID","reason":"DESCRIPTIVE_REASON"}' \
+          http://localhost:3000/api/apply/skip
+        ```
+        Use a specific reason (e.g., "Parked domain with no job content", "Page failed to load (404)"). Log: "Skipped: TITLE at COMPANY — REASON". Then loop back to the beginning of Step A to fetch the next role.
+    6. **If legitimate**, continue to the next bullet (display role info to user).
 - Otherwise: display the role title, company, score, URL, location, and salary to the user.
 - Ask the user to confirm they want to proceed with this role.
 - Save the parsed JSON output — you will need `id`, `companyId`, `companyName`, `title`, `url`, and `description` in later steps.
@@ -77,7 +77,7 @@ Save the `applicationId` from the output. Also check `resumePath` and `coverLett
 
 ## Step C: Check for Existing Documents
 
-If `resumePath` and `coverLetterPath` from Step B were both null, check Supabase storage for existing files:
+If `resumePath` and `coverLetterPath` from Step B were both null, check local storage for existing files:
 
 ```bash
 curl -s 'http://localhost:3000/api/apply/documents?roleId=ROLE_ID'
@@ -92,7 +92,7 @@ Replace `ROLE_ID` with the role's ID.
 
 ## Step D: Generate Documents
 
-Generate a tailored resume and cover letter, upload to Supabase storage, and update the application record. This step is long-running (30-120 seconds):
+Generate a tailored resume and cover letter, upload to local storage, and update the application record. This step is long-running (30-120 seconds):
 
 ```bash
 curl -s --max-time 180 -X POST -H 'Content-Type: application/json' \
@@ -108,7 +108,7 @@ Save the `resumePath` and `coverLetterPath` from the output.
 
 ## Step E: Download Documents to Local Disk
 
-Download the documents from Supabase storage to local disk so they can be uploaded via browser file input:
+Download the documents from local storage to a working directory so they can be uploaded via browser file input:
 
 ```bash
 curl -s -X POST -H 'Content-Type: application/json' \
@@ -133,9 +133,9 @@ Use the Playwright MCP browser tools.
 3. **Find the application form:** The page may be a job listing rather than the application form itself. Use `browser_snapshot` to read the page and look for an "Apply" button/link. Click it to get to the actual application form.
 
 4. **Handle login walls:** If the page shows a login/signup form instead of the application:
-   - Inform the user: "This site requires authentication. Please log in manually in the browser window."
-   - Wait for the user to confirm they have logged in
-   - Then continue with the application
+    - Inform the user: "This site requires authentication. Please log in manually in the browser window."
+    - Wait for the user to confirm they have logged in
+    - Then continue with the application
 
 ## Step G: Fill Out the Application Form
 
@@ -149,23 +149,24 @@ Use `browser_snapshot` to understand the current page structure. This returns an
 
 Read `packages/_config/user/src/experience.ts` for the `USER_PROFILE` constant. Use its fields to fill:
 
-| Form field | Source |
-|-----------|--------|
-| First name | First word of `USER_PROFILE.name` |
-| Last name | Last word of `USER_PROFILE.name` |
-| Full name | `USER_PROFILE.name` |
-| Email | `USER_PROFILE.email` |
-| Phone | `USER_PROFILE.phone` |
-| LinkedIn | `USER_PROFILE.linkedIn` |
-| GitHub | `USER_PROFILE.github` |
-| Website / Portfolio | `USER_PROFILE.personalWebsite` |
-| Location | `USER_PROFILE.location` |
-| Current title | `USER_PROFILE.jobTitle` |
+| Form field                | Source                                                               |
+| ------------------------- | -------------------------------------------------------------------- |
+| First name                | First word of `USER_PROFILE.name`                                    |
+| Last name                 | Last word of `USER_PROFILE.name`                                     |
+| Full name                 | `USER_PROFILE.name`                                                  |
+| Email                     | `USER_PROFILE.email`                                                 |
+| Phone                     | `USER_PROFILE.phone`                                                 |
+| LinkedIn                  | `USER_PROFILE.linkedIn`                                              |
+| GitHub                    | `USER_PROFILE.github`                                                |
+| Website / Portfolio       | `USER_PROFILE.personalWebsite`                                       |
+| Location                  | `USER_PROFILE.location`                                              |
+| Current title             | `USER_PROFILE.jobTitle`                                              |
 | Address / Mailing address | `PRIVATE_CONFIG.address` from `packages/_config/user/src/private.ts` |
 
 ### File uploads
 
 Upload resume and cover letter using `browser_file_upload` with the **absolute** local file paths from Step E:
+
 - Resume: `{absolutePath}/resume.docx`
 - Cover letter: `{absolutePath}/cover-letter.docx`
 
@@ -175,11 +176,11 @@ Some forms only have one upload field. In that case, upload the resume only.
 
 Read `packages/_config/user/src/eeo.ts` for the `EEO_CONFIG` constant. Fuzzy-match these values against the options the form presents:
 
-| Question | Source |
-|----------|--------|
-| Gender | `EEO_CONFIG.gender` |
-| Race / Ethnicity | `EEO_CONFIG.ethnicity` |
-| Veteran status | `EEO_CONFIG.veteranStatus` |
+| Question          | Source                        |
+| ----------------- | ----------------------------- |
+| Gender            | `EEO_CONFIG.gender`           |
+| Race / Ethnicity  | `EEO_CONFIG.ethnicity`        |
+| Veteran status    | `EEO_CONFIG.veteranStatus`    |
 | Disability status | `EEO_CONFIG.disabilityStatus` |
 
 If a config value is `null`, select "Decline to self-identify" or the equivalent option.
@@ -188,11 +189,11 @@ If a config value is `null`, select "Decline to self-identify" or the equivalent
 
 Read `packages/_config/user/src/eeo.ts` for work authorization fields:
 
-| Question | Source |
-|----------|--------|
+| Question                              | Source                                             |
+| ------------------------------------- | -------------------------------------------------- |
 | Are you authorized to work in the US? | `EEO_CONFIG.workAuthorization` (if non-null → Yes) |
-| Will you require visa sponsorship? | `EEO_CONFIG.requiresVisaSponsorship` |
-| Citizenship status | `EEO_CONFIG.workAuthorization` |
+| Will you require visa sponsorship?    | `EEO_CONFIG.requiresVisaSponsorship`               |
+| Citizenship status                    | `EEO_CONFIG.workAuthorization`                     |
 
 ### Salary expectations
 
@@ -201,6 +202,7 @@ If the form asks for a salary range, use `USER_PROFILE.salaryMin` and `USER_PROF
 ### Free-text questions
 
 For open-ended questions like "Why do you want to work here?" or "Tell us about a relevant project":
+
 - Generate a concise 2-3 sentence response based on the role description, company info, and the user's experience from `USER_PROFILE`
 - Tailor the response to highlight relevant skills and experience
 - Keep it professional and specific to the role
@@ -208,6 +210,7 @@ For open-ended questions like "Why do you want to work here?" or "Tell us about 
 ### Questions not covered by config
 
 If you encounter a form field that you cannot answer from the profile or EEO config, ask the user. Common examples:
+
 - Start date availability — compute by adding `USER_PROFILE.startDateWeeksOut` weeks to today's date
 - How did you hear about this role?
 - Referral name
@@ -216,6 +219,7 @@ If you encounter a form field that you cannot answer from the profile or EEO con
 ### Multi-page forms
 
 Some ATS platforms (especially Workday) spread applications across multiple pages:
+
 1. Fill all fields on the current page
 2. Take a `browser_snapshot` to confirm everything is filled
 3. Click "Next", "Continue", or equivalent
@@ -265,11 +269,11 @@ Replace `APPLICATION_ID` and `ROLE_ID` with values from previous steps.
 ### If user declines to submit
 
 - Mark the role as skipped so it won't appear again:
-  ```bash
-  curl -s -X POST -H 'Content-Type: application/json' \
-    -d '{"roleId":"ROLE_ID","reason":"User declined to submit"}' \
-    http://localhost:3000/api/apply/skip
-  ```
+    ```bash
+    curl -s -X POST -H 'Content-Type: application/json' \
+      -d '{"roleId":"ROLE_ID","reason":"User declined to submit"}' \
+      http://localhost:3000/api/apply/skip
+    ```
 - Leave the application as "draft"
 - Inform the user they can re-run `/auto-apply` to try the next role
 
@@ -287,16 +291,16 @@ Display a summary:
 
 ## Error Handling
 
-| Failure | Action |
-|---------|--------|
-| No unapplied roles found | Inform user, stop |
-| Document generation fails (Anthropic API error) | Report the error. The draft application record exists for retry. |
-| Document download fails | Report the error, ask user to check storage |
-| Page navigation fails (404, dead link) | Inform user and ask for an alternative URL |
-| Login wall detected | Tell user to log in manually in the browser window, wait for confirmation |
-| CAPTCHA detected | Tell user to solve it manually, wait for confirmation |
-| Form field not found or unclear | Take a snapshot, describe what is visible, ask user for guidance |
-| Submit button not found | Take a snapshot, ask user to identify the submit element |
-| Submission fails (error after clicking submit) | Take screenshot, do NOT update status, inform user |
-| Page legitimacy check fails to load | Skip the role with reason "Page failed to load" and loop to next |
-| API endpoint returns error | Display the error message from the response and stop or ask for guidance |
+| Failure                                         | Action                                                                    |
+| ----------------------------------------------- | ------------------------------------------------------------------------- |
+| No unapplied roles found                        | Inform user, stop                                                         |
+| Document generation fails (Anthropic API error) | Report the error. The draft application record exists for retry.          |
+| Document download fails                         | Report the error, ask user to check storage                               |
+| Page navigation fails (404, dead link)          | Inform user and ask for an alternative URL                                |
+| Login wall detected                             | Tell user to log in manually in the browser window, wait for confirmation |
+| CAPTCHA detected                                | Tell user to solve it manually, wait for confirmation                     |
+| Form field not found or unclear                 | Take a snapshot, describe what is visible, ask user for guidance          |
+| Submit button not found                         | Take a snapshot, ask user to identify the submit element                  |
+| Submission fails (error after clicking submit)  | Take screenshot, do NOT update status, inform user                        |
+| Page legitimacy check fails to load             | Skip the role with reason "Page failed to load" and loop to next          |
+| API endpoint returns error                      | Display the error message from the response and stop or ask for guidance  |

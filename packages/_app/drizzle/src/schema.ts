@@ -502,3 +502,36 @@ export const scraperConfig = sqliteTable("scraper_config", {
 
 export type TScraperConfig = typeof scraperConfig.$inferSelect
 export type TNewScraperConfig = typeof scraperConfig.$inferInsert
+
+// =============================================================
+// LLM CONFIG
+// =============================================================
+
+export const llmConfig = sqliteTable("llm_config", {
+	id: int("id").primaryKey({ autoIncrement: true }),
+	userProfileId: int("user_profile_id")
+		.unique()
+		.notNull()
+		.references(() => userProfile.id, { onDelete: "cascade" }),
+	anthropicApiKey: text("anthropic_api_key").notNull().default(""),
+	openaiApiKey: text("openai_api_key").notNull().default(""),
+	scoringProvider: text("scoring_provider").notNull().default("anthropic"),
+	scoringModel: text("scoring_model").notNull(),
+	keywordProvider: text("keyword_provider").notNull().default("anthropic"),
+	keywordModel: text("keyword_model").notNull(),
+	resumeProvider: text("resume_provider").notNull().default("anthropic"),
+	resumeModel: text("resume_model").notNull(),
+	coverLetterProvider: text("cover_letter_provider")
+		.notNull()
+		.default("anthropic"),
+	coverLetterModel: text("cover_letter_model").notNull(),
+	createdAt: int("created_at", { mode: "timestamp" }).$defaultFn(
+		() => new Date(),
+	),
+	updatedAt: int("updated_at", { mode: "timestamp" })
+		.$defaultFn(() => new Date())
+		.$onUpdate(() => new Date()),
+})
+
+export type TLlmConfig = typeof llmConfig.$inferSelect
+export type TNewLlmConfig = typeof llmConfig.$inferInsert

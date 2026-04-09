@@ -6,12 +6,14 @@ import { getUserProfile } from "@rja-api/settings/api/get-user-profile"
 import { upsertEducation } from "@rja-api/settings/api/upsert-education"
 import { upsertEeoConfig } from "@rja-api/settings/api/upsert-eeo-config"
 import { upsertFormDefaults } from "@rja-api/settings/api/upsert-form-defaults"
+import { upsertLlmConfig } from "@rja-api/settings/api/upsert-llm-config"
 import { upsertScoringConfig } from "@rja-api/settings/api/upsert-scoring-config"
 import { upsertScraperConfig } from "@rja-api/settings/api/upsert-scraper-config"
 import { upsertUserProfile } from "@rja-api/settings/api/upsert-user-profile"
 import { upsertWorkExperience } from "@rja-api/settings/api/upsert-work-experience"
 import { upsertEeoConfigSchema } from "@rja-api/settings/schema/eeo-config-schema"
 import { upsertFormDefaultsSchema } from "@rja-api/settings/schema/form-defaults-schema"
+import { upsertLlmConfigSchema } from "@rja-api/settings/schema/llm-config-schema"
 import { upsertScoringConfigSchema } from "@rja-api/settings/schema/scoring-config-schema"
 import { upsertScraperConfigSchema } from "@rja-api/settings/schema/scraper-config-schema"
 import {
@@ -96,6 +98,14 @@ export const updateScraperConfigAction = actionClient
 		return result.data
 	})
 
+export const updateLlmConfigAction = actionClient
+	.inputSchema(upsertLlmConfigSchema)
+	.action(async ({ parsedInput }) => {
+		const result = upsertLlmConfig(parsedInput)
+		if (!result.ok) throw new SafeForClientError(result.error.message)
+		return result.data
+	})
+
 export const saveAllSettingsAction = actionClient
 	.inputSchema(z.object({ json: z.string() }))
 	.action(async ({ parsedInput }) => {
@@ -133,8 +143,7 @@ export const saveAllSettingsAction = actionClient
 				summary: exp.summary ?? "",
 				highlights: exp.highlights ?? [],
 			})
-			if (!result.ok)
-				throw new SafeForClientError(result.error.message)
+			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
 
 		for (let i = 0; i < (data.education ?? []).length; i++) {
@@ -146,8 +155,7 @@ export const saveAllSettingsAction = actionClient
 				field: edu.field,
 				institution: edu.institution,
 			})
-			if (!result.ok)
-				throw new SafeForClientError(result.error.message)
+			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
 
 		if (data.eeo) {
@@ -155,8 +163,7 @@ export const saveAllSettingsAction = actionClient
 				userProfileId: profileId,
 				...data.eeo,
 			})
-			if (!result.ok)
-				throw new SafeForClientError(result.error.message)
+			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
 
 		if (data.formDefaults) {
@@ -164,8 +171,7 @@ export const saveAllSettingsAction = actionClient
 				userProfileId: profileId,
 				...data.formDefaults,
 			})
-			if (!result.ok)
-				throw new SafeForClientError(result.error.message)
+			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
 
 		if (data.scoring) {
@@ -173,8 +179,7 @@ export const saveAllSettingsAction = actionClient
 				userProfileId: profileId,
 				...data.scoring,
 			})
-			if (!result.ok)
-				throw new SafeForClientError(result.error.message)
+			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
 
 		if (data.scraper) {
@@ -182,8 +187,15 @@ export const saveAllSettingsAction = actionClient
 				userProfileId: profileId,
 				...data.scraper,
 			})
-			if (!result.ok)
-				throw new SafeForClientError(result.error.message)
+			if (!result.ok) throw new SafeForClientError(result.error.message)
+		}
+
+		if (data.llm) {
+			const result = upsertLlmConfig({
+				userProfileId: profileId,
+				...data.llm,
+			})
+			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
 
 		return { ok: true }

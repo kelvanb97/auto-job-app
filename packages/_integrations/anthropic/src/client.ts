@@ -1,26 +1,9 @@
 import Anthropic from "@anthropic-ai/sdk"
 import { z } from "zod"
 
-export type TAnthropicModel = Anthropic.Messages.Model
-
-const envSchema = await import("zod").then((m) =>
-	m.z.object({
-		ANTHROPIC_API_KEY: m.z.string().trim().min(1),
-	}),
-)
-
-let _client: Anthropic | null = null
-
-const getClient = (): Anthropic => {
-	if (!_client) {
-		const env = envSchema.parse(process.env)
-		_client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY })
-	}
-	return _client
-}
-
-type TCreateMessageParams<T> = {
-	model: TAnthropicModel
+export type TCreateMessageParams<T> = {
+	apiKey: string
+	model: string
 	system: string
 	user: string
 	maxTokens?: number
@@ -30,7 +13,7 @@ type TCreateMessageParams<T> = {
 export async function createMessage<T>(
 	params: TCreateMessageParams<T>,
 ): Promise<T> {
-	const client = getClient()
+	const client = new Anthropic({ apiKey: params.apiKey })
 
 	const inputSchema = z.toJSONSchema(params.schema)
 

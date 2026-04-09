@@ -11,7 +11,7 @@
 				"--browser",
 				"chrome",
 				"--user-data-dir",
-				"~/.chrome-profile"
+				"./data/chrome-profile"
 			]
 		},
 		"sequential-thinking": {

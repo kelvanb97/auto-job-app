@@ -5,14 +5,7 @@
 	"globalEnv": ["NEXT_RUNTIME"],
 	"tasks": {
 		"build": {
-			"env": [
-				"NODE_ENV",
-				"SCORE_MODEL",
-				"SCORE_BATCH_SIZE",
-				"SCORE_RATE_LIMIT_MS",
-				"APPLY_KEYWORD_MODEL",
-				"APPLY_RESUME_MODEL"
-			],
+			"env": ["NODE_ENV"],
 			"dependsOn": ["^build"],
 			"outputs": [".next/**", "!.next/cache/**"]
 		},

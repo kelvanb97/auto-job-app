@@ -17,8 +17,6 @@ import { actionClient, SafeForClientError } from "@rja-core/next-safe-action"
 import { z } from "zod"
 import { getOrCreateApplication } from "./role-application"
 
-const KEYWORD_MODEL = "claude-haiku-4-5-20251001" as const
-const RESUME_MODEL = "claude-opus-4-6" as const
 const STORAGE_BUCKET = "applications"
 
 function sanitize(text: string): string {
@@ -59,7 +57,6 @@ export const generateApplicationDocsAction = actionClient
 		// Extract keywords
 		const keywordPrompt = buildKeywordPrompt(role, company)
 		const keywords = await extractKeywords(
-			KEYWORD_MODEL,
 			keywordPrompt.system,
 			keywordPrompt.user,
 		)
@@ -67,7 +64,6 @@ export const generateApplicationDocsAction = actionClient
 		// Generate resume
 		const resumePrompt = buildResumePrompt(role, company, profile, keywords)
 		const resumeContent = await generateResumeContent(
-			RESUME_MODEL,
 			resumePrompt.system,
 			resumePrompt.user,
 		)
@@ -87,7 +83,6 @@ export const generateApplicationDocsAction = actionClient
 		// Generate cover letter
 		const coverLetterPrompt = buildCoverLetterPrompt(role, company, profile)
 		const coverLetterContent = await generateCoverLetterContent(
-			RESUME_MODEL,
 			coverLetterPrompt.system,
 			coverLetterPrompt.user,
 		)

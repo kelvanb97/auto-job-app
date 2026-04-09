@@ -11,8 +11,7 @@
 	},
 	"scripts": {
 		"check-types": "tsc --noEmit",
-		"lint": "eslint .",
-		"open-browser": "node --import=tsx src/open-browser.ts"
+		"lint": "eslint ."
 	},
 	"dependencies": {
 		"patchright": "1.58.2"

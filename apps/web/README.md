@@ -1,15 +1,12 @@
 # web
 
-Next.js 16 dashboard (App Router, Turbopack) for browsing scraped roles, triggering scrapes/scores, and managing the auto-apply pipeline.
+Next.js 16 dashboard (App Router, Turbopack) for browsing scraped roles, managing scores, and running the auto-apply pipeline.
 
 ## Setup
 
 Environment variables are loaded from the root `.env` file via `process.loadEnvFile()` in `next.config.ts`. See the root `.env.example` for required and optional variables.
 
-| Variable | Description | Default |
-|---|---|---|
-| `APPLY_KEYWORD_MODEL` | Model for keyword extraction | `claude-haiku-4-5-20251001` |
-| `APPLY_RESUME_MODEL` | Model for resume/cover letter gen | `claude-opus-4-6-20250619` |
+LLM providers, API keys, and per-use-case model selection are configured at runtime in the `/settings` UI (stored in SQLite via `@rja-api/settings`), not via environment variables.
 
 ## Scripts
 
@@ -28,14 +25,12 @@ Environment variables are loaded from the root `.env` file via `process.loadEnvF
 | `/people` | Contact management |
 | `/follow-ups` | Interaction tracking |
 | `/create` | Manual role creation |
-| `/operations` | Scraper and scorer controls |
+| `/operations` | CLI instructions for scraping and scoring |
 
 ## API Endpoints
 
 | Method | Path | Purpose |
 |---|---|---|
-| POST | `/api/scrape` | Trigger a scrape run |
-| POST | `/api/score` | Trigger batch scoring |
 | GET | `/api/apply/top-role` | Fetch top unapplied role |
 | POST | `/api/apply/documents/generate` | Generate resume/cover letter |
 | GET | `/api/apply/documents` | List generated documents |
@@ -48,7 +43,5 @@ Environment variables are loaded from the root `.env` file via `process.loadEnvF
 
 - `@rja-app/home` — dashboard screens
 - `@rja-app/apply` — auto-apply workflow
-- `@rja-app/score` — batch scoring
-- `@rja-app/scraper` — scrape triggering
 - `@rja-config/user` — user profile
 - `@rja-design/ui` — component library

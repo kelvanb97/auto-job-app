@@ -1,4 +1,4 @@
-CREATE TABLE `application` (
+CREATE TABLE IF NOT EXISTS `application` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`role_id` integer,
 	`status` text DEFAULT 'submitted' NOT NULL,
@@ -12,9 +12,9 @@ CREATE TABLE `application` (
 	FOREIGN KEY (`role_id`) REFERENCES `role`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE INDEX `idx_application_role_id` ON `application` (`role_id`);--> statement-breakpoint
-CREATE INDEX `idx_application_status` ON `application` (`status`);--> statement-breakpoint
-CREATE TABLE `company` (
+CREATE INDEX IF NOT EXISTS `idx_application_role_id` ON `application` (`role_id`);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS `idx_application_status` ON `application` (`status`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `company` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL,
 	`website` text,
@@ -27,8 +27,8 @@ CREATE TABLE `company` (
 	`notes` text
 );
 --> statement-breakpoint
-CREATE INDEX `idx_company_name` ON `company` (`name`);--> statement-breakpoint
-CREATE TABLE `interaction` (
+CREATE INDEX IF NOT EXISTS `idx_company_name` ON `company` (`name`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `interaction` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`role_id` integer,
 	`person_id` integer,
@@ -40,9 +40,9 @@ CREATE TABLE `interaction` (
 	FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
-CREATE INDEX `idx_interaction_role_id` ON `interaction` (`role_id`);--> statement-breakpoint
-CREATE INDEX `idx_interaction_person_id` ON `interaction` (`person_id`);--> statement-breakpoint
-CREATE TABLE `person` (
+CREATE INDEX IF NOT EXISTS `idx_interaction_role_id` ON `interaction` (`role_id`);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS `idx_interaction_person_id` ON `interaction` (`person_id`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `person` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`company_id` integer,
 	`name` text NOT NULL,
@@ -55,8 +55,8 @@ CREATE TABLE `person` (
 	FOREIGN KEY (`company_id`) REFERENCES `company`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
-CREATE INDEX `idx_person_company_id` ON `person` (`company_id`);--> statement-breakpoint
-CREATE TABLE `role` (
+CREATE INDEX IF NOT EXISTS `idx_person_company_id` ON `person` (`company_id`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `role` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`company_id` integer,
 	`title` text NOT NULL,
@@ -75,12 +75,12 @@ CREATE TABLE `role` (
 	FOREIGN KEY (`company_id`) REFERENCES `company`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE INDEX `idx_role_company_id` ON `role` (`company_id`);--> statement-breakpoint
-CREATE INDEX `idx_role_status` ON `role` (`status`);--> statement-breakpoint
-CREATE INDEX `idx_role_status_created_at` ON `role` (`status`,`created_at`);--> statement-breakpoint
-CREATE INDEX `idx_role_url` ON `role` (`url`);--> statement-breakpoint
-CREATE UNIQUE INDEX `idx_role_company_id_title` ON `role` (`company_id`,`title`);--> statement-breakpoint
-CREATE TABLE `role_person` (
+CREATE INDEX IF NOT EXISTS `idx_role_company_id` ON `role` (`company_id`);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS `idx_role_status` ON `role` (`status`);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS `idx_role_status_created_at` ON `role` (`status`,`created_at`);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS `idx_role_url` ON `role` (`url`);--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS `idx_role_company_id_title` ON `role` (`company_id`,`title`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `role_person` (
 	`role_id` integer NOT NULL,
 	`person_id` integer NOT NULL,
 	`relationship` text,
@@ -89,9 +89,9 @@ CREATE TABLE `role_person` (
 	FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE INDEX `idx_role_person_role_id` ON `role_person` (`role_id`);--> statement-breakpoint
-CREATE INDEX `idx_role_person_person_id` ON `role_person` (`person_id`);--> statement-breakpoint
-CREATE TABLE `score` (
+CREATE INDEX IF NOT EXISTS `idx_role_person_role_id` ON `role_person` (`role_id`);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS `idx_role_person_person_id` ON `role_person` (`person_id`);--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `score` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`role_id` integer,
 	`score` integer NOT NULL,
@@ -102,5 +102,5 @@ CREATE TABLE `score` (
 	FOREIGN KEY (`role_id`) REFERENCES `role`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `score_role_id_unique` ON `score` (`role_id`);--> statement-breakpoint
-CREATE INDEX `idx_score_role_id` ON `score` (`role_id`);
+CREATE UNIQUE INDEX IF NOT EXISTS `score_role_id_unique` ON `score` (`role_id`);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS `idx_score_role_id` ON `score` (`role_id`);

@@ -1,31 +1,16 @@
+import { scoreRoleById } from "@rja-api/score/api/score-role-by-id"
 import { getScraperConfig } from "@rja-api/settings/api/get-scraper-config"
 import type { TSourceName } from "@rja-api/settings/schema/scraper-config-schema"
+import {
+	closeBrowserContext,
+	createBrowserContext,
+} from "@rja-integrations/patchright/browser"
+import { AuthRequiredError, type TNeedsAuthEntry } from "#errors"
 import { filterRoles } from "#lib/filter"
-import { insertRoles } from "#lib/insert"
-import * as googleJobs from "#sources/google-jobs/index"
-import * as himalayas from "#sources/himalayas"
-import * as jobicy from "#sources/jobicy"
+import { insertRole } from "#lib/insert"
 import * as linkedin from "#sources/linkedin/index"
-import * as remoteok from "#sources/remoteok"
-import * as weworkremotely from "#sources/weworkremotely"
-import type {
-	ScrapedRole,
-	TScrapeProgressCallback,
-	TSourceScrapeOptions,
-} from "#types"
-
-type SourceModule = {
-	scrape: (...args: never[]) => Promise<ScrapedRole[]>
-}
-
-const ALL_SOURCES: Record<TSourceName, SourceModule> = {
-	remoteok,
-	weworkremotely,
-	himalayas,
-	jobicy,
-	"google-jobs": googleJobs,
-	linkedin,
-}
+import { ALL_SOURCES } from "#sources/registry"
+import type { ScrapedRole, TSourceScrapeOptions } from "#types"
 
 export type TScrapeSummary = {
 	total: {
@@ -33,6 +18,8 @@ export type TScrapeSummary = {
 		filtered: number
 		inserted: number
 		skipped: number
+		scored: number
+		scoreErrors: number
 		errors: number
 	}
 	sources: Record<
@@ -42,15 +29,15 @@ export type TScrapeSummary = {
 			filtered: number
 			inserted: number
 			skipped: number
+			scored: number
+			scoreErrors: number
 			error?: string
 		}
 	>
 }
 
 export type TScrapeOptions = {
-	sources?: TSourceName[]
 	signal?: AbortSignal
-	onProgress?: TScrapeProgressCallback
 }
 
 export async function runScraper(
@@ -67,12 +54,13 @@ export async function runScraper(
 	}
 
 	const config = configResult.data
-
-	const {
-		sources = config.enabledSources as TSourceName[],
-		signal,
-		onProgress,
-	} = options
+	const sources = config.enabledSources as TSourceName[]
+	if (sources.length === 0) {
+		throw new Error(
+			"No sources are enabled. Enable one at /settings before running /scrape.",
+		)
+	}
+	const { signal } = options
 
 	const filterConfig = {
 		relevantKeywords: config.relevantKeywords,
@@ -80,79 +68,110 @@ export async function runScraper(
 		blockedCompanies: config.blockedCompanies,
 	}
 
+	const companyCache = new Map<string, number>()
+
 	const summary: TScrapeSummary = {
-		total: { found: 0, filtered: 0, inserted: 0, skipped: 0, errors: 0 },
+		total: {
+			found: 0,
+			filtered: 0,
+			inserted: 0,
+			skipped: 0,
+			scored: 0,
+			scoreErrors: 0,
+			errors: 0,
+		},
 		sources: {},
 	}
 
-	for (const name of sources) {
-		if (signal?.aborted) break
+	const context = await createBrowserContext()
 
-		const sourceModule = ALL_SOURCES[name]
-		if (!sourceModule) {
-			console.warn(`Unknown source "${name}", skipping`)
-			continue
+	try {
+		// Pre-check auth for every requested source. If any are missing
+		// auth, throw AuthRequiredError so the API can return 401 with
+		// a needsAuth payload — the skill will run the login CLI and
+		// re-call this endpoint.
+		const needsAuth: TNeedsAuthEntry[] = []
+		for (const name of sources) {
+			const sourceModule = ALL_SOURCES[name]
+			if (!sourceModule) continue
+			if (!sourceModule.isAuthenticated) continue
+			const ok = await sourceModule.isAuthenticated(context)
+			if (!ok) {
+				needsAuth.push({
+					name,
+					displayName: sourceModule.DISPLAY_NAME,
+					homepageUrl: sourceModule.HOMEPAGE_URL,
+				})
+			}
+		}
+		if (needsAuth.length > 0) {
+			throw new AuthRequiredError(needsAuth)
 		}
 
-		onProgress?.({ type: "source:start", source: name })
+		for (const name of sources) {
+			if (signal?.aborted) break
 
-		try {
-			let batchPageCount = 0
-			const sourceSummary = {
-				found: 0,
-				filtered: 0,
-				inserted: 0,
-				skipped: 0,
+			if (!ALL_SOURCES[name]) {
+				console.warn(`Unknown source "${name}", skipping`)
+				continue
 			}
 
-			const onBatch = async (roles: ScrapedRole[]) => {
-				batchPageCount++
-				sourceSummary.found += roles.length
+			console.log(`[${name}] Starting...`)
 
-				const { filtered, removedCount } = filterRoles(
-					roles,
-					filterConfig,
-				)
-				const { inserted, skipped } = await insertRoles(
-					filtered,
-					signal,
-				)
+			try {
+				const sourceSummary = {
+					found: 0,
+					filtered: 0,
+					inserted: 0,
+					skipped: 0,
+					scored: 0,
+					scoreErrors: 0,
+				}
 
-				sourceSummary.filtered += removedCount
-				sourceSummary.inserted += inserted
-				sourceSummary.skipped += skipped
+				const onRole = async (role: ScrapedRole) => {
+					sourceSummary.found++
 
-				onProgress?.({
-					type: "source:page",
-					source: name,
-					page: batchPageCount,
-					found: roles.length,
-					inserted,
-					skipped,
-					filtered: removedCount,
-				})
+					// Filter
+					const { filtered, removedCount } = filterRoles(
+						[role],
+						filterConfig,
+					)
+					if (removedCount > 0) {
+						sourceSummary.filtered++
+						return
+					}
 
-				console.log(
-					`[${name}] page ${batchPageCount}: found=${roles.length} filtered=${removedCount} inserted=${inserted} skipped=${skipped}`,
-				)
-			}
+					// Insert immediately
+					const result = insertRole(filtered[0]!, companyCache)
+					if (result.status !== "inserted") {
+						sourceSummary.skipped++
+						return
+					}
 
-			const scrapeOptions: TSourceScrapeOptions = { onBatch, signal }
+					sourceSummary.inserted++
 
-			let allRoles: ScrapedRole[]
-			if (name === "google-jobs") {
-				allRoles = await googleJobs.scrape(
-					{
-						titles: config.googleTitles,
-						remote: config.googleRemote,
-						fullTimeOnly: config.googleFullTimeOnly,
-						freshnessDays: config.googleFreshnessDays,
-						maxPagesPerQuery: config.googleMaxPages,
-					},
-					scrapeOptions,
-				)
-			} else if (name === "linkedin") {
-				allRoles = await linkedin.scrape(
+					// Score inline. Failures are logged but never break the
+					// scrape — the role row stays in the DB and can be
+					// re-scored manually from the UI.
+					const inserted = result.role
+					const scoreResult = await scoreRoleById(inserted.id)
+					if (scoreResult.ok) {
+						sourceSummary.scored++
+						console.log(
+							`[score] "${inserted.title}" → ${scoreResult.data.score}`,
+						)
+					} else {
+						sourceSummary.scoreErrors++
+						console.warn(
+							`[score] "${inserted.title}": ${scoreResult.error.message}`,
+						)
+					}
+				}
+
+				const scrapeOptions: TSourceScrapeOptions = { onRole, signal }
+
+				await linkedin.scrape(
+					context,
 					{
 						urls: config.linkedinUrls,
 						maxPages: config.linkedinMaxPages,
@@ -160,79 +179,48 @@ export async function runScraper(
 					},
 					scrapeOptions,
 				)
-			} else {
-				allRoles = await (
-					sourceModule.scrape as (
-						options?: TSourceScrapeOptions,
-					) => Promise<ScrapedRole[]>
-				)(scrapeOptions)
-			}
 
-			if (batchPageCount === 0 && allRoles.length > 0) {
-				// Source did not use onBatch — process in bulk
-				onProgress?.({
-					type: "source:found",
-					source: name,
-					count: allRoles.length,
-				})
+				summary.sources[name] = sourceSummary
+				summary.total.found += sourceSummary.found
+				summary.total.filtered += sourceSummary.filtered
+				summary.total.inserted += sourceSummary.inserted
+				summary.total.skipped += sourceSummary.skipped
+				summary.total.scored += sourceSummary.scored
+				summary.total.scoreErrors += sourceSummary.scoreErrors
 
-				const { filtered: roles, removedCount } = filterRoles(
-					allRoles,
-					filterConfig,
+				console.log(
+					`[${name}] found=${sourceSummary.found} filtered=${sourceSummary.filtered} inserted=${sourceSummary.inserted} skipped=${sourceSummary.skipped} scored=${sourceSummary.scored} scoreErrors=${sourceSummary.scoreErrors}`,
 				)
-				const { inserted, skipped } = await insertRoles(roles, signal)
-
-				sourceSummary.found = allRoles.length
-				sourceSummary.filtered = removedCount
-				sourceSummary.inserted = inserted
-				sourceSummary.skipped = skipped
-
-				onProgress?.({
-					type: "source:inserted",
-					source: name,
-					inserted,
-					skipped,
-				})
-			} else if (batchPageCount > 0) {
-				onProgress?.({
-					type: "source:inserted",
-					source: name,
-					inserted: sourceSummary.inserted,
-					skipped: sourceSummary.skipped,
-				})
+			} catch (err) {
+				const rawMessage =
+					err instanceof Error ? err.message : String(err)
+				const isBrowserClosed =
+					/has been closed|Target closed|Browser closed|Page closed/i.test(
+						rawMessage,
+					)
+				const error = isBrowserClosed
+					? "The scraper browser window was closed before the scrape finished. Please leave the browser window open until the scrape is complete."
+					: rawMessage
+				summary.sources[name] = {
+					found: 0,
+					filtered: 0,
+					inserted: 0,
+					skipped: 0,
+					scored: 0,
+					scoreErrors: 0,
+					error,
+				}
+				summary.total.errors += 1
+				console.error(`[${name}] error: ${rawMessage}`)
 			}
-
-			summary.sources[name] = sourceSummary
-			summary.total.found += sourceSummary.found
-			summary.total.filtered += sourceSummary.filtered
-			summary.total.inserted += sourceSummary.inserted
-			summary.total.skipped += sourceSummary.skipped
-
-			console.log(
-				`[${name}] found=${sourceSummary.found} filtered=${sourceSummary.filtered} inserted=${sourceSummary.inserted} skipped=${sourceSummary.skipped}`,
-			)
-		} catch (err) {
-			const error = err instanceof Error ? err.message : String(err)
-			summary.sources[name] = {
-				found: 0,
-				filtered: 0,
-				inserted: 0,
-				skipped: 0,
-				error,
-			}
-			summary.total.errors += 1
-			onProgress?.({ type: "source:error", source: name, error })
-			console.error(`[${name}] error: ${error}`)
 		}
-
-		onProgress?.({ type: "source:done", source: name })
+	} finally {
+		await closeBrowserContext(context).catch(() => {})
 	}
 
 	console.log(
-		`[total] found=${summary.total.found} filtered=${summary.total.filtered} inserted=${summary.total.inserted} skipped=${summary.total.skipped} errors=${summary.total.errors}`,
+		`[total] found=${summary.total.found} filtered=${summary.total.filtered} inserted=${summary.total.inserted} skipped=${summary.total.skipped} scored=${summary.total.scored} scoreErrors=${summary.total.scoreErrors} errors=${summary.total.errors}`,
 	)
-
-	onProgress?.({ type: "done" })
 
 	return summary
 }
