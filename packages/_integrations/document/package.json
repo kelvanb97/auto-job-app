@@ -1,0 +1,25 @@
+{
+	"name": "@rja-integrations/document",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"exports": {
+		"./extract-text-from-pdf": "./src/extract-text-from-pdf.ts",
+		"./extract-text-from-docx": "./src/extract-text-from-docx.ts"
+	},
+	"scripts": {
+		"check-types": "tsc --noEmit",
+		"lint": "eslint ."
+	},
+	"dependencies": {
+		"mammoth": "1.12.0",
+		"pdf-parse": "2.4.5"
+	},
+	"devDependencies": {
+		"@rja-core/eslint": "workspace:*",
+		"@rja-core/tsconfig": "workspace:*",
+		"@types/node": "25.5.0",
+		"eslint": "9.24.0",
+		"typescript": "5.9.3"
+	}
+}
