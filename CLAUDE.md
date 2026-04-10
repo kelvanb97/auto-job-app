@@ -27,20 +27,18 @@ pnpm --filter @rja-api/role lint
 pnpm dev                                          # web app (Turbo)
 ```
 
-All apps load env from the root `.env` file. See `.env.example` for available variables. Web loads env via `process.loadEnvFile()` in `next.config.ts`.
-
 ## Architecture
 
 Turborepo monorepo with pnpm workspaces. Five package layers:
 
-| Layer                     | Scope                 | Purpose                                                 |
-| ------------------------- | --------------------- | ------------------------------------------------------- |
-| `apps/`                   | —                     | Deployable applications (web)                           |
-| `packages/_api/`          | `@rja-api/*`          | Entity CRUD operations against SQLite via Drizzle       |
-| `packages/_app/`          | `@rja-app/*`          | Feature modules (React components, server actions)      |
-| `packages/_core/`         | `@rja-core/*`         | Shared utilities and config                             |
-| `packages/_design/`       | `@rja-design/*`       | Component library (Radix UI + Tailwind)                 |
-| `packages/_integrations/` | `@rja-integrations/*` | Third-party SDK wrappers (Anthropic, Patchright)        |
+| Layer                     | Scope                 | Purpose                                            |
+| ------------------------- | --------------------- | -------------------------------------------------- |
+| `apps/`                   | —                     | Deployable applications (web)                      |
+| `packages/_api/`          | `@rja-api/*`          | Entity CRUD operations against SQLite via Drizzle  |
+| `packages/_app/`          | `@rja-app/*`          | Feature modules (React components, server actions) |
+| `packages/_core/`         | `@rja-core/*`         | Shared utilities and config                        |
+| `packages/_design/`       | `@rja-design/*`       | Component library (Radix UI + Tailwind)            |
+| `packages/_integrations/` | `@rja-integrations/*` | Third-party SDK wrappers (Anthropic, Patchright)   |
 
 ### Dependency hierarchy
 

@@ -2,6 +2,7 @@
 
 import { deleteEducation } from "@rja-api/settings/api/delete-education"
 import { deleteWorkExperience } from "@rja-api/settings/api/delete-work-experience"
+import { extractResume } from "@rja-api/settings/api/extract-resume"
 import { getUserProfile } from "@rja-api/settings/api/get-user-profile"
 import { upsertEducation } from "@rja-api/settings/api/upsert-education"
 import { upsertEeoConfig } from "@rja-api/settings/api/upsert-eeo-config"
@@ -194,6 +195,152 @@ export const saveAllSettingsAction = actionClient
 			const result = upsertLlmConfig({
 				userProfileId: profileId,
 				...data.llm,
+			})
+			if (!result.ok) throw new SafeForClientError(result.error.message)
+		}
+
+		return { ok: true }
+	})
+
+export const extractResumeAction = actionClient
+	.inputSchema(
+		z.object({
+			fileName: z.string().min(1),
+			fileBase64: z.string().min(1),
+		}),
+	)
+	.action(async ({ parsedInput }) => {
+		const buffer = Buffer.from(parsedInput.fileBase64, "base64")
+		try {
+			return await extractResume(parsedInput.fileName, buffer)
+		} catch (e) {
+			const message = e instanceof Error ? e.message : String(e)
+			throw new SafeForClientError(`Resume extraction failed: ${message}`)
+		}
+	})
+
+export const applyResumeImportAction = actionClient
+	.inputSchema(
+		z.object({
+			profileId: z.number(),
+			profileUpdates: upsertUserProfileSchema.partial(),
+			workExperience: z.array(
+				upsertWorkExperienceSchema.omit({
+					id: true,
+					userProfileId: true,
+					sortOrder: true,
+				}),
+			),
+			education: z.array(
+				upsertEducationSchema.omit({
+					id: true,
+					userProfileId: true,
+					sortOrder: true,
+				}),
+			),
+		}),
+	)
+	.action(async ({ parsedInput }) => {
+		const existing = getUserProfile()
+		if (!existing.ok || !existing.data) {
+			throw new SafeForClientError(
+				"Cannot apply resume import: profile not found.",
+			)
+		}
+		if (existing.data.id !== parsedInput.profileId) {
+			throw new SafeForClientError(
+				"Profile ID mismatch — refresh the page and try again.",
+			)
+		}
+
+		// Merge selected extracted fields onto the existing profile.
+		const merged = {
+			id: existing.data.id,
+			name: parsedInput.profileUpdates.name ?? existing.data.name,
+			email: parsedInput.profileUpdates.email ?? existing.data.email,
+			phone: parsedInput.profileUpdates.phone ?? existing.data.phone,
+			linkedin:
+				parsedInput.profileUpdates.linkedin ?? existing.data.linkedin,
+			github: parsedInput.profileUpdates.github ?? existing.data.github,
+			personalWebsite:
+				parsedInput.profileUpdates.personalWebsite ??
+				existing.data.personalWebsite,
+			location:
+				parsedInput.profileUpdates.location ?? existing.data.location,
+			address:
+				parsedInput.profileUpdates.address ?? existing.data.address,
+			jobTitle:
+				parsedInput.profileUpdates.jobTitle ?? existing.data.jobTitle,
+			seniority:
+				parsedInput.profileUpdates.seniority ??
+				(existing.data.seniority as
+					| "junior"
+					| "mid"
+					| "senior"
+					| "staff"
+					| "principal"
+					| "director"),
+			yearsOfExperience:
+				parsedInput.profileUpdates.yearsOfExperience ??
+				existing.data.yearsOfExperience,
+			summary:
+				parsedInput.profileUpdates.summary ?? existing.data.summary,
+			skills: parsedInput.profileUpdates.skills ?? existing.data.skills,
+			preferredSkills:
+				parsedInput.profileUpdates.preferredSkills ??
+				existing.data.preferredSkills,
+			preferredLocationTypes:
+				parsedInput.profileUpdates.preferredLocationTypes ??
+				existing.data.preferredLocationTypes,
+			preferredLocations:
+				parsedInput.profileUpdates.preferredLocations ??
+				existing.data.preferredLocations,
+			salaryMin:
+				parsedInput.profileUpdates.salaryMin ?? existing.data.salaryMin,
+			salaryMax:
+				parsedInput.profileUpdates.salaryMax ?? existing.data.salaryMax,
+			desiredSalary:
+				parsedInput.profileUpdates.desiredSalary ??
+				existing.data.desiredSalary,
+			startDateWeeksOut:
+				parsedInput.profileUpdates.startDateWeeksOut ??
+				existing.data.startDateWeeksOut,
+			industries:
+				parsedInput.profileUpdates.industries ??
+				existing.data.industries,
+			dealbreakers:
+				parsedInput.profileUpdates.dealbreakers ??
+				existing.data.dealbreakers,
+			notes: parsedInput.profileUpdates.notes ?? existing.data.notes,
+			domainExpertise:
+				parsedInput.profileUpdates.domainExpertise ??
+				existing.data.domainExpertise,
+		}
+
+		const profileResult = upsertUserProfile(merged)
+		if (!profileResult.ok)
+			throw new SafeForClientError(profileResult.error.message)
+
+		const baseExperienceOrder = existing.data.workExperience.length
+		for (let i = 0; i < parsedInput.workExperience.length; i++) {
+			const exp = parsedInput.workExperience[i]
+			if (!exp) continue
+			const result = upsertWorkExperience({
+				userProfileId: profileResult.data.id,
+				sortOrder: baseExperienceOrder + i,
+				...exp,
+			})
+			if (!result.ok) throw new SafeForClientError(result.error.message)
+		}
+
+		const baseEducationOrder = existing.data.education.length
+		for (let i = 0; i < parsedInput.education.length; i++) {
+			const edu = parsedInput.education[i]
+			if (!edu) continue
+			const result = upsertEducation({
+				userProfileId: profileResult.data.id,
+				sortOrder: baseEducationOrder + i,
+				...edu,
 			})
 			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
