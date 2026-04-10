@@ -16,7 +16,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@rja-design/ui/library/card"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { MultiInput } from "@rja-design/ui/library/multi-input"
 import { toast } from "@rja-design/ui/library/toast"
@@ -81,41 +81,41 @@ export function ScraperConfigCard({
 			</CardHeader>
 			<CardContent>
 				<YStack className="gap-4">
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Relevant Keywords</Label>
 						<MultiInput
 							values={relevantKeywords}
 							onChange={setRelevantKeywords}
 							max={50}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Blocked Keywords</Label>
 						<MultiInput
 							values={blockedKeywords}
 							onChange={setBlockedKeywords}
 							max={50}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Blocked Companies</Label>
 						<MultiInput
 							values={blockedCompanies}
 							onChange={setBlockedCompanies}
 							max={50}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Enabled Sources</Label>
 						<MultiInput
 							values={enabledSources}
 							onChange={setEnabledSources}
 							max={10}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 				</YStack>
 			</CardContent>
 			<CardFooter>

@@ -10,7 +10,7 @@ import {
 	CardTitle,
 } from "@rja-design/ui/library/card"
 import { Input } from "@rja-design/ui/library/input"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { Select } from "@rja-design/ui/library/select"
 import { Textarea } from "@rja-design/ui/library/text-area"
@@ -54,7 +54,7 @@ export function CompanyFieldsCard({
 			</CardHeader>
 			<CardContent>
 				<YStack className="gap-4">
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="company-name" showRequiredIcon>
 							Name
 						</Label>
@@ -64,10 +64,10 @@ export function CompanyFieldsCard({
 							onChange={(e) => update("name", e.target.value)}
 							placeholder="Acme Corp"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
 					<XStack className="gap-4">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="company-website">Website</Label>
 							<Input
 								id="company-website"
@@ -77,8 +77,8 @@ export function CompanyFieldsCard({
 								}
 								placeholder="https://example.com"
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="company-linkedin">
 								LinkedIn URL
 							</Label>
@@ -90,11 +90,11 @@ export function CompanyFieldsCard({
 								}
 								placeholder="https://linkedin.com/company/..."
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
 
 					<XStack className="gap-4">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="company-size">Size</Label>
 							<Select
 								value={values.size || null}
@@ -102,8 +102,8 @@ export function CompanyFieldsCard({
 								options={SIZE_OPTIONS}
 								placeholder="Select size"
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="company-stage">Stage</Label>
 							<Select
 								value={values.stage || null}
@@ -111,10 +111,10 @@ export function CompanyFieldsCard({
 								options={STAGE_OPTIONS}
 								placeholder="Select stage"
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="company-industry">Industry</Label>
 						<Input
 							id="company-industry"
@@ -122,9 +122,9 @@ export function CompanyFieldsCard({
 							onChange={(e) => update("industry", e.target.value)}
 							placeholder="e.g. Fintech, Healthcare"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="company-notes">Notes</Label>
 						<Textarea
 							id="company-notes"
@@ -134,7 +134,7 @@ export function CompanyFieldsCard({
 							) => update("notes", e.target.value)}
 							placeholder="Any notes about the company..."
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 				</YStack>
 			</CardContent>
 		</Card>

@@ -25,7 +25,7 @@ import {
 	CardTitle,
 } from "@rja-design/ui/library/card"
 import { Input } from "@rja-design/ui/library/input"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { Select } from "@rja-design/ui/library/select"
 import { toast } from "@rja-design/ui/library/toast"
@@ -204,7 +204,7 @@ export function LlmConfigCard({
 						<div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
 							API Keys
 						</div>
-						<InputGroup>
+						<InputLabelWrapper>
 							<Label htmlFor="llm-anthropic-api-key">
 								Anthropic API Key
 							</Label>
@@ -218,8 +218,8 @@ export function LlmConfigCard({
 								}
 								placeholder="sk-ant-..."
 							/>
-						</InputGroup>
-						<InputGroup>
+						</InputLabelWrapper>
+						<InputLabelWrapper>
 							<Label htmlFor="llm-openai-api-key">
 								OpenAI API Key
 							</Label>
@@ -233,7 +233,7 @@ export function LlmConfigCard({
 								}
 								placeholder="sk-..."
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</YStack>
 
 					<YStack className="gap-4">
@@ -241,15 +241,15 @@ export function LlmConfigCard({
 							Scoring
 						</div>
 						<XStack className="gap-4">
-							<InputGroup className="flex-1">
+							<InputLabelWrapper className="flex-1">
 								<Label>Provider</Label>
 								<Select
 									value={scoringProvider}
 									onValueChange={handleScoringProviderChange}
 									options={PROVIDER_OPTIONS}
 								/>
-							</InputGroup>
-							<InputGroup className="flex-1">
+							</InputLabelWrapper>
+							<InputLabelWrapper className="flex-1">
 								<Label>Model</Label>
 								<Select
 									value={scoringModel}
@@ -259,7 +259,7 @@ export function LlmConfigCard({
 										scoringModel,
 									)}
 								/>
-							</InputGroup>
+							</InputLabelWrapper>
 						</XStack>
 					</YStack>
 
@@ -268,15 +268,15 @@ export function LlmConfigCard({
 							Keyword Extraction
 						</div>
 						<XStack className="gap-4">
-							<InputGroup className="flex-1">
+							<InputLabelWrapper className="flex-1">
 								<Label>Provider</Label>
 								<Select
 									value={keywordProvider}
 									onValueChange={handleKeywordProviderChange}
 									options={PROVIDER_OPTIONS}
 								/>
-							</InputGroup>
-							<InputGroup className="flex-1">
+							</InputLabelWrapper>
+							<InputLabelWrapper className="flex-1">
 								<Label>Model</Label>
 								<Select
 									value={keywordModel}
@@ -286,7 +286,7 @@ export function LlmConfigCard({
 										keywordModel,
 									)}
 								/>
-							</InputGroup>
+							</InputLabelWrapper>
 						</XStack>
 					</YStack>
 
@@ -295,15 +295,15 @@ export function LlmConfigCard({
 							Resume Generation
 						</div>
 						<XStack className="gap-4">
-							<InputGroup className="flex-1">
+							<InputLabelWrapper className="flex-1">
 								<Label>Provider</Label>
 								<Select
 									value={resumeProvider}
 									onValueChange={handleResumeProviderChange}
 									options={PROVIDER_OPTIONS}
 								/>
-							</InputGroup>
-							<InputGroup className="flex-1">
+							</InputLabelWrapper>
+							<InputLabelWrapper className="flex-1">
 								<Label>Model</Label>
 								<Select
 									value={resumeModel}
@@ -313,7 +313,7 @@ export function LlmConfigCard({
 										resumeModel,
 									)}
 								/>
-							</InputGroup>
+							</InputLabelWrapper>
 						</XStack>
 					</YStack>
 
@@ -322,7 +322,7 @@ export function LlmConfigCard({
 							Cover Letter Generation
 						</div>
 						<XStack className="gap-4">
-							<InputGroup className="flex-1">
+							<InputLabelWrapper className="flex-1">
 								<Label>Provider</Label>
 								<Select
 									value={coverLetterProvider}
@@ -331,8 +331,8 @@ export function LlmConfigCard({
 									}
 									options={PROVIDER_OPTIONS}
 								/>
-							</InputGroup>
-							<InputGroup className="flex-1">
+							</InputLabelWrapper>
+							<InputLabelWrapper className="flex-1">
 								<Label>Model</Label>
 								<Select
 									value={coverLetterModel}
@@ -342,7 +342,7 @@ export function LlmConfigCard({
 										coverLetterModel,
 									)}
 								/>
-							</InputGroup>
+							</InputLabelWrapper>
 						</XStack>
 					</YStack>
 				</YStack>

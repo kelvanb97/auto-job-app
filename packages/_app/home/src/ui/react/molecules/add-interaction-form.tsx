@@ -12,7 +12,7 @@ import {
 	useToastOnError,
 } from "@rja-core/next-safe-action/hooks"
 import { Button } from "@rja-design/ui/library/button"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { Select } from "@rja-design/ui/library/select"
 import { Textarea } from "@rja-design/ui/library/text-area"
@@ -86,7 +86,7 @@ export function AddInteractionForm({
 	return (
 		<YStack className="gap-3 border rounded-md p-3">
 			<XStack className="gap-2">
-				<InputGroup className="flex-1">
+				<InputLabelWrapper className="flex-1">
 					<Label showRequiredIcon>Type</Label>
 					<Select
 						value={type || null}
@@ -94,9 +94,9 @@ export function AddInteractionForm({
 						options={INTERACTION_TYPE_OPTIONS}
 						placeholder="Select type"
 					/>
-				</InputGroup>
+				</InputLabelWrapper>
 				{personOptions.length > 0 && (
-					<InputGroup className="flex-1">
+					<InputLabelWrapper className="flex-1">
 						<Label>Person</Label>
 						<Select
 							value={personId || null}
@@ -104,10 +104,10 @@ export function AddInteractionForm({
 							options={personOptions}
 							placeholder="Optional"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 				)}
 			</XStack>
-			<InputGroup>
+			<InputLabelWrapper>
 				<Label>Notes</Label>
 				<Textarea
 					value={notes}
@@ -117,7 +117,7 @@ export function AddInteractionForm({
 					placeholder="Notes about this interaction..."
 					rows={2}
 				/>
-			</InputGroup>
+			</InputLabelWrapper>
 			<XStack className="gap-2 justify-end">
 				<Button
 					variant="ghost"

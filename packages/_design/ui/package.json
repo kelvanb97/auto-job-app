@@ -21,6 +21,7 @@
 		"./library/image-upload": "./src/library/image-upload/image-upload.tsx",
 		"./library/input": "./src/library/input/input.tsx",
 		"./library/input-group": "./src/library/input-group/input-group.tsx",
+		"./library/input-label-wrapper": "./src/library/input-label-wrapper/input-label-wrapper.tsx",
 		"./library/input-otp": "./src/library/input-otp/input-otp.tsx",
 		"./library/label": "./src/library/label/label.tsx",
 		"./library/multi-input": "./src/library/multi-input/multi-input.tsx",

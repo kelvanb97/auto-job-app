@@ -19,7 +19,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@rja-design/ui/library/card"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { Select } from "@rja-design/ui/library/select"
 import { toast } from "@rja-design/ui/library/toast"
@@ -91,50 +91,50 @@ export function ScoringWeightsCard({
 			</CardHeader>
 			<CardContent>
 				<YStack className="gap-4">
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Title & Seniority</Label>
 						<Select
 							value={titleAndSeniority}
 							onValueChange={setTitleAndSeniority}
 							options={WEIGHT_OPTIONS}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Skills</Label>
 						<Select
 							value={skills}
 							onValueChange={setSkills}
 							options={WEIGHT_OPTIONS}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Salary</Label>
 						<Select
 							value={salary}
 							onValueChange={setSalary}
 							options={WEIGHT_OPTIONS}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Location</Label>
 						<Select
 							value={location}
 							onValueChange={setLocation}
 							options={WEIGHT_OPTIONS}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Industry</Label>
 						<Select
 							value={industry}
 							onValueChange={setIndustry}
 							options={WEIGHT_OPTIONS}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 				</YStack>
 			</CardContent>
 			<CardFooter>

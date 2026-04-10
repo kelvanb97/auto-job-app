@@ -17,7 +17,7 @@ import {
 	CardTitle,
 } from "@rja-design/ui/library/card"
 import { Input } from "@rja-design/ui/library/input"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { Textarea } from "@rja-design/ui/library/text-area"
 import { toast } from "@rja-design/ui/library/toast"
@@ -87,7 +87,7 @@ export function FormDefaultsCard({
 			</CardHeader>
 			<CardContent>
 				<YStack className="gap-4">
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="fd-how-did-you-hear">
 							How Did You Hear
 						</Label>
@@ -96,9 +96,9 @@ export function FormDefaultsCard({
 							value={howDidYouHear}
 							onChange={(e) => setHowDidYouHear(e.target.value)}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="fd-referred-by-employee">
 							Referred By Employee
 						</Label>
@@ -109,9 +109,9 @@ export function FormDefaultsCard({
 								setReferredByEmployee(e.target.value)
 							}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="fd-non-compete-agreement">
 							Non-Compete Agreement
 						</Label>
@@ -122,9 +122,9 @@ export function FormDefaultsCard({
 								setNonCompeteAgreement(e.target.value)
 							}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="fd-previously-employed">
 							Previously Employed
 						</Label>
@@ -135,9 +135,9 @@ export function FormDefaultsCard({
 								setPreviouslyEmployed(e.target.value)
 							}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="fd-professional-references">
 							Professional References
 						</Label>
@@ -148,9 +148,9 @@ export function FormDefaultsCard({
 								e: React.ChangeEvent<HTMLTextAreaElement>,
 							) => setProfessionalReferences(e.target.value)}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="fd-employment-type">
 							Employment Type
 						</Label>
@@ -159,7 +159,7 @@ export function FormDefaultsCard({
 							value={employmentType}
 							onChange={(e) => setEmploymentType(e.target.value)}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 				</YStack>
 			</CardContent>
 			<CardFooter>

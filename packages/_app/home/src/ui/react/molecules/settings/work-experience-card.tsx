@@ -26,7 +26,7 @@ import {
 	DialogTitle,
 } from "@rja-design/ui/library/dialog"
 import { Input } from "@rja-design/ui/library/input"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { MultiInput } from "@rja-design/ui/library/multi-input"
 import { Select } from "@rja-design/ui/library/select"
@@ -285,7 +285,7 @@ export function WorkExperienceCard({
 					<div className="flex-1 overflow-y-auto">
 						<YStack className="gap-4">
 							<XStack className="gap-4">
-								<InputGroup className="flex-1">
+								<InputLabelWrapper className="flex-1">
 									<Label htmlFor="we-company">Company</Label>
 									<Input
 										id="we-company"
@@ -298,8 +298,8 @@ export function WorkExperienceCard({
 										}
 										placeholder="Acme Corp"
 									/>
-								</InputGroup>
-								<InputGroup className="flex-1">
+								</InputLabelWrapper>
+								<InputLabelWrapper className="flex-1">
 									<Label htmlFor="we-title">Title</Label>
 									<Input
 										id="we-title"
@@ -309,11 +309,11 @@ export function WorkExperienceCard({
 										}
 										placeholder="Senior Software Engineer"
 									/>
-								</InputGroup>
+								</InputLabelWrapper>
 							</XStack>
 
 							<XStack className="gap-4">
-								<InputGroup className="flex-1">
+								<InputLabelWrapper className="flex-1">
 									<Label htmlFor="we-start-date">
 										Start Date
 									</Label>
@@ -328,8 +328,8 @@ export function WorkExperienceCard({
 										}
 										placeholder="Oct 2020"
 									/>
-								</InputGroup>
-								<InputGroup className="flex-1">
+								</InputLabelWrapper>
+								<InputLabelWrapper className="flex-1">
 									<Label htmlFor="we-end-date">
 										End Date
 									</Label>
@@ -344,10 +344,10 @@ export function WorkExperienceCard({
 										}
 										placeholder="Mar 2026 or Current"
 									/>
-								</InputGroup>
+								</InputLabelWrapper>
 							</XStack>
 
-							<InputGroup>
+							<InputLabelWrapper>
 								<Label htmlFor="we-type">Type</Label>
 								<Select
 									value={form.type || null}
@@ -357,9 +357,9 @@ export function WorkExperienceCard({
 									options={TYPE_OPTIONS}
 									placeholder="Select type"
 								/>
-							</InputGroup>
+							</InputLabelWrapper>
 
-							<InputGroup>
+							<InputLabelWrapper>
 								<Label>Platforms</Label>
 								<MultiInput
 									values={form.platforms}
@@ -368,9 +368,9 @@ export function WorkExperienceCard({
 									}
 									max={10}
 								/>
-							</InputGroup>
+							</InputLabelWrapper>
 
-							<InputGroup>
+							<InputLabelWrapper>
 								<Label>Tech Stack</Label>
 								<MultiInput
 									values={form.techStack}
@@ -379,9 +379,9 @@ export function WorkExperienceCard({
 									}
 									max={30}
 								/>
-							</InputGroup>
+							</InputLabelWrapper>
 
-							<InputGroup>
+							<InputLabelWrapper>
 								<Label htmlFor="we-summary">Summary</Label>
 								<Textarea
 									id="we-summary"
@@ -391,9 +391,9 @@ export function WorkExperienceCard({
 									) => updateField("summary", e.target.value)}
 									placeholder="Brief description of your role..."
 								/>
-							</InputGroup>
+							</InputLabelWrapper>
 
-							<InputGroup>
+							<InputLabelWrapper>
 								<Label>Highlights</Label>
 								<MultiInput
 									values={form.highlights}
@@ -402,7 +402,7 @@ export function WorkExperienceCard({
 									}
 									max={20}
 								/>
-							</InputGroup>
+							</InputLabelWrapper>
 						</YStack>
 					</div>
 					<DialogFooter>

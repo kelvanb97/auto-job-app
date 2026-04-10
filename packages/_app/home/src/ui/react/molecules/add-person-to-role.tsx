@@ -10,7 +10,7 @@ import {
 } from "@rja-core/next-safe-action/hooks"
 import { Button } from "@rja-design/ui/library/button"
 import { Input } from "@rja-design/ui/library/input"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { Textarea } from "@rja-design/ui/library/text-area"
 import { toast } from "@rja-design/ui/library/toast"
@@ -210,7 +210,7 @@ export function AddPersonToRole({
 						</Button>
 					</XStack>
 					<XStack className="gap-2 items-end">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label>Relationship</Label>
 							<Input
 								value={relationship}
@@ -220,7 +220,7 @@ export function AddPersonToRole({
 								list="relationship-suggestions"
 								placeholder="e.g. Recruiter, Hiring Manager"
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 						<Button
 							onClick={handleLink}
 							disabled={isLinking}
@@ -247,41 +247,41 @@ export function AddPersonToRole({
 							Cancel
 						</Button>
 					</XStack>
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label showRequiredIcon>Name</Label>
 						<Input
 							value={newName}
 							onChange={(e) => setNewName(e.target.value)}
 							placeholder="Full name"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 					<XStack className="gap-2">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label>Email</Label>
 							<Input
 								value={newEmail}
 								onChange={(e) => setNewEmail(e.target.value)}
 								placeholder="email@example.com"
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label>Title</Label>
 							<Input
 								value={newTitle}
 								onChange={(e) => setNewTitle(e.target.value)}
 								placeholder="Job title"
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>LinkedIn URL</Label>
 						<Input
 							value={newLinkedinUrl}
 							onChange={(e) => setNewLinkedinUrl(e.target.value)}
 							placeholder="https://linkedin.com/in/..."
 						/>
-					</InputGroup>
-					<InputGroup>
+					</InputLabelWrapper>
+					<InputLabelWrapper>
 						<Label>Notes</Label>
 						<Textarea
 							value={newNotes}
@@ -291,9 +291,9 @@ export function AddPersonToRole({
 							placeholder="Notes about this person..."
 							rows={2}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 					<XStack className="gap-2 items-end">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label>Relationship</Label>
 							<Input
 								value={relationship}
@@ -308,7 +308,7 @@ export function AddPersonToRole({
 									<option key={r} value={r} />
 								))}
 							</datalist>
-						</InputGroup>
+						</InputLabelWrapper>
 						<Button
 							onClick={handleCreateAndLink}
 							disabled={isCreating || !newName.trim()}

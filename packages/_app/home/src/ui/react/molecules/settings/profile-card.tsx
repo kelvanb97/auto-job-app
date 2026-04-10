@@ -20,7 +20,7 @@ import {
 	CardTitle,
 } from "@rja-design/ui/library/card"
 import { Input } from "@rja-design/ui/library/input"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { MultiInput } from "@rja-design/ui/library/multi-input"
 import { Select } from "@rja-design/ui/library/select"
@@ -146,51 +146,51 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 						Contact Info
 					</h3>
 					<XStack className="gap-4">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-name">Name</Label>
 							<Input
 								id="profile-name"
 								value={name}
 								onChange={(e) => setName(e.target.value)}
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-email">Email</Label>
 							<Input
 								id="profile-email"
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
 					<XStack className="gap-4">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-phone">Phone</Label>
 							<Input
 								id="profile-phone"
 								value={phone}
 								onChange={(e) => setPhone(e.target.value)}
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-linkedin">LinkedIn</Label>
 							<Input
 								id="profile-linkedin"
 								value={linkedin}
 								onChange={(e) => setLinkedin(e.target.value)}
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
 					<XStack className="gap-4">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-github">GitHub</Label>
 							<Input
 								id="profile-github"
 								value={github}
 								onChange={(e) => setGithub(e.target.value)}
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-personal-website">
 								Personal Website
 							</Label>
@@ -201,40 +201,40 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 									setPersonalWebsite(e.target.value)
 								}
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
 					<XStack className="gap-4">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-location">Location</Label>
 							<Input
 								id="profile-location"
 								value={location}
 								onChange={(e) => setLocation(e.target.value)}
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-address">Address</Label>
 							<Input
 								id="profile-address"
 								value={address}
 								onChange={(e) => setAddress(e.target.value)}
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
 
 					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 						Career
 					</h3>
 					<XStack className="gap-4">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-job-title">Job Title</Label>
 							<Input
 								id="profile-job-title"
 								value={jobTitle}
 								onChange={(e) => setJobTitle(e.target.value)}
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-seniority">Seniority</Label>
 							<Select
 								value={seniority || null}
@@ -244,8 +244,8 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 								options={SENIORITY_OPTIONS}
 								placeholder="Select seniority"
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-yoe">
 								Years of Experience
 							</Label>
@@ -257,13 +257,13 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 									setYearsOfExperience(Number(e.target.value))
 								}
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
 
 					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 						Summary & Notes
 					</h3>
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="profile-summary">Summary</Label>
 						<Textarea
 							id="profile-summary"
@@ -272,8 +272,8 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 								e: React.ChangeEvent<HTMLTextAreaElement>,
 							) => setSummary(e.target.value)}
 						/>
-					</InputGroup>
-					<InputGroup>
+					</InputLabelWrapper>
+					<InputLabelWrapper>
 						<Label htmlFor="profile-notes">Notes</Label>
 						<Textarea
 							id="profile-notes"
@@ -282,57 +282,57 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 								e: React.ChangeEvent<HTMLTextAreaElement>,
 							) => setNotes(e.target.value)}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
 					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 						Skills & Expertise
 					</h3>
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Skills</Label>
 						<MultiInput
 							values={skills}
 							onChange={(vals) => setSkills(vals)}
 							max={100}
 						/>
-					</InputGroup>
-					<InputGroup>
+					</InputLabelWrapper>
+					<InputLabelWrapper>
 						<Label>Preferred Skills</Label>
 						<MultiInput
 							values={preferredSkills}
 							onChange={(vals) => setPreferredSkills(vals)}
 							max={20}
 						/>
-					</InputGroup>
-					<InputGroup>
+					</InputLabelWrapper>
+					<InputLabelWrapper>
 						<Label>Domain Expertise</Label>
 						<MultiInput
 							values={domainExpertise}
 							onChange={(vals) => setDomainExpertise(vals)}
 							max={20}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
 					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 						Preferences
 					</h3>
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Preferred Location Types</Label>
 						<MultiInput
 							values={preferredLocationTypes}
 							onChange={(vals) => setPreferredLocationTypes(vals)}
 							max={3}
 						/>
-					</InputGroup>
-					<InputGroup>
+					</InputLabelWrapper>
+					<InputLabelWrapper>
 						<Label>Preferred Locations</Label>
 						<MultiInput
 							values={preferredLocations}
 							onChange={(vals) => setPreferredLocations(vals)}
 							max={20}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 					<XStack className="gap-4">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-salary-min">
 								Salary Min
 							</Label>
@@ -344,8 +344,8 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 									setSalaryMin(Number(e.target.value))
 								}
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-salary-max">
 								Salary Max
 							</Label>
@@ -357,8 +357,8 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 									setSalaryMax(Number(e.target.value))
 								}
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-desired-salary">
 								Desired Salary
 							</Label>
@@ -370,9 +370,9 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 									setDesiredSalary(Number(e.target.value))
 								}
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="profile-start-date-weeks">
 							Start Date (Weeks Out)
 						</Label>
@@ -384,23 +384,23 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 								setStartDateWeeksOut(Number(e.target.value))
 							}
 						/>
-					</InputGroup>
-					<InputGroup>
+					</InputLabelWrapper>
+					<InputLabelWrapper>
 						<Label>Industries</Label>
 						<MultiInput
 							values={industries}
 							onChange={(vals) => setIndustries(vals)}
 							max={20}
 						/>
-					</InputGroup>
-					<InputGroup>
+					</InputLabelWrapper>
+					<InputLabelWrapper>
 						<Label>Dealbreakers</Label>
 						<MultiInput
 							values={dealbreakers}
 							onChange={(vals) => setDealbreakers(vals)}
 							max={20}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 				</YStack>
 			</CardContent>
 			<CardFooter>

@@ -15,7 +15,7 @@ import {
 	CardTitle,
 } from "@rja-design/ui/library/card"
 import { Input } from "@rja-design/ui/library/input"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { toast } from "@rja-design/ui/library/toast"
 import { XStack } from "@rja-design/ui/primitives/x-stack"
@@ -154,7 +154,7 @@ export function EducationCard({
 	const renderForm = () => (
 		<YStack className="gap-3 border rounded-md p-3">
 			<XStack className="gap-4">
-				<InputGroup className="flex-1">
+				<InputLabelWrapper className="flex-1">
 					<Label showRequiredIcon>Degree</Label>
 					<Input
 						value={form.degree}
@@ -163,8 +163,8 @@ export function EducationCard({
 						}
 						placeholder="B.S."
 					/>
-				</InputGroup>
-				<InputGroup className="flex-1">
+				</InputLabelWrapper>
+				<InputLabelWrapper className="flex-1">
 					<Label showRequiredIcon>Field</Label>
 					<Input
 						value={form.field}
@@ -173,9 +173,9 @@ export function EducationCard({
 						}
 						placeholder="Computer Science"
 					/>
-				</InputGroup>
+				</InputLabelWrapper>
 			</XStack>
-			<InputGroup>
+			<InputLabelWrapper>
 				<Label showRequiredIcon>Institution</Label>
 				<Input
 					value={form.institution}
@@ -187,7 +187,7 @@ export function EducationCard({
 					}
 					placeholder="University of California, Berkeley"
 				/>
-			</InputGroup>
+			</InputLabelWrapper>
 			<XStack className="gap-2 justify-end">
 				<Button variant="ghost" size="sm" onClick={handleCancel}>
 					Cancel

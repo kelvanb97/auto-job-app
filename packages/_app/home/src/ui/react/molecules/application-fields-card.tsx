@@ -8,7 +8,7 @@ import {
 	CardTitle,
 } from "@rja-design/ui/library/card"
 import { DocumentUpload } from "@rja-design/ui/library/document-upload"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { Textarea } from "@rja-design/ui/library/text-area"
 import { XStack } from "@rja-design/ui/primitives/x-stack"
@@ -57,7 +57,7 @@ function FileSlot({
 
 	if (url && !selectedFile) {
 		return (
-			<InputGroup>
+			<InputLabelWrapper>
 				<Label>{label}</Label>
 				<XStack className="items-center gap-2 rounded-md border px-3 py-2">
 					<a
@@ -78,12 +78,12 @@ function FileSlot({
 						{isRemoving ? "Removing..." : "Remove"}
 					</Button>
 				</XStack>
-			</InputGroup>
+			</InputLabelWrapper>
 		)
 	}
 
 	return (
-		<InputGroup>
+		<InputLabelWrapper>
 			<Label>{label}</Label>
 			{isUploading ? (
 				<div className="border-2 border-dashed rounded-lg p-6 text-center text-sm text-muted-foreground">
@@ -99,7 +99,7 @@ function FileSlot({
 					accepts=".pdf,.doc,.docx"
 				/>
 			)}
-		</InputGroup>
+		</InputLabelWrapper>
 	)
 }
 
@@ -158,7 +158,7 @@ export function ApplicationFieldsCard({
 					/>
 
 					{screenshotUrl && (
-						<InputGroup>
+						<InputLabelWrapper>
 							<Label>Screenshot</Label>
 							<XStack className="items-center gap-2 rounded-md border px-3 py-2">
 								<a
@@ -170,10 +170,10 @@ export function ApplicationFieldsCard({
 									View screenshot
 								</a>
 							</XStack>
-						</InputGroup>
+						</InputLabelWrapper>
 					)}
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="app-notes">Notes</Label>
 						<Textarea
 							id="app-notes"
@@ -183,7 +183,7 @@ export function ApplicationFieldsCard({
 							) => onNotesChange(e.target.value)}
 							placeholder="Application notes..."
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 				</YStack>
 			</CardContent>
 		</Card>

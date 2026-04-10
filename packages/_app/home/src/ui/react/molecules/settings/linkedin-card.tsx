@@ -17,7 +17,7 @@ import {
 	CardTitle,
 } from "@rja-design/ui/library/card"
 import { Input } from "@rja-design/ui/library/input"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { MultiInput } from "@rja-design/ui/library/multi-input"
 import { toast } from "@rja-design/ui/library/toast"
@@ -79,16 +79,16 @@ export function LinkedInCard({
 			</CardHeader>
 			<CardContent>
 				<YStack className="gap-4">
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label>Search URLs</Label>
 						<MultiInput
 							values={linkedinUrls}
 							onChange={setLinkedinUrls}
 							max={30}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="linkedin-max-pages">Max Pages</Label>
 						<Input
 							id="linkedin-max-pages"
@@ -98,9 +98,9 @@ export function LinkedInCard({
 								setLinkedinMaxPages(Number(e.target.value))
 							}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="linkedin-max-per-page">
 							Max Per Page
 						</Label>
@@ -112,7 +112,7 @@ export function LinkedInCard({
 								setLinkedinMaxPerPage(Number(e.target.value))
 							}
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 				</YStack>
 			</CardContent>
 			<CardFooter>

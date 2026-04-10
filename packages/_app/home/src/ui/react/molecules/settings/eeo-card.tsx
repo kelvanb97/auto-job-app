@@ -17,7 +17,7 @@ import {
 	CardTitle,
 } from "@rja-design/ui/library/card"
 import { Input } from "@rja-design/ui/library/input"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { Switch } from "@rja-design/ui/library/switch"
 import { toast } from "@rja-design/ui/library/toast"
@@ -78,7 +78,7 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 			</CardHeader>
 			<CardContent>
 				<YStack className="gap-4">
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="eeo-gender">Gender</Label>
 						<Input
 							id="eeo-gender"
@@ -86,9 +86,9 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 							onChange={(e) => setGender(e.target.value)}
 							placeholder="Leave empty to decline"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="eeo-ethnicity">Ethnicity</Label>
 						<Input
 							id="eeo-ethnicity"
@@ -96,9 +96,9 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 							onChange={(e) => setEthnicity(e.target.value)}
 							placeholder="Leave empty to decline"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="eeo-veteran-status">
 							Veteran Status
 						</Label>
@@ -108,9 +108,9 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 							onChange={(e) => setVeteranStatus(e.target.value)}
 							placeholder="Leave empty to decline"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="eeo-disability-status">
 							Disability Status
 						</Label>
@@ -122,9 +122,9 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 							}
 							placeholder="Leave empty to decline"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="eeo-work-authorization">
 							Work Authorization
 						</Label>
@@ -136,7 +136,7 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 							}
 							placeholder="Leave empty to decline"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
 					<Switch
 						checked={requiresVisaSponsorship}
