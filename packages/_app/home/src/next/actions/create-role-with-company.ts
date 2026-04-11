@@ -6,10 +6,7 @@ import {
 	companyStageSchema,
 } from "@rja-api/company/schema/company-schema"
 import { createRole } from "@rja-api/role/api/create-role"
-import {
-	locationTypeSchema,
-	roleSourceSchema,
-} from "@rja-api/role/schema/role-schema"
+import { locationTypeSchema } from "@rja-api/role/schema/role-schema"
 import { actionClient, SafeForClientError } from "@rja-core/next-safe-action"
 import { z } from "zod"
 
@@ -28,7 +25,7 @@ const createRoleWithCompanySchema = z.object({
 	title: z.string().min(1),
 	url: z.string().optional(),
 	description: z.string().optional(),
-	source: roleSourceSchema.optional(),
+	source: z.string().optional(),
 	locationType: locationTypeSchema.optional(),
 	location: z.string().optional(),
 	salaryMin: z.number().optional(),

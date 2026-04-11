@@ -8,7 +8,6 @@ import {
 import { updateRole } from "@rja-api/role/api/update-role"
 import {
 	locationTypeSchema,
-	roleSourceSchema,
 	roleStatusSchema,
 } from "@rja-api/role/schema/role-schema"
 import { actionClient, SafeForClientError } from "@rja-core/next-safe-action"
@@ -20,7 +19,7 @@ const updateRoleWithCompanySchema = z.object({
 		title: z.string().min(1).optional(),
 		url: z.string().nullable().optional(),
 		description: z.string().nullable().optional(),
-		source: roleSourceSchema.nullable().optional(),
+		source: z.string().nullable().optional(),
 		locationType: locationTypeSchema.nullable().optional(),
 		location: z.string().nullable().optional(),
 		salaryMin: z.number().nullable().optional(),

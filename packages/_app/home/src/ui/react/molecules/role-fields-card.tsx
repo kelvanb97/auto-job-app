@@ -1,7 +1,4 @@
-import {
-	type TLocationType,
-	type TRoleSource,
-} from "@rja-api/role/schema/role-schema"
+import { type TLocationType } from "@rja-api/role/schema/role-schema"
 import {
 	Card,
 	CardContent,
@@ -18,6 +15,7 @@ import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { Select } from "@rja-design/ui/library/select"
 import { Textarea } from "@rja-design/ui/library/text-area"
+import { Tooltip } from "@rja-design/ui/library/tooltip"
 import { XStack } from "@rja-design/ui/primitives/x-stack"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 
@@ -37,15 +35,6 @@ const LOCATION_TYPE_OPTIONS: { label: string; value: TLocationType }[] = [
 	{ label: "Remote", value: "remote" },
 	{ label: "Hybrid", value: "hybrid" },
 	{ label: "On-site", value: "on-site" },
-]
-
-const SOURCE_OPTIONS: { label: string; value: TRoleSource }[] = [
-	{ label: "LinkedIn", value: "linkedin" },
-	{ label: "Indeed", value: "indeed" },
-	{ label: "Company Website", value: "company-website" },
-	{ label: "Referral", value: "referral" },
-	{ label: "Recruiter", value: "recruiter" },
-	{ label: "Other", value: "other" },
 ]
 
 function formatCurrency(value: string): string {
@@ -88,7 +77,13 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 					</InputLabelWrapper>
 
 					<InputLabelWrapper>
-						<Label htmlFor="role-url">URL</Label>
+						<Label htmlFor="role-url">
+							Application URL
+							<Tooltip
+								iconClassName="size-3.5 text-muted-foreground"
+								content="Link to the application form or job listing"
+							/>
+						</Label>
 						<Input
 							id="role-url"
 							value={values.url}
@@ -97,26 +92,22 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 						/>
 					</InputLabelWrapper>
 
-					<InputLabelWrapper>
-						<Label htmlFor="role-description">Description</Label>
-						<Textarea
-							id="role-description"
-							value={values.description}
-							onChange={(
-								e: React.ChangeEvent<HTMLTextAreaElement>,
-							) => update("description", e.target.value)}
-							placeholder="Job description..."
-						/>
-					</InputLabelWrapper>
-
 					<XStack className="gap-4">
 						<InputLabelWrapper className="flex-1">
-							<Label htmlFor="role-source">Source</Label>
-							<Select
-								value={values.source || null}
-								onValueChange={(val) => update("source", val)}
-								options={SOURCE_OPTIONS}
-								placeholder="Select source"
+							<Label htmlFor="role-source">
+								Source
+								<Tooltip
+									iconClassName="size-3.5 text-muted-foreground"
+									content="Where you found the job e.g. LinkedIn, Glassdoor, etc."
+								/>
+							</Label>
+							<Input
+								id="role-source"
+								value={values.source}
+								onChange={(e) =>
+									update("source", e.target.value)
+								}
+								placeholder="LinkedIn, Hacker News, etc."
 							/>
 						</InputLabelWrapper>
 						<InputLabelWrapper className="flex-1">
@@ -182,6 +173,20 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 							</InputGroup>
 						</InputLabelWrapper>
 					</XStack>
+
+					<InputLabelWrapper>
+						<Label htmlFor="role-description">
+							Job Description
+						</Label>
+						<Textarea
+							id="role-description"
+							value={values.description}
+							onChange={(
+								e: React.ChangeEvent<HTMLTextAreaElement>,
+							) => update("description", e.target.value)}
+							placeholder="Job description..."
+						/>
+					</InputLabelWrapper>
 
 					<InputLabelWrapper>
 						<Label htmlFor="role-notes">Notes</Label>

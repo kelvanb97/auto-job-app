@@ -4,10 +4,7 @@ import type {
 	TCompanySize,
 	TCompanyStage,
 } from "@rja-api/company/schema/company-schema"
-import type {
-	TLocationType,
-	TRoleSource,
-} from "@rja-api/role/schema/role-schema"
+import type { TLocationType } from "@rja-api/role/schema/role-schema"
 import {
 	useAction,
 	useActionError,
@@ -88,7 +85,7 @@ export function CreateRoleForm() {
 			title: role.title,
 			url: role.url || undefined,
 			description: role.description || undefined,
-			source: (role.source || undefined) as TRoleSource | undefined,
+			source: role.source || undefined,
 			locationType: (role.locationType || undefined) as
 				| TLocationType
 				| undefined,

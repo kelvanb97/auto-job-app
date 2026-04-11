@@ -68,17 +68,29 @@ function TooltipContent({
 
 interface ITooltipProps {
 	iconClassName?: string
+	paragraphClassName?: string
 	content: string
 }
 
-export function Tooltip({ iconClassName, content }: ITooltipProps) {
+export function Tooltip({
+	iconClassName,
+	paragraphClassName,
+	content,
+}: ITooltipProps) {
 	return (
 		<TooltipRoot>
 			<TooltipTrigger asChild>
 				<CircleQuestionMarkIcon className={iconClassName} />
 			</TooltipTrigger>
 			<TooltipContent>
-				<Paragraph>{content}</Paragraph>
+				<Paragraph
+					className={cn(
+						"inline-block text-wrap leading-snug",
+						paragraphClassName,
+					)}
+				>
+					{content}
+				</Paragraph>
 			</TooltipContent>
 		</TooltipRoot>
 	)
