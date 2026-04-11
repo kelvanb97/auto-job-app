@@ -17,7 +17,7 @@ import {
 	type IRolesFilters,
 	type TSortOption,
 } from "#molecules/roles-filter-bar"
-import { EditRoleDialog } from "#organisms/edit-role-dialog"
+import { EditRoleSheet } from "#organisms/edit-role-sheet"
 import { RolesTable } from "#organisms/roles-table"
 import { useCallback, useEffect, useReducer, useRef } from "react"
 
@@ -283,7 +283,7 @@ export function RolesTemplate() {
 				isLoadingMore={isFetching}
 				statusDisabledId={statusUpdatingId.current}
 			/>
-			<EditRoleDialog
+			<EditRoleSheet
 				open={state.isDialogOpen}
 				onOpenChange={handleDialogOpenChange}
 				role={state.selectedRole}

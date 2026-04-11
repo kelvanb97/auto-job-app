@@ -18,12 +18,12 @@ import {
 } from "@rja-core/next-safe-action/hooks"
 import { Button } from "@rja-design/ui/library/button"
 import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@rja-design/ui/library/dialog"
+	Sheet,
+	SheetContent,
+	SheetFooter,
+	SheetHeader,
+	SheetTitle,
+} from "@rja-design/ui/library/sheet"
 import { toast } from "@rja-design/ui/library/toast"
 import { XStack } from "@rja-design/ui/primitives/x-stack"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
@@ -461,9 +461,9 @@ function RoleScoreTab({
 	)
 }
 
-// --- Main Dialog ---
+// --- Main Sheet ---
 
-interface IEditRoleDialogProps {
+interface IEditRoleSheetProps {
 	open: boolean
 	onOpenChange: (open: boolean) => void
 	role: TRole | null
@@ -473,7 +473,7 @@ interface IEditRoleDialogProps {
 	onScoreUpdated: (roleId: number, score: TScore) => void
 }
 
-export function EditRoleDialog({
+export function EditRoleSheet({
 	open,
 	onOpenChange,
 	role,
@@ -481,7 +481,7 @@ export function EditRoleDialog({
 	score,
 	onSaved,
 	onScoreUpdated,
-}: IEditRoleDialogProps) {
+}: IEditRoleSheetProps) {
 	const [activeTab, setActiveTab] = useState<Tab>("details")
 	const [roleFields, setRoleFields] = useState<IRoleFieldsValues>(
 		roleToFieldValues(role ?? ({ title: "" } as TRole)),
@@ -588,12 +588,15 @@ export function EditRoleDialog({
 	]
 
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-2xl max-h-[85vh] flex flex-col">
-				<DialogHeader>
-					<DialogTitle>Edit Role</DialogTitle>
-				</DialogHeader>
-				<XStack className="gap-1 border-b pb-2">
+		<Sheet open={open} onOpenChange={onOpenChange}>
+			<SheetContent
+				side="right"
+				className="sm:max-w-2xl w-full max-h-screen flex flex-col gap-0"
+			>
+				<SheetHeader>
+					<SheetTitle>Edit Role</SheetTitle>
+				</SheetHeader>
+				<XStack className="gap-1 border-b px-4 pb-2">
 					{tabs.map((tab) => (
 						<Button
 							key={tab.key}
@@ -609,7 +612,7 @@ export function EditRoleDialog({
 				</XStack>
 				<div className="flex-1 overflow-y-auto">
 					{activeTab === "details" && (
-						<YStack className="gap-6">
+						<YStack className="gap-6 px-4 py-4">
 							<CompanyFieldsCard
 								values={companyFields}
 								onChange={setCompanyFields}
@@ -621,38 +624,48 @@ export function EditRoleDialog({
 						</YStack>
 					)}
 					{activeTab === "people" && role && (
-						<RolePeopleTab roleId={role.id} />
+						<div className="px-4 py-4">
+							<RolePeopleTab roleId={role.id} />
+						</div>
 					)}
 					{activeTab === "interactions" && role && (
-						<RoleInteractionsTab roleId={role.id} />
+						<div className="px-4 py-4">
+							<RoleInteractionsTab roleId={role.id} />
+						</div>
 					)}
 					{activeTab === "score" && role && (
-						<RoleScoreTab
-							score={score}
-							roleId={role.id}
-							onScoreUpdated={(s) => onScoreUpdated(role.id, s)}
-						/>
+						<div className="px-4 py-4">
+							<RoleScoreTab
+								score={score}
+								roleId={role.id}
+								onScoreUpdated={(s) =>
+									onScoreUpdated(role.id, s)
+								}
+							/>
+						</div>
 					)}
 					{activeTab === "application" && role && (
-						<ApplicationFieldsCard
-							resumeUrl={app.resumeUrl}
-							coverLetterUrl={app.coverLetterUrl}
-							screenshotUrl={app.screenshotUrl}
-							notes={app.notes}
-							onNotesChange={app.setNotes}
-							onUpload={app.handleUpload}
-							onRemove={app.handleRemove}
-							uploadingType={app.uploadingType}
-							removingType={app.removingType}
-							onGenerate={() =>
-								executeGenerate({ roleId: role.id })
-							}
-							isGenerating={isGenerating}
-						/>
+						<div className="px-4 py-4">
+							<ApplicationFieldsCard
+								resumeUrl={app.resumeUrl}
+								coverLetterUrl={app.coverLetterUrl}
+								screenshotUrl={app.screenshotUrl}
+								notes={app.notes}
+								onNotesChange={app.setNotes}
+								onUpload={app.handleUpload}
+								onRemove={app.handleRemove}
+								uploadingType={app.uploadingType}
+								removingType={app.removingType}
+								onGenerate={() =>
+									executeGenerate({ roleId: role.id })
+								}
+								isGenerating={isGenerating}
+							/>
+						</div>
 					)}
 				</div>
 				{activeTab === "details" && (
-					<DialogFooter>
+					<SheetFooter className="flex-row justify-end gap-2">
 						<Button
 							variant="outline"
 							onClick={() => onOpenChange(false)}
@@ -662,10 +675,10 @@ export function EditRoleDialog({
 						<Button onClick={handleSave} disabled={isLoading}>
 							{isLoading ? "Saving..." : "Save"}
 						</Button>
-					</DialogFooter>
+					</SheetFooter>
 				)}
 				{activeTab === "application" && (
-					<DialogFooter>
+					<SheetFooter className="flex-row justify-end gap-2">
 						<Button
 							variant="outline"
 							onClick={() => onOpenChange(false)}
@@ -678,9 +691,9 @@ export function EditRoleDialog({
 						>
 							{app.isSaving ? "Saving..." : "Save"}
 						</Button>
-					</DialogFooter>
+					</SheetFooter>
 				)}
-			</DialogContent>
-		</Dialog>
+			</SheetContent>
+		</Sheet>
 	)
 }

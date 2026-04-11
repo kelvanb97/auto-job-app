@@ -9,7 +9,12 @@ import {
 	CardTitle,
 } from "@rja-design/ui/library/card"
 import { Input } from "@rja-design/ui/library/input"
-import { InputGroup } from "@rja-design/ui/library/input-group"
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from "@rja-design/ui/library/input-group"
+import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { Select } from "@rja-design/ui/library/select"
 import { Textarea } from "@rja-design/ui/library/text-area"
@@ -43,6 +48,16 @@ const SOURCE_OPTIONS: { label: string; value: TRoleSource }[] = [
 	{ label: "Other", value: "other" },
 ]
 
+function formatCurrency(value: string): string {
+	const digits = value.replace(/\D/g, "")
+	if (!digits) return ""
+	return Number(digits).toLocaleString("en-US")
+}
+
+function parseCurrency(formatted: string): string {
+	return formatted.replace(/,/g, "")
+}
+
 interface IRoleFieldsCardProps {
 	values: IRoleFieldsValues
 	onChange: (values: IRoleFieldsValues) => void
@@ -60,7 +75,7 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 			</CardHeader>
 			<CardContent>
 				<YStack className="gap-4">
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="role-title" showRequiredIcon>
 							Title
 						</Label>
@@ -70,9 +85,9 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 							onChange={(e) => update("title", e.target.value)}
 							placeholder="Senior Software Engineer"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="role-url">URL</Label>
 						<Input
 							id="role-url"
@@ -80,9 +95,9 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 							onChange={(e) => update("url", e.target.value)}
 							placeholder="https://..."
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="role-description">Description</Label>
 						<Textarea
 							id="role-description"
@@ -92,10 +107,10 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 							) => update("description", e.target.value)}
 							placeholder="Job description..."
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
 					<XStack className="gap-4">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="role-source">Source</Label>
 							<Select
 								value={values.source || null}
@@ -103,8 +118,8 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 								options={SOURCE_OPTIONS}
 								placeholder="Select source"
 							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="role-location-type">
 								Location Type
 							</Label>
@@ -116,10 +131,10 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 								options={LOCATION_TYPE_OPTIONS}
 								placeholder="Select type"
 							/>
-						</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="role-location">Location</Label>
 						<Input
 							id="role-location"
@@ -127,36 +142,48 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 							onChange={(e) => update("location", e.target.value)}
 							placeholder="San Francisco, CA"
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 
 					<XStack className="gap-4">
-						<InputGroup className="flex-1">
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="role-salary-min">Salary Min</Label>
-							<Input
-								id="role-salary-min"
-								type="number"
-								value={values.salaryMin}
-								onChange={(e) =>
-									update("salaryMin", e.target.value)
-								}
-								placeholder="80000"
-							/>
-						</InputGroup>
-						<InputGroup className="flex-1">
+							<InputGroup>
+								<InputGroupAddon>$</InputGroupAddon>
+								<InputGroupInput
+									id="role-salary-min"
+									inputMode="numeric"
+									value={formatCurrency(values.salaryMin)}
+									onChange={(e) =>
+										update(
+											"salaryMin",
+											parseCurrency(e.target.value),
+										)
+									}
+									placeholder="80,000"
+								/>
+							</InputGroup>
+						</InputLabelWrapper>
+						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="role-salary-max">Salary Max</Label>
-							<Input
-								id="role-salary-max"
-								type="number"
-								value={values.salaryMax}
-								onChange={(e) =>
-									update("salaryMax", e.target.value)
-								}
-								placeholder="120000"
-							/>
-						</InputGroup>
+							<InputGroup>
+								<InputGroupAddon>$</InputGroupAddon>
+								<InputGroupInput
+									id="role-salary-max"
+									inputMode="numeric"
+									value={formatCurrency(values.salaryMax)}
+									onChange={(e) =>
+										update(
+											"salaryMax",
+											parseCurrency(e.target.value),
+										)
+									}
+									placeholder="120,000"
+								/>
+							</InputGroup>
+						</InputLabelWrapper>
 					</XStack>
 
-					<InputGroup>
+					<InputLabelWrapper>
 						<Label htmlFor="role-notes">Notes</Label>
 						<Textarea
 							id="role-notes"
@@ -166,7 +193,7 @@ export function RoleFieldsCard({ values, onChange }: IRoleFieldsCardProps) {
 							) => update("notes", e.target.value)}
 							placeholder="Any notes about the role..."
 						/>
-					</InputGroup>
+					</InputLabelWrapper>
 				</YStack>
 			</CardContent>
 		</Card>
