@@ -120,6 +120,15 @@ function buildJsonView(props: IJsonEditorCardProps) {
 					institution: edu.institution,
 				}))
 			: [],
+		certifications: profile
+			? profile.certifications.map((cert) => ({
+					name: cert.name,
+					issuer: cert.issuer,
+					issueDate: cert.issueDate,
+					expirationDate: cert.expirationDate,
+					url: cert.url,
+				}))
+			: [],
 		eeo: eeo
 			? {
 					gender: eeo.gender,

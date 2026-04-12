@@ -363,6 +363,38 @@ export type TEducation = typeof education.$inferSelect
 export type TNewEducation = typeof education.$inferInsert
 
 // =============================================================
+// CERTIFICATION
+// =============================================================
+
+export const certification = sqliteTable(
+	"certification",
+	{
+		id: int("id").primaryKey({ autoIncrement: true }),
+		userProfileId: int("user_profile_id")
+			.notNull()
+			.references(() => userProfile.id, { onDelete: "cascade" }),
+		sortOrder: int("sort_order").notNull().default(0),
+		name: text("name").notNull(),
+		issuer: text("issuer").notNull(),
+		issueDate: text("issue_date"),
+		expirationDate: text("expiration_date"),
+		url: text("url"),
+		createdAt: int("created_at", { mode: "timestamp" }).$defaultFn(
+			() => new Date(),
+		),
+		updatedAt: int("updated_at", { mode: "timestamp" })
+			.$defaultFn(() => new Date())
+			.$onUpdate(() => new Date()),
+	},
+	(table) => [
+		index("idx_certification_user_profile_id").on(table.userProfileId),
+	],
+)
+
+export type TCertification = typeof certification.$inferSelect
+export type TNewCertification = typeof certification.$inferInsert
+
+// =============================================================
 // EEO CONFIG
 // =============================================================
 

@@ -14,6 +14,13 @@ const resumeEducationSchema = z.object({
 	institution: z.string(),
 })
 
+const resumeCertificationSchema = z.object({
+	name: z.string(),
+	issuer: z.string(),
+	issueDate: z.string().optional(),
+	expirationDate: z.string().optional(),
+})
+
 export const resumeResponseSchema = z.object({
 	summary: z.string(),
 	skills: z.array(
@@ -21,6 +28,7 @@ export const resumeResponseSchema = z.object({
 	),
 	workExperience: z.array(resumeWorkExperienceSchema),
 	education: z.array(resumeEducationSchema),
+	certifications: z.array(resumeCertificationSchema),
 })
 
 export type TResumeResponse = z.infer<typeof resumeResponseSchema>

@@ -121,6 +121,7 @@ export function ImportResumePreviewModal({
 
 	const extractedExperience = extracted.workExperience ?? []
 	const extractedEducation = extracted.education ?? []
+	const extractedCertifications = extracted.certifications ?? []
 
 	// Default everything checked.
 	const [selectedProfileFields, setSelectedProfileFields] = useState<
@@ -132,6 +133,10 @@ export function ImportResumePreviewModal({
 	const [selectedEducationIndices, setSelectedEducationIndices] = useState<
 		Set<number>
 	>(() => new Set(extractedEducation.map((_, i) => i)))
+	const [selectedCertificationIndices, setSelectedCertificationIndices] =
+		useState<Set<number>>(
+			() => new Set(extractedCertifications.map((_, i) => i)),
+		)
 
 	const { execute, result, status } = useAction(applyResumeImportAction, {
 		onSuccess: () => {
@@ -161,6 +166,14 @@ export function ImportResumePreviewModal({
 	}
 	const toggleEducation = (index: number) => {
 		setSelectedEducationIndices((prev) => {
+			const next = new Set(prev)
+			if (next.has(index)) next.delete(index)
+			else next.add(index)
+			return next
+		})
+	}
+	const toggleCertification = (index: number) => {
+		setSelectedCertificationIndices((prev) => {
 			const next = new Set(prev)
 			if (next.has(index)) next.delete(index)
 			else next.add(index)
@@ -198,17 +211,29 @@ export function ImportResumePreviewModal({
 				institution: edu.institution,
 			}))
 
+		const certifications = extractedCertifications
+			.filter((_, i) => selectedCertificationIndices.has(i))
+			.map((cert) => ({
+				name: cert.name,
+				issuer: cert.issuer,
+				issueDate: cert.issueDate ?? null,
+				expirationDate: cert.expirationDate ?? null,
+				url: cert.url ?? null,
+			}))
+
 		execute({
 			profileUpdates,
 			workExperience,
 			education,
+			certifications,
 		})
 	}
 
 	const nothingSelected =
 		selectedProfileFields.size === 0 &&
 		selectedExperienceIndices.size === 0 &&
-		selectedEducationIndices.size === 0
+		selectedEducationIndices.size === 0 &&
+		selectedCertificationIndices.size === 0
 
 	return (
 		<Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -361,9 +386,49 @@ export function ImportResumePreviewModal({
 						</YStack>
 					)}
 
+					{/* Certifications section */}
+					{extractedCertifications.length > 0 && (
+						<YStack className="gap-2">
+							<h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+								Certifications ({extractedCertifications.length}
+								)
+							</h3>
+							<YStack className="gap-2">
+								{extractedCertifications.map((cert, i) => (
+									<XStack
+										key={`cert-${i}`}
+										className="items-start gap-3 rounded-md border border-border p-3"
+									>
+										<Checkbox
+											checked={selectedCertificationIndices.has(
+												i,
+											)}
+											onCheckedChange={() =>
+												toggleCertification(i)
+											}
+										/>
+										<YStack className="flex-1 gap-1">
+											<span className="text-sm font-medium">
+												{cert.name}
+											</span>
+											<span className="text-xs text-muted-foreground">
+												{cert.issuer}
+												{cert.issueDate &&
+													` · ${cert.issueDate}`}
+												{cert.expirationDate &&
+													` – ${cert.expirationDate}`}
+											</span>
+										</YStack>
+									</XStack>
+								))}
+							</YStack>
+						</YStack>
+					)}
+
 					{extractedProfileEntries.length === 0 &&
 						extractedExperience.length === 0 &&
-						extractedEducation.length === 0 && (
+						extractedEducation.length === 0 &&
+						extractedCertifications.length === 0 && (
 							<p className="text-sm text-muted-foreground">
 								The resume parser didn't find any usable data.
 								Try a different file.

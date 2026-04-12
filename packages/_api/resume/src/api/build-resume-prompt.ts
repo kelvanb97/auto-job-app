@@ -48,6 +48,18 @@ function buildFullProfile(profile: TUserProfileFull): string {
 		sections.push(`\nEducation:\n${edu}`)
 	}
 
+	if (profile.certifications.length > 0) {
+		const certs = profile.certifications
+			.map((c) => {
+				let line = `- ${c.name}, ${c.issuer}`
+				if (c.issueDate) line += ` (${c.issueDate})`
+				if (c.expirationDate) line += ` – expires ${c.expirationDate}`
+				return line
+			})
+			.join("\n")
+		sections.push(`\nCertifications:\n${certs}`)
+	}
+
 	return sections.join("\n")
 }
 
@@ -76,6 +88,7 @@ You will be given the candidate's complete profile (work history, skills, highli
 2. **Skills**: Select 15-25 skills from the candidate's skill list that are most relevant to the role. Group them into categories (e.g., "Languages", "Frontend", "Backend & Infrastructure"). Order categories and items within them by relevance to the role. Only include skills the candidate actually has.
 3. **Work Experience**: Include ALL work experiences but reorder highlights within each role to lead with the most relevant ones. Select the 3-5 most impactful highlights per role. You may lightly reword highlights to emphasize relevant aspects, but do not fabricate accomplishments.
 4. **Education**: Include all education entries as-is.
+5. **Certifications**: Include all certifications as-is. Prioritize certifications most relevant to the role.
 
 Important rules:
 - Never invent skills, experiences, or accomplishments the candidate doesn't have.

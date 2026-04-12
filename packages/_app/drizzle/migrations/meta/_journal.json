@@ -36,6 +36,13 @@
 			"when": 1775958014235,
 			"tag": "0004_curved_slipstream",
 			"breakpoints": true
+		},
+		{
+			"idx": 5,
+			"version": "6",
+			"when": 1776036328904,
+			"tag": "0005_fine_lethal_legion",
+			"breakpoints": true
 		}
 	]
 }

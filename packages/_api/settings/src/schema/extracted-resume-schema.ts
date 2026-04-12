@@ -49,6 +49,17 @@ export const extractedResumeSchema = z.object({
 			}),
 		)
 		.optional(),
+	certifications: z
+		.array(
+			z.object({
+				name: z.string(),
+				issuer: z.string(),
+				issueDate: z.string().optional(),
+				expirationDate: z.string().optional(),
+				url: z.string().optional(),
+			}),
+		)
+		.optional(),
 })
 
 export type TExtractedResume = z.infer<typeof extractedResumeSchema>

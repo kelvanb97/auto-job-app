@@ -1,4 +1,5 @@
 export {
+	Award,
 	BarChart3,
 	Braces,
 	Briefcase,

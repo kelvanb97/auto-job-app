@@ -7,7 +7,7 @@ import {
 } from "#schema/extracted-resume-schema"
 import { getLlmConfigForUseCase } from "./get-llm-config-for-use-case"
 
-const SYSTEM_PROMPT = `You are a resume parser. Extract structured profile, work experience, and education information from the resume text the user provides.
+const SYSTEM_PROMPT = `You are a resume parser. Extract structured profile, work experience, education, and certifications information from the resume text the user provides.
 
 Rules:
 - Only include fields you can confidently identify in the text. Leave anything you can't find blank/undefined.
@@ -16,6 +16,7 @@ Rules:
 - Preserve dates in their original format (e.g. "Jan 2023", "Mar 2024", "Present").
 - For highlights, capture bullet-point achievements as short standalone strings.
 - For skills, dedupe and normalize casing (e.g. "TypeScript" not "typescript").
+- For certifications, extract the certification name, issuing organization, and any dates or verification URLs if present.
 - Do not invent or hallucinate companies, titles, schools, or dates that are not in the resume.`
 
 export async function extractResume(

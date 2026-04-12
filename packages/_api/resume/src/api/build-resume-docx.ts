@@ -183,6 +183,39 @@ export async function buildResumeDocx(
 		)
 	}
 
+	// Certifications section
+	if (resume.certifications && resume.certifications.length > 0) {
+		children.push(sectionHeading("Certifications"))
+		for (const cert of resume.certifications) {
+			const parts: TextRun[] = [
+				new TextRun({
+					text: cert.name,
+					bold: true,
+					size: 22,
+					font: "Calibri",
+				}),
+				new TextRun({
+					text: ` — ${cert.issuer}`,
+					size: 22,
+					font: "Calibri",
+				}),
+			]
+			if (cert.issueDate) {
+				parts.push(
+					new TextRun({
+						text: ` (${cert.issueDate}${cert.expirationDate ? ` – ${cert.expirationDate}` : ""})`,
+						size: 22,
+						font: "Calibri",
+						color: "555555",
+					}),
+				)
+			}
+			children.push(
+				new Paragraph({ spacing: { after: 40 }, children: parts }),
+			)
+		}
+	}
+
 	const doc = new Document({
 		sections: [
 			{

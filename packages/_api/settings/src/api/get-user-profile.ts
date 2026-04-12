@@ -1,4 +1,9 @@
-import { education, userProfile, workExperience } from "@rja-app/drizzle"
+import {
+	certification,
+	education,
+	userProfile,
+	workExperience,
+} from "@rja-app/drizzle"
 import { db } from "@rja-core/drizzle"
 import { errFrom, ok, type TResult } from "@rja-core/result"
 import type { TUserProfileFull } from "#schema/user-profile-schema"
@@ -23,10 +28,18 @@ export function getUserProfile(): TResult<TUserProfileFull> {
 			.orderBy(asc(education.sortOrder))
 			.all()
 
+		const certifications = db()
+			.select()
+			.from(certification)
+			.where(eq(certification.userProfileId, profile.id))
+			.orderBy(asc(certification.sortOrder))
+			.all()
+
 		return ok({
 			...profile,
 			workExperience: experiences,
 			education: educations,
+			certifications,
 		})
 	} catch (e) {
 		return errFrom(

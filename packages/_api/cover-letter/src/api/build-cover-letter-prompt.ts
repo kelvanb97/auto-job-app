@@ -54,7 +54,7 @@ Work Experience:
 ${experienceSummary}
 
 Education: ${profile.education.map((e) => `${e.degree} in ${e.field}, ${e.institution}`).join("; ")}
-
+${profile.certifications.length > 0 ? `\nCertifications: ${profile.certifications.map((c) => `${c.name} (${c.issuer})`).join("; ")}` : ""}
 ## Target Role
 ${roleDetails}`
 

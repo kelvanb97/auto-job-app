@@ -7,6 +7,8 @@ export type {
 	TNewWorkExperience,
 	TEducation,
 	TNewEducation,
+	TCertification,
+	TNewCertification,
 } from "@rja-app/drizzle"
 
 export const SENIORITY_LEVELS = [
@@ -84,6 +86,18 @@ export type TUserProfileFull = {
 		createdAt: Date | null
 		updatedAt: Date | null
 	}>
+	certifications: Array<{
+		id: number
+		userProfileId: number
+		sortOrder: number
+		name: string
+		issuer: string
+		issueDate: string | null
+		expirationDate: string | null
+		url: string | null
+		createdAt: Date | null
+		updatedAt: Date | null
+	}>
 }
 
 export const upsertUserProfileSchema = z.object({
@@ -149,5 +163,22 @@ export const upsertEducationSchema = z.object({
 export type TUpsertEducation = z.infer<typeof upsertEducationSchema>
 
 export const deleteEducationSchema = z.object({
+	id: z.number(),
+})
+
+export const upsertCertificationSchema = z.object({
+	id: z.number().optional(),
+	userProfileId: z.number(),
+	sortOrder: z.number().int().min(0),
+	name: z.string().min(1),
+	issuer: z.string().min(1),
+	issueDate: z.string().nullish(),
+	expirationDate: z.string().nullish(),
+	url: z.string().nullish(),
+})
+
+export type TUpsertCertification = z.infer<typeof upsertCertificationSchema>
+
+export const deleteCertificationSchema = z.object({
 	id: z.number(),
 })

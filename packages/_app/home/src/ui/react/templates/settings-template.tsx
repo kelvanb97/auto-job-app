@@ -7,6 +7,7 @@ import type { TScoringConfig } from "@rja-api/settings/schema/scoring-config-sch
 import type { TScraperConfig } from "@rja-api/settings/schema/scraper-config-schema"
 import type { TUserProfileFull } from "@rja-api/settings/schema/user-profile-schema"
 import {
+	Award,
 	BarChart3,
 	Braces,
 	Briefcase,
@@ -21,6 +22,7 @@ import {
 import { cn } from "@rja-design/ui/cn"
 import { XStack } from "@rja-design/ui/primitives/x-stack"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
+import { CertificationCard } from "#molecules/settings/certification-card"
 import { EducationCard } from "#molecules/settings/education-card"
 import { EeoCard } from "#molecules/settings/eeo-card"
 import { FormDefaultsCard } from "#molecules/settings/form-defaults-card"
@@ -53,6 +55,7 @@ const SECTIONS: TSection[] = [
 			{ key: "profile", label: "Profile", icon: User },
 			{ key: "work-experience", label: "Experience", icon: Briefcase },
 			{ key: "education", label: "Education", icon: GraduationCap },
+			{ key: "certifications", label: "Certifications", icon: Award },
 		],
 	},
 	{
@@ -173,6 +176,16 @@ export function SettingsTemplate({
 							/>
 						) : (
 							<NeedsProfile tab="Education" />
+						))}
+					{activeTab === "certifications" &&
+						(profile ? (
+							<CertificationCard
+								profileId={profile.id}
+								certifications={profile.certifications}
+								onSaved={onSaved}
+							/>
+						) : (
+							<NeedsProfile tab="Certifications" />
 						))}
 					{activeTab === "eeo" &&
 						(profile ? (

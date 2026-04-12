@@ -1,9 +1,11 @@
 "use server"
 
+import { deleteCertification } from "@rja-api/settings/api/delete-certification"
 import { deleteEducation } from "@rja-api/settings/api/delete-education"
 import { deleteWorkExperience } from "@rja-api/settings/api/delete-work-experience"
 import { extractResume } from "@rja-api/settings/api/extract-resume"
 import { getUserProfile } from "@rja-api/settings/api/get-user-profile"
+import { upsertCertification } from "@rja-api/settings/api/upsert-certification"
 import { upsertEducation } from "@rja-api/settings/api/upsert-education"
 import { upsertEeoConfig } from "@rja-api/settings/api/upsert-eeo-config"
 import { upsertFormDefaults } from "@rja-api/settings/api/upsert-form-defaults"
@@ -18,8 +20,10 @@ import { upsertLlmConfigSchema } from "@rja-api/settings/schema/llm-config-schem
 import { upsertScoringConfigSchema } from "@rja-api/settings/schema/scoring-config-schema"
 import { upsertScraperConfigSchema } from "@rja-api/settings/schema/scraper-config-schema"
 import {
+	deleteCertificationSchema,
 	deleteEducationSchema,
 	deleteWorkExperienceSchema,
+	upsertCertificationSchema,
 	upsertEducationSchema,
 	upsertUserProfileSchema,
 	upsertWorkExperienceSchema,
@@ -65,6 +69,22 @@ export const deleteEducationAction = actionClient
 	.inputSchema(deleteEducationSchema)
 	.action(async ({ parsedInput }) => {
 		const result = deleteEducation(parsedInput.id)
+		if (!result.ok) throw new SafeForClientError(result.error.message)
+		return result.data
+	})
+
+export const upsertCertificationAction = actionClient
+	.inputSchema(upsertCertificationSchema)
+	.action(async ({ parsedInput }) => {
+		const result = upsertCertification(parsedInput)
+		if (!result.ok) throw new SafeForClientError(result.error.message)
+		return result.data
+	})
+
+export const deleteCertificationAction = actionClient
+	.inputSchema(deleteCertificationSchema)
+	.action(async ({ parsedInput }) => {
+		const result = deleteCertification(parsedInput.id)
 		if (!result.ok) throw new SafeForClientError(result.error.message)
 		return result.data
 	})
@@ -129,6 +149,9 @@ export const saveAllSettingsAction = actionClient
 			for (const edu of existing.data.education) {
 				deleteEducation(edu.id)
 			}
+			for (const cert of existing.data.certifications) {
+				deleteCertification(cert.id)
+			}
 		}
 
 		for (let i = 0; i < (data.workExperience ?? []).length; i++) {
@@ -157,6 +180,20 @@ export const saveAllSettingsAction = actionClient
 				degree: edu.degree,
 				field: edu.field,
 				institution: edu.institution,
+			})
+			if (!result.ok) throw new SafeForClientError(result.error.message)
+		}
+
+		for (let i = 0; i < (data.certifications ?? []).length; i++) {
+			const cert = data.certifications[i]
+			const result = upsertCertification({
+				userProfileId: profileId,
+				sortOrder: i,
+				name: cert.name,
+				issuer: cert.issuer,
+				issueDate: cert.issueDate ?? null,
+				expirationDate: cert.expirationDate ?? null,
+				url: cert.url ?? null,
 			})
 			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
@@ -226,6 +263,13 @@ export const applyResumeImportAction = actionClient
 			),
 			education: z.array(
 				upsertEducationSchema.omit({
+					id: true,
+					userProfileId: true,
+					sortOrder: true,
+				}),
+			),
+			certifications: z.array(
+				upsertCertificationSchema.omit({
 					id: true,
 					userProfileId: true,
 					sortOrder: true,
@@ -381,6 +425,20 @@ export const applyResumeImportAction = actionClient
 				userProfileId: profileResult.data.id,
 				sortOrder: baseEducationOrder + i,
 				...edu,
+			})
+			if (!result.ok) throw new SafeForClientError(result.error.message)
+		}
+
+		const baseCertificationOrder = existingProfile
+			? existingProfile.certifications.length
+			: 0
+		for (let i = 0; i < parsedInput.certifications.length; i++) {
+			const cert = parsedInput.certifications[i]
+			if (!cert) continue
+			const result = upsertCertification({
+				userProfileId: profileResult.data.id,
+				sortOrder: baseCertificationOrder + i,
+				...cert,
 			})
 			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
