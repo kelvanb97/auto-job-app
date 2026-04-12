@@ -22,48 +22,25 @@ Ask for help, share your wins, or just say hi.
 
 ## Prerequisites
 
-You'll need an AI coding assistant (harness) to run the skills — [Claude Code](https://claude.com/claude-code), [Codex](https://github.com/openai/codex), [OpenCode](https://opencode.ai), or any other agentic coding harness that supports the [agentskills.io](https://agentskills.io) spec.
+1. AI coding assistant (harness) to run the skills — [Claude Code](https://claude.com/claude-code), [Codex](https://github.com/openai/codex), [OpenCode](https://opencode.ai), or any other agentic coding harness that supports the [agentskills.io](https://agentskills.io) spec.
 
-You'll also need an API key from at least one supported LLM provider — [Anthropic](https://console.anthropic.com/settings/keys) or [OpenAI](https://platform.openai.com/api-keys) — for scoring roles and generating tailored resumes and cover letters.
+2. API key from at least one supported LLM provider — [Anthropic](https://console.anthropic.com/settings/keys) or [OpenAI](https://platform.openai.com/api-keys) — for scoring roles and generating tailored resumes and cover letters.
 
 ## Install
 
-### AI assisted install (recommended)
+Clone the repository `git clone https://github.com/kelvanb97/rocket-jobs-app.git`
 
-If you have Claude Code, Codex, OpenCode, or another AI coding assistant, you can let it install and configure the project for you.
-
-Open this folder in your assistant and run skill:
+Open the `rocket-jobs-app` folder with your AI coding assistant and run:
 
 ```console
 /rj-install
 ```
 
-### Manual install
-
-#### Prerequisites
-
-- git
-- Node.js >= 24
-- pnpm >= 10
-
-#### Steps
-
-```bash
-git clone https://github.com/kelvanb97/rocket-jobs-app
-cd rocket-jobs-app
-pnpm install
-pnpm dev
-```
+For manual installation without an AI assistant, see [Manual Install](./MANUAL_INSTALL.md).
 
 ## Getting started
 
-### AI assisted setup (recommended)
-
-Run skill `/rj-setup` in your AI assistant to configure the app and tell it about yourself. You'll be prompted to fill in details about your background, job preferences, and what you're looking for. You can also upload your resume (PDF or DOCX) to auto-fill most of it.
-
-### Manual setup
-
-Then open <http://localhost:3000/settings> to configure your profile, LLM provider, and scraper sources. From there you can upload a resume (PDF or DOCX) to auto-fill your profile, work experience, and education.
+Run `/rj-setup` using your AI assistant to configure the app and tell it about yourself. You'll be prompted to fill in details about your background, job preferences, and what you're looking for. You can also upload your resume (PDF or DOCX) to auto-fill most of it.
 
 ## Skills
 

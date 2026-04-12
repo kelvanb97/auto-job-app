@@ -84,7 +84,7 @@ Note: `better-sqlite3` (a transitive native dependency) needs Visual Studio Buil
 pnpm install
 ```
 
-Run with a 600000ms (10 min) Bash timeout — the `postinstall` script builds `better-sqlite3` natively, which can take a minute. Surface the output to the user as it runs.
+Run with a 600000ms (10 min) Bash timeout — `better-sqlite3` builds a native module during install, which can take a minute. Surface the output to the user as it runs.
 
 If `pnpm install` fails:
 - On Windows, point at the Visual Studio Build Tools note above.
