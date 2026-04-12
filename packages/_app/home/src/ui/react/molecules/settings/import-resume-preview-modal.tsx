@@ -26,7 +26,7 @@ import { applyResumeImportAction } from "#actions/settings-actions"
 import { useMemo, useState } from "react"
 
 interface IImportResumePreviewModalProps {
-	profile: TUserProfileFull
+	profile: TUserProfileFull | null
 	extracted: TExtractedResume
 	open: boolean
 	onClose: () => void
@@ -112,7 +112,7 @@ export function ImportResumePreviewModal({
 			entries.push({
 				key,
 				label: PROFILE_FIELD_LABELS[key],
-				currentValue: formatValue(profile[key]),
+				currentValue: profile ? formatValue(profile[key]) : "",
 				extractedValue: formatValue(raw),
 			})
 		}
@@ -199,7 +199,6 @@ export function ImportResumePreviewModal({
 			}))
 
 		execute({
-			profileId: profile.id,
 			profileUpdates,
 			workExperience,
 			education,

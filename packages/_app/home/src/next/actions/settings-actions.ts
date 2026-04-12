@@ -23,6 +23,8 @@ import {
 	upsertEducationSchema,
 	upsertUserProfileSchema,
 	upsertWorkExperienceSchema,
+	type TSeniority,
+	type TUpsertUserProfile,
 } from "@rja-api/settings/schema/user-profile-schema"
 import { actionClient, SafeForClientError } from "@rja-core/next-safe-action"
 import { z } from "zod"
@@ -191,14 +193,6 @@ export const saveAllSettingsAction = actionClient
 			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
 
-		if (data.llm) {
-			const result = upsertLlmConfig({
-				userProfileId: profileId,
-				...data.llm,
-			})
-			if (!result.ok) throw new SafeForClientError(result.error.message)
-		}
-
 		return { ok: true }
 	})
 
@@ -222,7 +216,6 @@ export const extractResumeAction = actionClient
 export const applyResumeImportAction = actionClient
 	.inputSchema(
 		z.object({
-			profileId: z.number(),
 			profileUpdates: upsertUserProfileSchema.partial(),
 			workExperience: z.array(
 				upsertWorkExperienceSchema.omit({
@@ -242,86 +235,131 @@ export const applyResumeImportAction = actionClient
 	)
 	.action(async ({ parsedInput }) => {
 		const existing = getUserProfile()
-		if (!existing.ok || !existing.data) {
-			throw new SafeForClientError(
-				"Cannot apply resume import: profile not found.",
-			)
-		}
-		if (existing.data.id !== parsedInput.profileId) {
-			throw new SafeForClientError(
-				"Profile ID mismatch — refresh the page and try again.",
-			)
-		}
+		const existingProfile = existing.ok ? existing.data : null
 
-		// Merge selected extracted fields onto the existing profile.
-		const merged = {
-			id: existing.data.id,
-			name: parsedInput.profileUpdates.name ?? existing.data.name,
-			email: parsedInput.profileUpdates.email ?? existing.data.email,
-			phone: parsedInput.profileUpdates.phone ?? existing.data.phone,
-			linkedin:
-				parsedInput.profileUpdates.linkedin ?? existing.data.linkedin,
-			github: parsedInput.profileUpdates.github ?? existing.data.github,
-			personalWebsite:
-				parsedInput.profileUpdates.personalWebsite ??
-				existing.data.personalWebsite,
-			location:
-				parsedInput.profileUpdates.location ?? existing.data.location,
-			address:
-				parsedInput.profileUpdates.address ?? existing.data.address,
-			jobTitle:
-				parsedInput.profileUpdates.jobTitle ?? existing.data.jobTitle,
-			seniority:
-				parsedInput.profileUpdates.seniority ??
-				(existing.data.seniority as
-					| "junior"
-					| "mid"
-					| "senior"
-					| "staff"
-					| "principal"
-					| "director"),
-			yearsOfExperience:
-				parsedInput.profileUpdates.yearsOfExperience ??
-				existing.data.yearsOfExperience,
-			summary:
-				parsedInput.profileUpdates.summary ?? existing.data.summary,
-			skills: parsedInput.profileUpdates.skills ?? existing.data.skills,
-			preferredSkills:
-				parsedInput.profileUpdates.preferredSkills ??
-				existing.data.preferredSkills,
-			preferredLocationTypes:
-				parsedInput.profileUpdates.preferredLocationTypes ??
-				existing.data.preferredLocationTypes,
-			preferredLocations:
-				parsedInput.profileUpdates.preferredLocations ??
-				existing.data.preferredLocations,
-			salaryMin:
-				parsedInput.profileUpdates.salaryMin ?? existing.data.salaryMin,
-			salaryMax:
-				parsedInput.profileUpdates.salaryMax ?? existing.data.salaryMax,
-			desiredSalary:
-				parsedInput.profileUpdates.desiredSalary ??
-				existing.data.desiredSalary,
-			startDateWeeksOut:
-				parsedInput.profileUpdates.startDateWeeksOut ??
-				existing.data.startDateWeeksOut,
-			industries:
-				parsedInput.profileUpdates.industries ??
-				existing.data.industries,
-			dealbreakers:
-				parsedInput.profileUpdates.dealbreakers ??
-				existing.data.dealbreakers,
-			notes: parsedInput.profileUpdates.notes ?? existing.data.notes,
-			domainExpertise:
-				parsedInput.profileUpdates.domainExpertise ??
-				existing.data.domainExpertise,
+		const merged: TUpsertUserProfile = existingProfile
+			? {
+					id: existingProfile.id,
+					name:
+						parsedInput.profileUpdates.name ?? existingProfile.name,
+					email:
+						parsedInput.profileUpdates.email ??
+						existingProfile.email,
+					phone:
+						parsedInput.profileUpdates.phone ??
+						existingProfile.phone,
+					linkedin:
+						parsedInput.profileUpdates.linkedin ??
+						existingProfile.linkedin,
+					github:
+						parsedInput.profileUpdates.github ??
+						existingProfile.github,
+					personalWebsite:
+						parsedInput.profileUpdates.personalWebsite ??
+						existingProfile.personalWebsite,
+					location:
+						parsedInput.profileUpdates.location ??
+						existingProfile.location,
+					address:
+						parsedInput.profileUpdates.address ??
+						existingProfile.address,
+					jobTitle:
+						parsedInput.profileUpdates.jobTitle ??
+						existingProfile.jobTitle,
+					seniority:
+						parsedInput.profileUpdates.seniority ??
+						(existingProfile.seniority as TSeniority),
+					yearsOfExperience:
+						parsedInput.profileUpdates.yearsOfExperience ??
+						existingProfile.yearsOfExperience,
+					summary:
+						parsedInput.profileUpdates.summary ??
+						existingProfile.summary,
+					skills:
+						parsedInput.profileUpdates.skills ??
+						existingProfile.skills,
+					preferredSkills:
+						parsedInput.profileUpdates.preferredSkills ??
+						existingProfile.preferredSkills,
+					preferredLocationTypes:
+						parsedInput.profileUpdates.preferredLocationTypes ??
+						existingProfile.preferredLocationTypes,
+					preferredLocations:
+						parsedInput.profileUpdates.preferredLocations ??
+						existingProfile.preferredLocations,
+					salaryMin:
+						parsedInput.profileUpdates.salaryMin ??
+						existingProfile.salaryMin,
+					salaryMax:
+						parsedInput.profileUpdates.salaryMax ??
+						existingProfile.salaryMax,
+					desiredSalary:
+						parsedInput.profileUpdates.desiredSalary ??
+						existingProfile.desiredSalary,
+					startDateWeeksOut:
+						parsedInput.profileUpdates.startDateWeeksOut ??
+						existingProfile.startDateWeeksOut,
+					industries:
+						parsedInput.profileUpdates.industries ??
+						existingProfile.industries,
+					dealbreakers:
+						parsedInput.profileUpdates.dealbreakers ??
+						existingProfile.dealbreakers,
+					notes:
+						parsedInput.profileUpdates.notes ??
+						existingProfile.notes,
+					domainExpertise:
+						parsedInput.profileUpdates.domainExpertise ??
+						existingProfile.domainExpertise,
+				}
+			: {
+					name: parsedInput.profileUpdates.name ?? "",
+					email: parsedInput.profileUpdates.email ?? "",
+					phone: parsedInput.profileUpdates.phone ?? "",
+					linkedin: parsedInput.profileUpdates.linkedin ?? "",
+					github: parsedInput.profileUpdates.github ?? "",
+					personalWebsite:
+						parsedInput.profileUpdates.personalWebsite ?? "",
+					location: parsedInput.profileUpdates.location ?? "",
+					address: parsedInput.profileUpdates.address ?? "",
+					jobTitle: parsedInput.profileUpdates.jobTitle ?? "",
+					seniority: parsedInput.profileUpdates.seniority ?? "mid",
+					yearsOfExperience:
+						parsedInput.profileUpdates.yearsOfExperience ?? 0,
+					summary: parsedInput.profileUpdates.summary ?? "",
+					skills: parsedInput.profileUpdates.skills ?? [],
+					preferredSkills:
+						parsedInput.profileUpdates.preferredSkills ?? [],
+					preferredLocationTypes:
+						parsedInput.profileUpdates.preferredLocationTypes ?? [],
+					preferredLocations:
+						parsedInput.profileUpdates.preferredLocations ?? [],
+					salaryMin: parsedInput.profileUpdates.salaryMin ?? 0,
+					salaryMax: parsedInput.profileUpdates.salaryMax ?? 0,
+					desiredSalary:
+						parsedInput.profileUpdates.desiredSalary ?? 0,
+					startDateWeeksOut:
+						parsedInput.profileUpdates.startDateWeeksOut ?? 2,
+					industries: parsedInput.profileUpdates.industries ?? [],
+					dealbreakers: parsedInput.profileUpdates.dealbreakers ?? [],
+					notes: parsedInput.profileUpdates.notes ?? "",
+					domainExpertise:
+						parsedInput.profileUpdates.domainExpertise ?? [],
+				}
+
+		if (!merged.name || !merged.email || !merged.jobTitle) {
+			throw new SafeForClientError(
+				"Resume is missing a required field (name, email, or job title). Fill these in manually on the Profile tab and try again.",
+			)
 		}
 
 		const profileResult = upsertUserProfile(merged)
 		if (!profileResult.ok)
 			throw new SafeForClientError(profileResult.error.message)
 
-		const baseExperienceOrder = existing.data.workExperience.length
+		const baseExperienceOrder = existingProfile
+			? existingProfile.workExperience.length
+			: 0
 		for (let i = 0; i < parsedInput.workExperience.length; i++) {
 			const exp = parsedInput.workExperience[i]
 			if (!exp) continue
@@ -333,7 +371,9 @@ export const applyResumeImportAction = actionClient
 			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
 
-		const baseEducationOrder = existing.data.education.length
+		const baseEducationOrder = existingProfile
+			? existingProfile.education.length
+			: 0
 		for (let i = 0; i < parsedInput.education.length; i++) {
 			const edu = parsedInput.education[i]
 			if (!edu) continue

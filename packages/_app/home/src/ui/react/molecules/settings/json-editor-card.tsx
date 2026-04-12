@@ -2,7 +2,6 @@
 
 import type { TEeoConfig } from "@rja-api/settings/schema/eeo-config-schema"
 import type { TFormDefaults } from "@rja-api/settings/schema/form-defaults-schema"
-import type { TLlmConfig } from "@rja-api/settings/schema/llm-config-schema"
 import type { TScoringConfig } from "@rja-api/settings/schema/scoring-config-schema"
 import type { TScraperConfig } from "@rja-api/settings/schema/scraper-config-schema"
 import type { TUserProfileFull } from "@rja-api/settings/schema/user-profile-schema"
@@ -30,7 +29,6 @@ interface IJsonEditorCardProps {
 	formDefaults: TFormDefaults | null
 	scoring: TScoringConfig | null
 	scraper: TScraperConfig | null
-	llm: TLlmConfig | null
 	onSaved: () => void
 }
 
@@ -70,7 +68,7 @@ function highlightJson(json: string): string {
 // ---------------------------------------------------------------------------
 
 function buildJsonView(props: IJsonEditorCardProps) {
-	const { profile, eeo, formDefaults, scoring, scraper, llm } = props
+	const { profile, eeo, formDefaults, scoring, scraper } = props
 
 	return {
 		profile: profile
@@ -165,20 +163,6 @@ function buildJsonView(props: IJsonEditorCardProps) {
 					linkedinUrls: scraper.linkedinUrls,
 					linkedinMaxPages: scraper.linkedinMaxPages,
 					linkedinMaxPerPage: scraper.linkedinMaxPerPage,
-				}
-			: null,
-		llm: llm
-			? {
-					anthropicApiKey: llm.anthropicApiKey,
-					openaiApiKey: llm.openaiApiKey,
-					scoringProvider: llm.scoringProvider,
-					scoringModel: llm.scoringModel,
-					keywordProvider: llm.keywordProvider,
-					keywordModel: llm.keywordModel,
-					resumeProvider: llm.resumeProvider,
-					resumeModel: llm.resumeModel,
-					coverLetterProvider: llm.coverLetterProvider,
-					coverLetterModel: llm.coverLetterModel,
 				}
 			: null,
 	}

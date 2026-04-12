@@ -30,7 +30,6 @@ export const LLM_USE_CASES = [
 export type TLlmUseCase = (typeof LLM_USE_CASES)[number]
 
 export const upsertLlmConfigSchema = z.object({
-	userProfileId: z.number(),
 	anthropicApiKey: z.string().default(""),
 	openaiApiKey: z.string().default(""),
 	scoringProvider: llmProviderSchema,

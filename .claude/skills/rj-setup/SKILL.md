@@ -30,32 +30,36 @@ curl -sf http://localhost:3000 > /dev/null && echo OK || echo DOWN
   > "I can't reach <http://localhost:3000>. If you haven't installed yet, run `/rj-install` first. If you have installed, run `pnpm dev` in a terminal and re-run `/rj-setup`."
   Then stop.
 
-## Step 1: Open /settings in the browser
+## Step 1: Open /llm-config in the browser
+
+LLM config lives on its own page now. Do it first so that when we get to `/settings`, the resume-upload shortcut is already enabled.
+
+```
+mcp__playwright__browser_navigate → http://localhost:3000/llm-config
+mcp__playwright__browser_snapshot
+```
+
+## Step 2: LLM Provider (chat-driven, FIRST)
+
+1. Explain to the user in chat:
+   > "The app uses Claude (Anthropic) and/or GPT (OpenAI) for scoring jobs, generating resumes, generating cover letters, and extracting data from your uploaded resume. You need at least one API key. Anthropic is the default and recommended."
+   > - Get an Anthropic key at <https://console.anthropic.com/settings/keys> (paid; ~$5–$20/month for personal use)
+   > - Get an OpenAI key at <https://platform.openai.com/api-keys> (paid)
+2. Ask the user which provider(s) they want to use and request the key(s) in chat.
+3. Use Playwright `browser_type` to fill the relevant key field(s). Use `browser_select_option` for the provider dropdowns (scoring / keyword / resume / cover letter providers).
+4. Click Save.
+5. Verify by re-snapshotting the page and confirming the input shows a populated value (or at least a masked placeholder).
+
+## Step 3: Profile / Experience / Education — offer resume upload first
+
+Navigate to `/settings`:
 
 ```
 mcp__playwright__browser_navigate → http://localhost:3000/settings
 mcp__playwright__browser_snapshot
 ```
 
-Confirm the settings sidebar is visible. The Profile tab is the default landing tab.
-
-## Step 2: LLM Provider (chat-driven, FIRST)
-
-The LLM tab must be configured before resume upload will work, so do it first.
-
-1. Click the **LLM Provider** tab in the sidebar.
-2. Explain to the user in chat:
-   > "The app uses Claude (Anthropic) and/or GPT (OpenAI) for scoring jobs, generating resumes, generating cover letters, and extracting data from your uploaded resume. You need at least one API key. Anthropic is the default and recommended."
-   > - Get an Anthropic key at <https://console.anthropic.com/settings/keys> (paid; ~$5–$20/month for personal use)
-   > - Get an OpenAI key at <https://platform.openai.com/api-keys> (paid)
-3. Ask the user which provider(s) they want to use and request the key(s) in chat.
-4. Use Playwright `browser_type` to fill the relevant key field(s). Use `browser_select_option` for the provider dropdowns (scoring / keyword / resume / cover letter providers).
-5. Click Save.
-6. Verify by re-snapshotting the page and confirming the input shows a populated value (or at least a masked placeholder).
-
-## Step 3: Profile / Experience / Education — offer resume upload first
-
-Click the **Profile** tab. Ask in chat:
+Ask in chat:
 
 > "Want to import your profile, work experience, and education from a PDF or DOCX resume? It's much faster than typing each one out. Or we can fill them in by hand."
 

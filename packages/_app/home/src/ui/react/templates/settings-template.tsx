@@ -15,7 +15,6 @@ import {
 	Linkedin,
 	Search,
 	Shield,
-	Sparkles,
 	User,
 	type LucideIcon,
 } from "@rja-design/ui/assets/lucide"
@@ -28,7 +27,7 @@ import { FormDefaultsCard } from "#molecules/settings/form-defaults-card"
 import { ImportFromResumeBar } from "#molecules/settings/import-from-resume-bar"
 import { JsonEditorCard } from "#molecules/settings/json-editor-card"
 import { LinkedInCard } from "#molecules/settings/linkedin-card"
-import { LlmConfigCard } from "#molecules/settings/llm-config-card"
+import { LlmMissingBanner } from "#molecules/settings/llm-missing-banner"
 import { ProfileCard } from "#molecules/settings/profile-card"
 import { ScoringWeightsCard } from "#molecules/settings/scoring-weights-card"
 import { ScraperConfigCard } from "#molecules/settings/scraper-config-card"
@@ -63,10 +62,6 @@ const SECTIONS: TSection[] = [
 			{ key: "form-defaults", label: "Form Defaults", icon: FileText },
 			{ key: "scoring", label: "Scoring Weights", icon: BarChart3 },
 		],
-	},
-	{
-		label: "Integrations",
-		tabs: [{ key: "llm", label: "LLM Provider", icon: Sparkles }],
 	},
 	{
 		label: "Scraper",
@@ -104,16 +99,15 @@ export function SettingsTemplate({
 	const router = useRouter()
 	const onSaved = useCallback(() => router.refresh(), [router])
 
-	const hasProfile = !!profile
 	const llmConfigured = !!(llm?.anthropicApiKey || llm?.openaiApiKey)
 
 	return (
 		<YStack className="h-full gap-0">
-			<ImportFromResumeBar
-				profile={profile}
-				llmConfigured={llmConfigured}
-				onImported={onSaved}
-			/>
+			{llmConfigured ? (
+				<ImportFromResumeBar profile={profile} onImported={onSaved} />
+			) : (
+				<LlmMissingBanner />
+			)}
 			<XStack className="flex-1 gap-0">
 				<YStack className="w-48 shrink-0 border-r border-border pr-2 pt-1">
 					{SECTIONS.map((section, sectionIdx) => (
@@ -127,23 +121,16 @@ export function SettingsTemplate({
 							{section.tabs.map((tab) => {
 								const Icon = tab.icon
 								const isActive = activeTab === tab.key
-								const isDisabled =
-									!hasProfile &&
-									tab.key !== "profile" &&
-									tab.key !== "json"
 								return (
 									<button
 										key={tab.key}
 										type="button"
-										disabled={isDisabled}
 										onClick={() => setActiveTab(tab.key)}
 										className={cn(
 											"flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all duration-150 w-full text-left",
 											isActive
 												? "bg-primary/10 text-primary font-medium"
 												: "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-											isDisabled &&
-												"opacity-40 cursor-not-allowed hover:bg-transparent hover:text-muted-foreground",
 										)}
 									>
 										<Icon
@@ -167,62 +154,76 @@ export function SettingsTemplate({
 					{activeTab === "profile" && (
 						<ProfileCard profile={profile} onSaved={onSaved} />
 					)}
-					{activeTab === "work-experience" && profile && (
-						<WorkExperienceCard
-							profileId={profile.id}
-							workExperience={profile.workExperience}
-							onSaved={onSaved}
-						/>
-					)}
-					{activeTab === "education" && profile && (
-						<EducationCard
-							profileId={profile.id}
-							education={profile.education}
-							onSaved={onSaved}
-						/>
-					)}
-					{activeTab === "eeo" && profile && (
-						<EeoCard
-							profileId={profile.id}
-							eeo={eeo}
-							onSaved={onSaved}
-						/>
-					)}
-					{activeTab === "form-defaults" && profile && (
-						<FormDefaultsCard
-							profileId={profile.id}
-							formDefaults={formDefaults}
-							onSaved={onSaved}
-						/>
-					)}
-					{activeTab === "scoring" && profile && (
-						<ScoringWeightsCard
-							profileId={profile.id}
-							scoring={scoring}
-							onSaved={onSaved}
-						/>
-					)}
-					{activeTab === "llm" && profile && (
-						<LlmConfigCard
-							profileId={profile.id}
-							llm={llm}
-							onSaved={onSaved}
-						/>
-					)}
-					{activeTab === "scraper" && profile && (
-						<ScraperConfigCard
-							profileId={profile.id}
-							scraper={scraper}
-							onSaved={onSaved}
-						/>
-					)}
-					{activeTab === "linkedin" && profile && (
-						<LinkedInCard
-							profileId={profile.id}
-							scraper={scraper}
-							onSaved={onSaved}
-						/>
-					)}
+					{activeTab === "work-experience" &&
+						(profile ? (
+							<WorkExperienceCard
+								profileId={profile.id}
+								workExperience={profile.workExperience}
+								onSaved={onSaved}
+							/>
+						) : (
+							<NeedsProfile tab="Experience" />
+						))}
+					{activeTab === "education" &&
+						(profile ? (
+							<EducationCard
+								profileId={profile.id}
+								education={profile.education}
+								onSaved={onSaved}
+							/>
+						) : (
+							<NeedsProfile tab="Education" />
+						))}
+					{activeTab === "eeo" &&
+						(profile ? (
+							<EeoCard
+								profileId={profile.id}
+								eeo={eeo}
+								onSaved={onSaved}
+							/>
+						) : (
+							<NeedsProfile tab="EEO & Work Auth" />
+						))}
+					{activeTab === "form-defaults" &&
+						(profile ? (
+							<FormDefaultsCard
+								profileId={profile.id}
+								formDefaults={formDefaults}
+								onSaved={onSaved}
+							/>
+						) : (
+							<NeedsProfile tab="Form Defaults" />
+						))}
+					{activeTab === "scoring" &&
+						(profile ? (
+							<ScoringWeightsCard
+								profileId={profile.id}
+								scoring={scoring}
+								onSaved={onSaved}
+							/>
+						) : (
+							<NeedsProfile tab="Scoring Weights" />
+						))}
+					{activeTab === "scraper" &&
+						(profile ? (
+							<ScraperConfigCard
+								profileId={profile.id}
+								scraper={scraper}
+								onSaved={onSaved}
+							/>
+						) : (
+							<NeedsProfile tab="Scraper Config" />
+						))}
+					{activeTab === "linkedin" &&
+						(profile ? (
+							<LinkedInCard
+								profileId={profile.id}
+								scraper={scraper}
+								onSaved={onSaved}
+							/>
+						) : (
+							<NeedsProfile tab="LinkedIn" />
+						))}
 					{activeTab === "json" && (
 						<JsonEditorCard
 							profile={profile}
@@ -230,12 +231,24 @@ export function SettingsTemplate({
 							formDefaults={formDefaults}
 							scoring={scoring}
 							scraper={scraper}
-							llm={llm}
 							onSaved={onSaved}
 						/>
 					)}
 				</div>
 			</XStack>
+		</YStack>
+	)
+}
+
+function NeedsProfile({ tab }: { tab: string }) {
+	return (
+		<YStack className="gap-2 rounded-md border border-dashed border-border p-6">
+			<span className="text-sm font-medium">No profile yet</span>
+			<span className="text-sm text-muted-foreground">
+				Create your profile first — fill in the Profile tab by hand or
+				upload a resume at the top of this page to auto-populate it.
+				Once a profile exists, {tab} will be editable here.
+			</span>
 		</YStack>
 	)
 }

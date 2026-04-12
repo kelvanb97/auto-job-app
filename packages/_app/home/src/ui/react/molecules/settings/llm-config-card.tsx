@@ -86,16 +86,11 @@ const DEFAULT_COVER_LETTER_PROVIDER: TLlmProvider = "anthropic"
 const DEFAULT_COVER_LETTER_MODEL = "claude-opus-4-6"
 
 interface ILlmConfigCardProps {
-	profileId: number
 	llm: TLlmConfig | null
 	onSaved: () => void
 }
 
-export function LlmConfigCard({
-	profileId,
-	llm,
-	onSaved,
-}: ILlmConfigCardProps) {
+export function LlmConfigCard({ llm, onSaved }: ILlmConfigCardProps) {
 	const [anthropicApiKey, setAnthropicApiKey] = useState(
 		llm?.anthropicApiKey ?? "",
 	)
@@ -175,7 +170,6 @@ export function LlmConfigCard({
 
 	const handleSave = () => {
 		execute({
-			userProfileId: profileId,
 			anthropicApiKey,
 			openaiApiKey,
 			scoringProvider,

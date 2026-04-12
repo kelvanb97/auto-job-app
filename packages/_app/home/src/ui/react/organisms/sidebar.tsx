@@ -5,6 +5,7 @@ import {
 	Home,
 	Plus,
 	Settings,
+	Sparkles,
 } from "@rja-design/ui/assets/lucide"
 import { cn } from "@rja-design/ui/cn"
 import { TextBody } from "@rja-design/ui/library/text"
@@ -18,10 +19,21 @@ const HOME_NAV_ITEMS = [
 
 const ROLES_NAV_ITEMS = [
 	{ page: "roles" as const, href: "/roles", label: "Roles", icon: Briefcase },
-	{ page: "create" as const, href: "/create", label: "Create Role", icon: Plus },
+	{
+		page: "create" as const,
+		href: "/create",
+		label: "Create Role",
+		icon: Plus,
+	},
 ]
 
 const SECONDARY_NAV_ITEMS = [
+	{
+		page: "llm-config" as const,
+		href: "/llm-config",
+		label: "LLM Config",
+		icon: Sparkles,
+	},
 	{
 		page: "settings" as const,
 		href: "/settings",

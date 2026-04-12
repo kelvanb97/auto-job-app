@@ -18,13 +18,11 @@ import { useRef, useState } from "react"
 
 interface IImportFromResumeBarProps {
 	profile: TUserProfileFull | null
-	llmConfigured: boolean
 	onImported: () => void
 }
 
 export function ImportFromResumeBar({
 	profile,
-	llmConfigured,
 	onImported,
 }: IImportFromResumeBarProps) {
 	const fileInputRef = useRef<HTMLInputElement>(null)
@@ -39,14 +37,11 @@ export function ImportFromResumeBar({
 	useToastOnError(error, status)
 	const isLoading = useIsLoading(status)
 
-	const hasProfile = !!profile
-	const isDisabled = !hasProfile || !llmConfigured || isLoading
+	const isDisabled = isLoading
 
-	const helperText = !hasProfile
-		? "Create a basic profile (name, email, job title) in the Profile tab first."
-		: !llmConfigured
-			? "Configure your LLM provider in the LLM tab first."
-			: "PDF or DOCX. We'll extract your contact info, work experience, and education for review."
+	const helperText = !profile
+		? "Upload your resume to create your profile in one step. PDF or DOCX."
+		: "PDF or DOCX. We'll extract your contact info, work experience, and education for review."
 
 	const handleClick = () => {
 		fileInputRef.current?.click()
@@ -103,7 +98,7 @@ export function ImportFromResumeBar({
 				</XStack>
 			</YStack>
 
-			{extracted && profile && (
+			{extracted && (
 				<ImportResumePreviewModal
 					profile={profile}
 					extracted={extracted}

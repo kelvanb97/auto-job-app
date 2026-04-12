@@ -509,10 +509,6 @@ export type TNewScraperConfig = typeof scraperConfig.$inferInsert
 
 export const llmConfig = sqliteTable("llm_config", {
 	id: int("id").primaryKey({ autoIncrement: true }),
-	userProfileId: int("user_profile_id")
-		.unique()
-		.notNull()
-		.references(() => userProfile.id, { onDelete: "cascade" }),
 	anthropicApiKey: text("anthropic_api_key").notNull().default(""),
 	openaiApiKey: text("openai_api_key").notNull().default(""),
 	scoringProvider: text("scoring_provider").notNull().default("anthropic"),

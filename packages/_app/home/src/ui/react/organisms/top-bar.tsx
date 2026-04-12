@@ -9,6 +9,7 @@ const TITLE_MAP: Record<TPage, string> = {
 	roles: "Roles",
 	create: "Create Role",
 	settings: "Settings",
+	"llm-config": "LLM Config",
 }
 
 interface ITopBarProps {
