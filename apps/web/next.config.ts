@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
 		"patchright-core",
 		"better-sqlite3",
 		"@rja-core/drizzle",
+		"pdf-parse",
 	],
 }
 
