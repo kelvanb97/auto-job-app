@@ -43,3 +43,7 @@ next-env.d.ts
 
 # sentry
 .env.sentry-build-plugin
+
+# data
+data/*
+!data/.gitkeep

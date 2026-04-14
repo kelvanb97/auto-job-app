@@ -12,7 +12,8 @@ node_modules
 log
 
 # local data (screenshots, downloaded docs)
-data
+data/*
+!data/.gitkeep
 
 # examples
 .examples
