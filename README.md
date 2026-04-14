@@ -55,3 +55,9 @@ Run `/rj-help` in your AI assistant for a full list of available skills, what th
 Still stuck? Hop into the [Rocket Jobs Discord](https://discord.gg/UkFSyB59) and ask away!
 
 Discord not your thing? Book a call with me and we can troubleshoot together: <https://cal.com/kelvan-brandt/15min>
+
+## License
+
+Copyright © 2026 KELVCO ENTERPRISES LLC (DBA Rocket Jobs). All rights reserved.
+
+This software is proprietary. Use is limited to the named purchaser under the terms of the [LICENSE](./LICENSE) file and a separate purchase agreement. Redistribution and commercial reuse are prohibited.

@@ -1,0 +1,135 @@
+Rocket Jobs App — Proprietary License
+
+Copyright © 2026 KELVCO ENTERPRISES LLC (DBA Rocket Jobs). All rights reserved.
+
+This software and its source code (the "Software") are the confidential and
+proprietary property of KELVCO ENTERPRISES LLC, a limited liability company
+doing business as Rocket Jobs (the "Licensor"). The Software is licensed, not
+sold.
+
+1. DEFINITIONS
+
+   "Purchaser" means the individual or legal entity that has paid Licensor for
+   a valid, current license to the Software under a separate purchase or
+   subscription agreement with Licensor (the "Purchase Agreement").
+
+   "Authorized Users" means, where the Purchaser is an entity, employees and
+   contractors of the Purchaser acting within the scope of their duties for
+   the Purchaser and bound by confidentiality obligations at least as
+   protective as those in this license.
+
+2. GRANT OF LICENSE
+
+   Subject to the Purchaser's full compliance with this license and the
+   Purchase Agreement, Licensor grants the Purchaser a non-exclusive,
+   non-transferable, non-sublicensable, revocable license, for the term
+   specified in the Purchase Agreement, to:
+
+   (a) install and run the Software solely for the Purchaser's own internal
+       use; and
+
+   (b) modify the source code of the Software solely for the Purchaser's own
+       internal use, provided that any such modifications remain subject to
+       this license.
+
+3. RESTRICTIONS
+
+   Except as expressly permitted in Section 2, the Purchaser and its
+   Authorized Users shall NOT, and shall not permit any third party to:
+
+   (a) copy, distribute, publish, post, host, mirror, or otherwise make the
+       Software (in source or compiled form) available to any third party;
+
+   (b) sublicense, sell, rent, lease, lend, assign, or otherwise transfer the
+       Software or any rights under this license;
+
+   (c) use the Software to provide a service to any third party, including
+       any "software as a service", hosted, managed, or on-demand offering;
+
+   (d) use the Software to build, train, or operate a product or service that
+       competes with Licensor;
+
+   (e) share access credentials, license keys, or deployment artifacts with
+       anyone who is not an Authorized User;
+
+   (f) remove, alter, or obscure any copyright, trademark, or other
+       proprietary notices in the Software; or
+
+   (g) use the Software in violation of any applicable law or regulation.
+
+4. OWNERSHIP
+
+   The Software is licensed, not sold. Licensor retains all right, title, and
+   interest in and to the Software, including all intellectual property
+   rights therein. No rights are granted to the Purchaser other than those
+   expressly set forth in this license.
+
+5. THIRD-PARTY COMPONENTS
+
+   The Software depends on and may be distributed together with third-party
+   open-source software (including, without limitation, the packages
+   installed under `node_modules/`). Those components are licensed under
+   their own terms as identified in their respective LICENSE files, and
+   nothing in this license modifies or supersedes those terms. This license
+   applies only to the first-party source code authored by Licensor in this
+   repository.
+
+6. TERMINATION
+
+   This license terminates automatically upon (a) any breach of its terms by
+   the Purchaser or any Authorized User, (b) expiration or termination of the
+   Purchase Agreement, or (c) notice from Licensor for cause as permitted
+   under the Purchase Agreement. Upon termination, the Purchaser shall
+   immediately cease all use of the Software and destroy (or, at Licensor's
+   option, return) all copies of the Software in its possession or control.
+   Sections 3, 4, 7, 8, and 9 survive termination.
+
+7. CONFIDENTIALITY
+
+   The Software constitutes the confidential information and trade secrets
+   of Licensor. The Purchaser shall protect the Software from unauthorized
+   disclosure using at least the same degree of care it uses to protect its
+   own confidential information of like importance, and in no event less
+   than a reasonable degree of care.
+
+8. DISCLAIMER OF WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF
+   ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+   OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND
+   NON-INFRINGEMENT. LICENSOR DOES NOT WARRANT THAT THE SOFTWARE WILL BE
+   ERROR-FREE, SECURE, OR UNINTERRUPTED.
+
+9. LIMITATION OF LIABILITY
+
+   TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL
+   LICENSOR BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL,
+   OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, DATA, OR USE,
+   ARISING OUT OF OR RELATING TO THIS LICENSE OR THE SOFTWARE, WHETHER IN
+   CONTRACT, TORT, OR OTHERWISE, EVEN IF LICENSOR HAS BEEN ADVISED OF THE
+   POSSIBILITY OF SUCH DAMAGES. LICENSOR'S TOTAL AGGREGATE LIABILITY ARISING
+   OUT OF OR RELATING TO THIS LICENSE SHALL NOT EXCEED THE FEES ACTUALLY
+   PAID BY THE PURCHASER TO LICENSOR UNDER THE PURCHASE AGREEMENT IN THE
+   TWELVE (12) MONTHS PRECEDING THE CLAIM.
+
+10. GOVERNING LAW
+
+    This license is governed by the laws of [Governing law: <state>, USA],
+    without regard to its conflict-of-laws principles. Any dispute arising
+    under or relating to this license shall be brought exclusively in the
+    state or federal courts located in that jurisdiction, and the parties
+    consent to personal jurisdiction and venue in those courts.
+
+11. ENTIRE AGREEMENT
+
+    This license, together with the Purchase Agreement, is the entire
+    agreement between the parties concerning the Software and supersedes all
+    prior or contemporaneous understandings. If any conflict exists between
+    this license and the Purchase Agreement, the Purchase Agreement controls
+    with respect to commercial terms (fees, term, support, refunds), and
+    this license controls with respect to the scope of permitted use.
+
+For licensing inquiries, contact KELVCO ENTERPRISES LLC (DBA Rocket Jobs).
+
+This license does not replace a signed Purchase Agreement; commercial terms
+(fees, term, support, refunds) are defined in that agreement.
