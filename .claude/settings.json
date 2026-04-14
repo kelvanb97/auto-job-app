@@ -3,7 +3,14 @@
 		"allow": [
 			"mcp__playwright__*",
 			"Bash(pnpm install:*)",
-			"Bash(sqlite3:*)"
+			"Bash(sqlite3:*)",
+			"Bash(curl -sf http://localhost:3000:*)",
+			"Bash(curl -s http://localhost:3000:*)",
+			"Bash(curl -s 'http://localhost:3000:*)",
+			"Bash(curl -s \"http://localhost:3000:*)",
+			"Bash(curl -s -X POST \"http://localhost:3000:*)",
+			"Bash(curl -s -X POST http://localhost:3000:*)",
+			"Bash(curl -s -w \"\\n%{http_code}\\n\" \"http://localhost:3000:*)"
 		]
 	}
 }
