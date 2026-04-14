@@ -117,7 +117,10 @@ export function SettingsTemplate({
 	return (
 		<YStack className="h-full gap-0">
 			{llmConfigured ? (
-				<ImportFromResumeBar profile={profile} onImported={onImported} />
+				<ImportFromResumeBar
+					profile={profile}
+					onImported={onImported}
+				/>
 			) : (
 				<LlmMissingBanner />
 			)}
@@ -163,7 +166,7 @@ export function SettingsTemplate({
 					))}
 				</YStack>
 
-				<div className="flex-1 overflow-y-auto pl-6 pb-6">
+				<div className="flex-1 overflow-y-auto p-6">
 					{activeTab === "profile" && (
 						<ProfileCard
 							key={`profile-${profileRev}`}

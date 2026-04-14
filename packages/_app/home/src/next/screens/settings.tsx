@@ -16,7 +16,7 @@ export async function SettingsScreen() {
 	const llmResult = getLlmConfig()
 
 	return (
-		<AppShell activePage="settings">
+		<AppShell activePage="settings" ignoreMainPadding>
 			<SettingsTemplate
 				initialProfile={profileResult.ok ? profileResult.data : null}
 				initialEeo={eeoResult.ok ? eeoResult.data : null}
