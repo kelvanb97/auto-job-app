@@ -5,7 +5,7 @@ import {
 	HeadingLevel,
 	Packer,
 	Paragraph,
-	TabStopPosition,
+	Tab,
 	TabStopType,
 	TextRun,
 } from "docx"
@@ -117,7 +117,7 @@ export async function buildResumeDocx(
 				tabStops: [
 					{
 						type: TabStopType.RIGHT,
-						position: TabStopPosition.MAX,
+						position: 10800,
 					},
 				],
 				spacing: { before: 120 },
@@ -134,7 +134,10 @@ export async function buildResumeDocx(
 						font: "Calibri",
 					}),
 					new TextRun({
-						text: `\t${job.startDate} – ${job.endDate}`,
+						children: [
+							new Tab(),
+							`${job.startDate} – ${job.endDate}`,
+						],
 						size: 22,
 						font: "Calibri",
 					}),
