@@ -64,6 +64,13 @@
 			"when": 1776239662328,
 			"tag": "0008_burly_santa_claus",
 			"breakpoints": true
+		},
+		{
+			"idx": 9,
+			"version": "6",
+			"when": 1776289462226,
+			"tag": "0009_glossy_firelord",
+			"breakpoints": true
 		}
 	]
 }

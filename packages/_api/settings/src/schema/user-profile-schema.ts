@@ -67,8 +67,6 @@ export type TUserProfileFull = {
 		startDate: string
 		endDate: string
 		type: string
-		platforms: string[]
-		techStack: string[]
 		summary: string
 		highlights: string[]
 		createdAt: Date | null
@@ -136,8 +134,6 @@ export const upsertWorkExperienceSchema = z.object({
 	startDate: z.string().min(1, "Start date is required"),
 	endDate: z.string().min(1, "End date is required"),
 	type: z.enum(WORK_EXPERIENCE_TYPES),
-	platforms: z.array(z.string()),
-	techStack: z.array(z.string()),
 	summary: z.string(),
 	highlights: z.array(z.string()),
 })

@@ -51,8 +51,6 @@ interface IWorkExperienceEntry {
 	startDate: string
 	endDate: string
 	type: string
-	platforms: string[]
-	techStack: string[]
 	summary: string
 	highlights: string[]
 	createdAt: Date | null
@@ -85,8 +83,6 @@ const EMPTY_FORM = {
 	startDate: "",
 	endDate: "",
 	type: "",
-	platforms: [] as string[],
-	techStack: [] as string[],
 	summary: "",
 	highlights: [] as string[],
 }
@@ -117,8 +113,6 @@ export function WorkExperienceCard({
 			startDate: entry.startDate,
 			endDate: entry.endDate,
 			type: entry.type,
-			platforms: entry.platforms,
-			techStack: entry.techStack,
 			summary: entry.summary,
 			highlights: entry.highlights,
 		})
@@ -191,8 +185,6 @@ export function WorkExperienceCard({
 			startDate: form.startDate,
 			endDate: form.endDate,
 			type: form.type as TWorkExperienceType,
-			platforms: form.platforms,
-			techStack: form.techStack,
 			summary: form.summary,
 			highlights: form.highlights,
 		})
@@ -387,28 +379,6 @@ export function WorkExperienceCard({
 									}
 									options={TYPE_OPTIONS}
 									placeholder="Select type"
-								/>
-							</InputLabelWrapper>
-
-							<InputLabelWrapper>
-								<Label>Platforms</Label>
-								<MultiInput
-									values={form.platforms}
-									onChange={(val) =>
-										updateField("platforms", val)
-									}
-									max={10}
-								/>
-							</InputLabelWrapper>
-
-							<InputLabelWrapper>
-								<Label>Tech Stack</Label>
-								<MultiInput
-									values={form.techStack}
-									onChange={(val) =>
-										updateField("techStack", val)
-									}
-									max={30}
 								/>
 							</InputLabelWrapper>
 

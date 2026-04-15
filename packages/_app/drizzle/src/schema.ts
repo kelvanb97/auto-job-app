@@ -301,14 +301,6 @@ export const workExperience = sqliteTable(
 		startDate: text("start_date").notNull(),
 		endDate: text("end_date").notNull(),
 		type: text("type").notNull().default("full-time"),
-		platforms: text("platforms", { mode: "json" })
-			.$type<string[]>()
-			.notNull()
-			.default([]),
-		techStack: text("tech_stack", { mode: "json" })
-			.$type<string[]>()
-			.notNull()
-			.default([]),
 		summary: text("summary").notNull().default(""),
 		highlights: text("highlights", { mode: "json" })
 			.$type<string[]>()

@@ -31,7 +31,6 @@ function buildFullProfile(profile: TUserProfileFull): string {
 				return [
 					`  ${w.company} | ${w.title} (${w.type})`,
 					`  ${w.startDate} – ${w.endDate}`,
-					`  Tech: ${w.techStack.join(", ")}`,
 					`  Summary: ${w.summary}`,
 					`  Highlights:\n${highlights}`,
 				].join("\n")

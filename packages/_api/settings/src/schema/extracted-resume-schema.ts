@@ -33,8 +33,6 @@ export const extractedResumeSchema = z.object({
 				startDate: z.string(),
 				endDate: z.string(),
 				type: z.enum(WORK_EXPERIENCE_TYPES).optional(),
-				platforms: z.array(z.string()).optional(),
-				techStack: z.array(z.string()).optional(),
 				summary: z.string().optional(),
 				highlights: z.array(z.string()).optional(),
 			}),

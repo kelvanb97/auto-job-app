@@ -180,7 +180,7 @@ ORDER BY sort_order ASC, id ASC;
 '
 ```
 
-Save the rows as `workExperience`. Use `company`, `title`, `start_date`, `end_date`, `type`, `platforms`, `tech_stack`, `summary`, and `highlights` when filling employment-history sections or answering experience questions.
+Save the rows as `workExperience`. Use `company`, `title`, `start_date`, `end_date`, `type`, `summary`, and `highlights` when filling employment-history sections or answering experience questions.
 
 **3. Load saved education**
 
@@ -260,7 +260,7 @@ Save the first row as `formDefaults` if present. Use these `form_defaults` colum
 
 If the query returns an empty array, treat `formDefaults` as missing and ask the user for those answers if needed.
 
-**Important JSON note:** some SQLite columns are stored as JSON arrays and will be returned as JSON values or JSON-encoded strings depending on the CLI output. For `skills`, `preferred_location_types`, `preferred_locations`, `industries`, `dealbreakers`, `domain_expertise`, `platforms`, `tech_stack`, and `highlights`, treat them as arrays of strings. If the CLI returns them as strings, parse the JSON string before using the values.
+**Important JSON note:** some SQLite columns are stored as JSON arrays and will be returned as JSON values or JSON-encoded strings depending on the CLI output. For `skills`, `preferred_location_types`, `preferred_locations`, `industries`, `dealbreakers`, `domain_expertise`, and `highlights`, treat them as arrays of strings. If the CLI returns them as strings, parse the JSON string before using the values.
 
 ### Personal information
 

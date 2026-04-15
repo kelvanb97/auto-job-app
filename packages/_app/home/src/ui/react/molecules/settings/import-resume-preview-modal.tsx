@@ -8,7 +8,6 @@ import {
 	useIsLoading,
 	useToastOnError,
 } from "@rja-core/next-safe-action/hooks"
-import { Badge } from "@rja-design/ui/library/badge"
 import { Button } from "@rja-design/ui/library/button"
 import { Checkbox } from "@rja-design/ui/library/checkbox"
 import {
@@ -198,8 +197,6 @@ export function ImportResumePreviewModal({
 				startDate: exp.startDate,
 				endDate: exp.endDate,
 				type: exp.type ?? "full-time",
-				platforms: exp.platforms ?? [],
-				techStack: exp.techStack ?? [],
 				summary: exp.summary ?? "",
 				highlights: exp.highlights ?? [],
 			}))
@@ -327,21 +324,6 @@ export function ImportResumePreviewModal({
 													? ` · ${exp.type}`
 													: ""}
 											</span>
-											{exp.techStack &&
-												exp.techStack.length > 0 && (
-													<XStack className="flex-wrap gap-1 pt-1">
-														{exp.techStack.map(
-															(tech) => (
-																<Badge
-																	key={tech}
-																	variant="secondary"
-																>
-																	{tech}
-																</Badge>
-															),
-														)}
-													</XStack>
-												)}
 											{exp.summary && (
 												<span className="text-xs text-muted-foreground">
 													{truncate(exp.summary, 160)}

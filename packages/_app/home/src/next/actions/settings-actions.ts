@@ -164,8 +164,6 @@ export const saveAllSettingsAction = actionClient
 				startDate: exp.startDate,
 				endDate: exp.endDate,
 				type: exp.type,
-				platforms: exp.platforms ?? [],
-				techStack: exp.techStack ?? [],
 				summary: exp.summary ?? "",
 				highlights: exp.highlights ?? [],
 			})
