@@ -24,6 +24,7 @@
 		"./library/input-label-wrapper": "./src/library/input-label-wrapper/input-label-wrapper.tsx",
 		"./library/input-otp": "./src/library/input-otp/input-otp.tsx",
 		"./library/label": "./src/library/label/label.tsx",
+		"./library/month-year-picker": "./src/library/month-year-picker/month-year-picker.tsx",
 		"./library/multi-input": "./src/library/multi-input/multi-input.tsx",
 		"./library/multi-select": "./src/library/multi-select/multi-select.tsx",
 		"./library/navbar-container": "./src/library/navbar-container/navbar-container.tsx",

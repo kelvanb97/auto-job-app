@@ -18,6 +18,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@rja-design/ui/library/card"
+import { Checkbox } from "@rja-design/ui/library/checkbox"
 import {
 	Dialog,
 	DialogContent,
@@ -28,6 +29,7 @@ import {
 import { Input } from "@rja-design/ui/library/input"
 import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
+import { MonthYearPicker } from "@rja-design/ui/library/month-year-picker"
 import { MultiInput } from "@rja-design/ui/library/multi-input"
 import { Select } from "@rja-design/ui/library/select"
 import { Textarea } from "@rja-design/ui/library/text-area"
@@ -69,6 +71,13 @@ const TYPE_OPTIONS = [
 	{ label: "Founder", value: "founder" },
 	{ label: "Self-employed", value: "self-employed" },
 ]
+
+const CURRENT = "Current"
+
+function isCurrent(value: string): boolean {
+	const v = value.trim().toLowerCase()
+	return v === "current" || v === "present"
+}
 
 const EMPTY_FORM = {
 	company: "",
@@ -274,7 +283,7 @@ export function WorkExperienceCard({
 			</Card>
 
 			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-				<DialogContent className="sm:max-w-2xl max-h-[85vh] flex flex-col">
+				<DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
 					<DialogHeader>
 						<DialogTitle>
 							{editingEntry
@@ -282,11 +291,16 @@ export function WorkExperienceCard({
 								: "Add Experience"}
 						</DialogTitle>
 					</DialogHeader>
-					<div className="flex-1 overflow-y-auto">
+					<div>
 						<YStack className="gap-4">
 							<XStack className="gap-4">
 								<InputLabelWrapper className="flex-1">
-									<Label htmlFor="we-company">Company</Label>
+									<Label
+										htmlFor="we-company"
+										showRequiredIcon
+									>
+										Company
+									</Label>
 									<Input
 										id="we-company"
 										value={form.company}
@@ -300,7 +314,9 @@ export function WorkExperienceCard({
 									/>
 								</InputLabelWrapper>
 								<InputLabelWrapper className="flex-1">
-									<Label htmlFor="we-title">Title</Label>
+									<Label htmlFor="we-title" showRequiredIcon>
+										Title
+									</Label>
 									<Input
 										id="we-title"
 										value={form.title}
@@ -312,43 +328,58 @@ export function WorkExperienceCard({
 								</InputLabelWrapper>
 							</XStack>
 
-							<XStack className="gap-4">
+							<XStack className="gap-4 items-start">
 								<InputLabelWrapper className="flex-1">
-									<Label htmlFor="we-start-date">
-										Start Date
-									</Label>
-									<Input
-										id="we-start-date"
+									<Label showRequiredIcon>Start Date</Label>
+									<MonthYearPicker
 										value={form.startDate}
-										onChange={(e) =>
-											updateField(
-												"startDate",
-												e.target.value,
-											)
+										onChange={(val) =>
+											updateField("startDate", val)
 										}
-										placeholder="Oct 2020"
 									/>
 								</InputLabelWrapper>
 								<InputLabelWrapper className="flex-1">
-									<Label htmlFor="we-end-date">
-										End Date
-									</Label>
-									<Input
-										id="we-end-date"
-										value={form.endDate}
-										onChange={(e) =>
-											updateField(
-												"endDate",
-												e.target.value,
-											)
+									<XStack className="items-center justify-between">
+										<Label showRequiredIcon>End Date</Label>
+										<XStack className="items-center gap-1.5">
+											<Checkbox
+												id="we-end-current"
+												checked={isCurrent(
+													form.endDate,
+												)}
+												onCheckedChange={(checked) =>
+													updateField(
+														"endDate",
+														checked ? CURRENT : "",
+													)
+												}
+											/>
+											<Label
+												htmlFor="we-end-current"
+												className="text-xs font-normal text-muted-foreground cursor-pointer"
+											>
+												Current
+											</Label>
+										</XStack>
+									</XStack>
+									<MonthYearPicker
+										value={
+											isCurrent(form.endDate)
+												? ""
+												: form.endDate
 										}
-										placeholder="Mar 2026 or Current"
+										onChange={(val) =>
+											updateField("endDate", val)
+										}
+										disabled={isCurrent(form.endDate)}
 									/>
 								</InputLabelWrapper>
 							</XStack>
 
 							<InputLabelWrapper>
-								<Label htmlFor="we-type">Type</Label>
+								<Label htmlFor="we-type" showRequiredIcon>
+									Type
+								</Label>
 								<Select
 									value={form.type || null}
 									onValueChange={(val) =>
@@ -405,7 +436,7 @@ export function WorkExperienceCard({
 							</InputLabelWrapper>
 						</YStack>
 					</div>
-					<DialogFooter>
+					<DialogFooter className="pt-4">
 						<Button variant="outline" onClick={closeDialog}>
 							Cancel
 						</Button>
