@@ -41,9 +41,6 @@ function buildCandidateContext(profile: TUserProfileFull): string {
 
 	// Skills
 	sections.push(`Skills: ${profile.skills.join(", ")}`)
-	if (profile.preferredSkills.length > 0) {
-		sections.push(`Preferred stack: ${profile.preferredSkills.join(", ")}`)
-	}
 
 	// Preferences
 	sections.push(

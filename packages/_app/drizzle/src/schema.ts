@@ -249,10 +249,6 @@ export const userProfile = sqliteTable("user_profile", {
 		.$type<string[]>()
 		.notNull()
 		.default([]),
-	preferredSkills: text("preferred_skills", { mode: "json" })
-		.$type<string[]>()
-		.notNull()
-		.default([]),
 	preferredLocationTypes: text("preferred_location_types", { mode: "json" })
 		.$type<string[]>()
 		.notNull()

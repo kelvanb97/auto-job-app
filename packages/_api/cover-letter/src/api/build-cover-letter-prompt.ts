@@ -48,7 +48,7 @@ Title: ${profile.jobTitle}
 Years of Experience: ${profile.yearsOfExperience}
 Summary: ${profile.summary}
 
-Key Skills: ${profile.preferredSkills.join(", ")}
+Key Skills: ${profile.skills.join(", ")}
 
 Work Experience:
 ${experienceSummary}

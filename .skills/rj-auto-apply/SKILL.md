@@ -162,8 +162,8 @@ Save the first row as `profile`. Use these `user_profile` columns when matching 
 - `job_title`, `summary`
 - `salary_min`, `salary_max`, `desired_salary`
 - `start_date_weeks_out`
-- `skills`, `preferred_skills`, `preferred_location_types`, `preferred_locations`
-- `industries`, `dealbreakers`, `domain_expertise`, `notes`
+- `skills`, `preferred_location_types`, `preferred_locations`
+- `industries`, `dealbreakers`, `domain_expertise`
 
 If the query returns an empty array, stop and tell the user no profile is configured.
 
@@ -260,7 +260,7 @@ Save the first row as `formDefaults` if present. Use these `form_defaults` colum
 
 If the query returns an empty array, treat `formDefaults` as missing and ask the user for those answers if needed.
 
-**Important JSON note:** some SQLite columns are stored as JSON arrays and will be returned as JSON values or JSON-encoded strings depending on the CLI output. For `skills`, `preferred_skills`, `preferred_location_types`, `preferred_locations`, `industries`, `dealbreakers`, `domain_expertise`, `platforms`, `tech_stack`, and `highlights`, treat them as arrays of strings. If the CLI returns them as strings, parse the JSON string before using the values.
+**Important JSON note:** some SQLite columns are stored as JSON arrays and will be returned as JSON values or JSON-encoded strings depending on the CLI output. For `skills`, `preferred_location_types`, `preferred_locations`, `industries`, `dealbreakers`, `domain_expertise`, `platforms`, `tech_stack`, and `highlights`, treat them as arrays of strings. If the CLI returns them as strings, parse the JSON string before using the values.
 
 ### Personal information
 

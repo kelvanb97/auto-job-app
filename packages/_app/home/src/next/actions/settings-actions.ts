@@ -323,9 +323,6 @@ export const applyResumeImportAction = actionClient
 					skills:
 						parsedInput.profileUpdates.skills ??
 						existingProfile.skills,
-					preferredSkills:
-						parsedInput.profileUpdates.preferredSkills ??
-						existingProfile.preferredSkills,
 					preferredLocationTypes:
 						parsedInput.profileUpdates.preferredLocationTypes ??
 						existingProfile.preferredLocationTypes,
@@ -370,8 +367,6 @@ export const applyResumeImportAction = actionClient
 						parsedInput.profileUpdates.yearsOfExperience ?? 0,
 					summary: parsedInput.profileUpdates.summary ?? "",
 					skills: parsedInput.profileUpdates.skills ?? [],
-					preferredSkills:
-						parsedInput.profileUpdates.preferredSkills ?? [],
 					preferredLocationTypes:
 						parsedInput.profileUpdates.preferredLocationTypes ?? [],
 					preferredLocations:

@@ -15,7 +15,6 @@ function buildFullProfile(profile: TUserProfileFull): string {
 	)
 
 	sections.push(`\nAll Skills: ${profile.skills.join(", ")}`)
-	sections.push(`Preferred Skills: ${profile.preferredSkills.join(", ")}`)
 
 	if (profile.domainExpertise.length > 0) {
 		sections.push(

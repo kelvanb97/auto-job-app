@@ -1,0 +1,1 @@
+ALTER TABLE `user_profile` DROP COLUMN `preferred_skills`;

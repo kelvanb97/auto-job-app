@@ -47,7 +47,6 @@ export type TUserProfileFull = {
 	yearsOfExperience: number
 	summary: string
 	skills: string[]
-	preferredSkills: string[]
 	preferredLocationTypes: string[]
 	preferredLocations: string[]
 	salaryMin: number
@@ -115,7 +114,6 @@ export const upsertUserProfileSchema = z.object({
 	yearsOfExperience: z.number().int().min(0),
 	summary: z.string(),
 	skills: z.array(z.string()),
-	preferredSkills: z.array(z.string()),
 	preferredLocationTypes: z.array(z.string()),
 	preferredLocations: z.array(z.string()),
 	salaryMin: z.number().int().min(0),

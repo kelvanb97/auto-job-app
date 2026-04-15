@@ -80,9 +80,6 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 	)
 	const [summary, setSummary] = useState(profile?.summary ?? "")
 	const [skills, setSkills] = useState(profile?.skills ?? [])
-	const [preferredSkills, setPreferredSkills] = useState(
-		profile?.preferredSkills ?? [],
-	)
 	const [domainExpertise, setDomainExpertise] = useState(
 		profile?.domainExpertise ?? [],
 	)
@@ -131,7 +128,6 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 			yearsOfExperience,
 			summary,
 			skills,
-			preferredSkills,
 			domainExpertise,
 			preferredLocationTypes,
 			preferredLocations,
@@ -296,14 +292,6 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 							values={skills}
 							onChange={(vals) => setSkills(vals)}
 							max={100}
-						/>
-					</InputLabelWrapper>
-					<InputLabelWrapper>
-						<Label>Preferred Skills</Label>
-						<MultiInput
-							values={preferredSkills}
-							onChange={(vals) => setPreferredSkills(vals)}
-							max={20}
 						/>
 					</InputLabelWrapper>
 					<InputLabelWrapper>
