@@ -31,6 +31,7 @@ import { MultiInput } from "@rja-design/ui/library/multi-input"
 import { Select } from "@rja-design/ui/library/select"
 import { Textarea } from "@rja-design/ui/library/text-area"
 import { toast } from "@rja-design/ui/library/toast"
+import { Tooltip } from "@rja-design/ui/library/tooltip"
 import { XStack } from "@rja-design/ui/primitives/x-stack"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { updateProfileAction } from "#actions/settings-actions"
@@ -300,7 +301,13 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 						/>
 					</InputLabelWrapper>
 					<InputLabelWrapper>
-						<Label>Domain Expertise</Label>
+						<Label>
+							Domain Expertise
+							<Tooltip
+								iconClassName="size-3.5 text-muted-foreground"
+								content="Industries or domains you have worked in (e.g. fintech, healthcare, e-commerce). Used by the LLM to gauge industry fit when scoring roles and tailoring resumes."
+							/>
+						</Label>
 						<MultiInput
 							values={domainExpertise}
 							onChange={(vals) => setDomainExpertise(vals)}
