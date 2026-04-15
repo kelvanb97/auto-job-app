@@ -273,7 +273,6 @@ export const userProfile = sqliteTable("user_profile", {
 		.$type<string[]>()
 		.notNull()
 		.default([]),
-	notes: text("notes").notNull().default(""),
 	domainExpertise: text("domain_expertise", { mode: "json" })
 		.$type<string[]>()
 		.notNull()

@@ -350,9 +350,6 @@ export const applyResumeImportAction = actionClient
 					dealbreakers:
 						parsedInput.profileUpdates.dealbreakers ??
 						existingProfile.dealbreakers,
-					notes:
-						parsedInput.profileUpdates.notes ??
-						existingProfile.notes,
 					domainExpertise:
 						parsedInput.profileUpdates.domainExpertise ??
 						existingProfile.domainExpertise,
@@ -387,7 +384,6 @@ export const applyResumeImportAction = actionClient
 						parsedInput.profileUpdates.startDateWeeksOut ?? 2,
 					industries: parsedInput.profileUpdates.industries ?? [],
 					dealbreakers: parsedInput.profileUpdates.dealbreakers ?? [],
-					notes: parsedInput.profileUpdates.notes ?? "",
 					domainExpertise:
 						parsedInput.profileUpdates.domainExpertise ?? [],
 				}

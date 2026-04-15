@@ -20,6 +20,11 @@ import {
 	CardTitle,
 } from "@rja-design/ui/library/card"
 import { Input } from "@rja-design/ui/library/input"
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from "@rja-design/ui/library/input-group"
 import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { MultiInput } from "@rja-design/ui/library/multi-input"
@@ -30,6 +35,16 @@ import { XStack } from "@rja-design/ui/primitives/x-stack"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { updateProfileAction } from "#actions/settings-actions"
 import { useState } from "react"
+
+function formatCurrency(value: number): string {
+	if (!value) return ""
+	return value.toLocaleString("en-US")
+}
+
+function parseCurrency(formatted: string): number {
+	const digits = formatted.replace(/\D/g, "")
+	return digits ? Number(digits) : 0
+}
 
 const SENIORITY_OPTIONS = [
 	{ label: "Junior", value: "junior" },
@@ -64,7 +79,6 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 		profile?.yearsOfExperience ?? 0,
 	)
 	const [summary, setSummary] = useState(profile?.summary ?? "")
-	const [notes, setNotes] = useState(profile?.notes ?? "")
 	const [skills, setSkills] = useState(profile?.skills ?? [])
 	const [preferredSkills, setPreferredSkills] = useState(
 		profile?.preferredSkills ?? [],
@@ -116,7 +130,6 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 			seniority,
 			yearsOfExperience,
 			summary,
-			notes,
 			skills,
 			preferredSkills,
 			domainExpertise,
@@ -261,7 +274,7 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 					</XStack>
 
 					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Summary & Notes
+						Summary
 					</h3>
 					<InputLabelWrapper>
 						<Label htmlFor="profile-summary">Summary</Label>
@@ -271,16 +284,6 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 							onChange={(
 								e: React.ChangeEvent<HTMLTextAreaElement>,
 							) => setSummary(e.target.value)}
-						/>
-					</InputLabelWrapper>
-					<InputLabelWrapper>
-						<Label htmlFor="profile-notes">Notes</Label>
-						<Textarea
-							id="profile-notes"
-							value={notes}
-							onChange={(
-								e: React.ChangeEvent<HTMLTextAreaElement>,
-							) => setNotes(e.target.value)}
 						/>
 					</InputLabelWrapper>
 
@@ -336,40 +339,58 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 							<Label htmlFor="profile-salary-min">
 								Salary Min
 							</Label>
-							<Input
-								id="profile-salary-min"
-								type="number"
-								value={salaryMin}
-								onChange={(e) =>
-									setSalaryMin(Number(e.target.value))
-								}
-							/>
+							<InputGroup>
+								<InputGroupAddon>$</InputGroupAddon>
+								<InputGroupInput
+									id="profile-salary-min"
+									inputMode="numeric"
+									value={formatCurrency(salaryMin)}
+									onChange={(e) =>
+										setSalaryMin(
+											parseCurrency(e.target.value),
+										)
+									}
+									placeholder="80,000"
+								/>
+							</InputGroup>
 						</InputLabelWrapper>
 						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-salary-max">
 								Salary Max
 							</Label>
-							<Input
-								id="profile-salary-max"
-								type="number"
-								value={salaryMax}
-								onChange={(e) =>
-									setSalaryMax(Number(e.target.value))
-								}
-							/>
+							<InputGroup>
+								<InputGroupAddon>$</InputGroupAddon>
+								<InputGroupInput
+									id="profile-salary-max"
+									inputMode="numeric"
+									value={formatCurrency(salaryMax)}
+									onChange={(e) =>
+										setSalaryMax(
+											parseCurrency(e.target.value),
+										)
+									}
+									placeholder="120,000"
+								/>
+							</InputGroup>
 						</InputLabelWrapper>
 						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-desired-salary">
 								Desired Salary
 							</Label>
-							<Input
-								id="profile-desired-salary"
-								type="number"
-								value={desiredSalary}
-								onChange={(e) =>
-									setDesiredSalary(Number(e.target.value))
-								}
-							/>
+							<InputGroup>
+								<InputGroupAddon>$</InputGroupAddon>
+								<InputGroupInput
+									id="profile-desired-salary"
+									inputMode="numeric"
+									value={formatCurrency(desiredSalary)}
+									onChange={(e) =>
+										setDesiredSalary(
+											parseCurrency(e.target.value),
+										)
+									}
+									placeholder="100,000"
+								/>
+							</InputGroup>
 						</InputLabelWrapper>
 					</XStack>
 					<InputLabelWrapper>

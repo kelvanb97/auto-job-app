@@ -86,7 +86,6 @@ function buildJsonView(props: IJsonEditorCardProps) {
 					seniority: profile.seniority,
 					yearsOfExperience: profile.yearsOfExperience,
 					summary: profile.summary,
-					notes: profile.notes,
 					skills: profile.skills,
 					preferredSkills: profile.preferredSkills,
 					preferredLocationTypes: profile.preferredLocationTypes,

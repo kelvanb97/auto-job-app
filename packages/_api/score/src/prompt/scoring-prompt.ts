@@ -59,9 +59,6 @@ function buildCandidateContext(profile: TUserProfileFull): string {
 	if (profile.dealbreakers.length > 0) {
 		sections.push(`Dealbreakers: ${profile.dealbreakers.join(", ")}`)
 	}
-	if (profile.notes) {
-		sections.push(`Notes: ${profile.notes}`)
-	}
 
 	return sections.join("\n\n")
 }

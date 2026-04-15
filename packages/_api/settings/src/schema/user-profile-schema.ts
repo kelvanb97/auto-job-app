@@ -56,7 +56,6 @@ export type TUserProfileFull = {
 	startDateWeeksOut: number
 	industries: string[]
 	dealbreakers: string[]
-	notes: string
 	domainExpertise: string[]
 	createdAt: Date | null
 	updatedAt: Date | null
@@ -125,7 +124,6 @@ export const upsertUserProfileSchema = z.object({
 	startDateWeeksOut: z.number().int().min(0),
 	industries: z.array(z.string()),
 	dealbreakers: z.array(z.string()),
-	notes: z.string(),
 	domainExpertise: z.array(z.string()),
 })
 
