@@ -21,7 +21,6 @@
 		"@rja-core/tsconfig": "workspace:*",
 		"@types/node": "25.5.0",
 		"eslint": "9.24.0",
-		"tsx": "4.21.0",
 		"typescript": "5.9.3"
 	}
 }

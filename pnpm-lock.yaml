@@ -48,30 +48,6 @@ importers:
 
   apps/web:
     dependencies:
-      '@rja-api/application':
-        specifier: workspace:*
-        version: link:../../packages/_api/application
-      '@rja-api/company':
-        specifier: workspace:*
-        version: link:../../packages/_api/company
-      '@rja-api/cover-letter':
-        specifier: workspace:*
-        version: link:../../packages/_api/cover-letter
-      '@rja-api/resume':
-        specifier: workspace:*
-        version: link:../../packages/_api/resume
-      '@rja-api/role':
-        specifier: workspace:*
-        version: link:../../packages/_api/role
-      '@rja-api/score':
-        specifier: workspace:*
-        version: link:../../packages/_api/score
-      '@rja-api/settings':
-        specifier: workspace:*
-        version: link:../../packages/_api/settings
-      '@rja-api/storage':
-        specifier: workspace:*
-        version: link:../../packages/_api/storage
       '@rja-app/apply':
         specifier: workspace:*
         version: link:../../packages/_app/apply
@@ -81,9 +57,6 @@ importers:
       '@rja-app/scraper':
         specifier: workspace:*
         version: link:../../packages/_app/scraper
-      '@rja-core/drizzle':
-        specifier: workspace:*
-        version: link:../../packages/_core/drizzle
       '@rja-design/ui':
         specifier: workspace:*
         version: link:../../packages/_design/ui
@@ -99,9 +72,6 @@ importers:
       react-dom:
         specifier: 19.2.4
         version: 19.2.4(react@19.2.4)
-      zod:
-        specifier: 4.3.6
-        version: 4.3.6
     devDependencies:
       '@rja-core/eslint':
         specifier: workspace:*
@@ -149,9 +119,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
@@ -183,9 +150,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
@@ -254,9 +218,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
@@ -288,9 +249,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
@@ -359,9 +317,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
@@ -393,9 +348,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
@@ -439,9 +391,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
@@ -572,9 +521,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       drizzle-kit:
         specifier: 0.31.5
         version: 0.31.5
@@ -959,9 +905,6 @@ importers:
       input-otp:
         specifier: 1.4.2
         version: 1.4.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      lottie-web:
-        specifier: 5.13.0
-        version: 5.13.0
       lucide-react:
         specifier: 0.525.0
         version: 0.525.0(react@19.2.4)
@@ -1018,9 +961,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
@@ -1071,9 +1011,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
@@ -1096,9 +1033,6 @@ importers:
       '@rja-core/tsconfig':
         specifier: workspace:*
         version: link:../../_core/tsconfig
-      '@types/node':
-        specifier: 25.5.0
-        version: 25.5.0
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
@@ -1124,9 +1058,6 @@ importers:
       eslint:
         specifier: 9.24.0
         version: 9.24.0(jiti@2.6.1)
-      tsx:
-        specifier: 4.21.0
-        version: 4.21.0
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -4498,9 +4429,6 @@ packages:
 
   lop@0.4.2:
     resolution: {integrity: sha512-RefILVDQ4DKoRZsJ4Pj22TxE3omDO47yFpkIBoDKzkqPRISs5U1cnAdg/5583YPkWPaLIYHOKRMQSvjFsO26cw==}
-
-  lottie-web@5.13.0:
-    resolution: {integrity: sha512-+gfBXl6sxXMPe8tKQm7qzLnUy5DUPJPKIyRHwtpCpyUEYjHYRJC/5gjUvdkuO2c3JllrPtHXH5UJJK8LRYl5yQ==}
 
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
@@ -8773,8 +8701,6 @@ snapshots:
       duck: 0.1.12
       option: 0.2.4
       underscore: 1.13.8
-
-  lottie-web@5.13.0: {}
 
   lru-cache@5.1.1:
     dependencies:

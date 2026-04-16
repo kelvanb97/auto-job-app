@@ -22,7 +22,6 @@
 		"@rja-core/eslint": "workspace:*",
 		"@rja-core/tsconfig": "workspace:*",
 		"eslint": "9.24.0",
-		"@types/node": "25.5.0",
 		"typescript": "5.9.3",
 		"zod": "4.3.6"
 	},
