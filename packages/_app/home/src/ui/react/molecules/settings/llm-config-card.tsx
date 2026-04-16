@@ -199,9 +199,19 @@ export function LlmConfigCard({ llm, onSaved }: ILlmConfigCardProps) {
 							API Keys
 						</div>
 						<InputLabelWrapper>
-							<Label htmlFor="llm-anthropic-api-key">
-								Anthropic API Key
-							</Label>
+							<XStack className="items-center justify-between">
+								<Label htmlFor="llm-anthropic-api-key">
+									Anthropic API Key
+								</Label>
+								<a
+									href="https://console.anthropic.com/settings/keys"
+									target="_blank"
+									rel="noreferrer noopener"
+									className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+								>
+									Get key →
+								</a>
+							</XStack>
 							<Input
 								id="llm-anthropic-api-key"
 								type="password"
@@ -214,9 +224,19 @@ export function LlmConfigCard({ llm, onSaved }: ILlmConfigCardProps) {
 							/>
 						</InputLabelWrapper>
 						<InputLabelWrapper>
-							<Label htmlFor="llm-openai-api-key">
-								OpenAI API Key
-							</Label>
+							<XStack className="items-center justify-between">
+								<Label htmlFor="llm-openai-api-key">
+									OpenAI API Key
+								</Label>
+								<a
+									href="https://platform.openai.com/api-keys"
+									target="_blank"
+									rel="noreferrer noopener"
+									className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+								>
+									Get key →
+								</a>
+							</XStack>
 							<Input
 								id="llm-openai-api-key"
 								type="password"

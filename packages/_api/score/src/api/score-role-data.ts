@@ -2,6 +2,10 @@ import type { TCompany } from "@rja-api/company/schema/company-schema"
 import type { TRole } from "@rja-api/role/schema/role-schema"
 import { getScoringConfig } from "@rja-api/settings/api/get-scoring-config"
 import { getUserProfile } from "@rja-api/settings/api/get-user-profile"
+import {
+	DEFAULT_SCORING_WEIGHTS,
+	type TScoringConfig,
+} from "@rja-api/settings/schema/scoring-config-schema"
 import { errFrom, type TResult } from "@rja-core/result"
 import { scoreRole } from "#lib/llm-client"
 import { buildScoringPrompt } from "#prompt/scoring-prompt"
@@ -17,14 +21,21 @@ export async function scoreRoleData(
 		if (!profileResult.ok) return errFrom("User profile not configured")
 
 		const scoringResult = getScoringConfig()
-		if (!scoringResult.ok) return errFrom("Scoring config not configured")
-		if (!scoringResult.data) return errFrom("Scoring config not configured")
+		if (!scoringResult.ok) return errFrom(scoringResult.error.message)
+
+		const weights: TScoringConfig = scoringResult.data ?? {
+			id: 0,
+			userProfileId: profileResult.data.id,
+			...DEFAULT_SCORING_WEIGHTS,
+			createdAt: null,
+			updatedAt: null,
+		}
 
 		const { system, user } = buildScoringPrompt(
 			role,
 			company,
 			profileResult.data,
-			scoringResult.data,
+			weights,
 		)
 		const response = await scoreRole(system, user)
 		return upsertScore({

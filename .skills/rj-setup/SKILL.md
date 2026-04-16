@@ -64,36 +64,24 @@ LLM config lives on its own page now. Do it first so that when we get to `/setti
 
 ```
 browser_navigate → http://localhost:3000/llm-config
-browser_snapshot
 ```
 
-## Step 2: LLM Provider (chat-driven, FIRST)
+Do **not** snapshot, inspect, or manipulate this page. The user drives it themselves — controlling the form is overkill for a handful of keys and dropdowns.
 
-After snapshotting, check whether the Anthropic and/or OpenAI API key fields already have values.
+## Step 2: LLM Provider (user-driven, FIRST)
 
-**If at least one key is already populated:**
-Present a multiple-choice selection:
+Post this message to chat verbatim (adjust only the link text formatting for your harness):
 
-> "LLM keys already configured. What would you like to do?"
+> "The app uses Claude (Anthropic) and/or GPT (OpenAI) for scoring jobs, generating resumes, generating cover letters, and parsing uploaded resumes. You need at least one API key.
 >
-> 1. Move on to Settings
-> 2. Update API keys
-> 3. Change model selections
+> - Anthropic key: <https://console.anthropic.com/settings/keys>
+> - OpenAI key: <https://platform.openai.com/api-keys>
+>
+> The LLM config page is open in the browser. Fill in your key(s), set the provider/model dropdowns for each use case, and click Save. Let me know when you're done (or say 'skip' if keys are already configured) and I'll continue to Settings."
 
-If the user picks 1, skip straight to Step 3. For 2 or 3, walk through the relevant fields, save, then continue to Step 3.
+Then **wait for the user**. Do not navigate, snapshot, type, click, or verify. Secrets belong in the page, not the transcript — never ask the user to paste a key into chat.
 
-**If no keys are populated:**
-
-1. Explain to the user in chat:
-    > "The app uses Claude (Anthropic) and/or GPT (OpenAI) for scoring jobs, generating resumes, generating cover letters, and extracting data from your uploaded resume. You need at least one API key."
-    >
-    > - Get an Anthropic key at <https://console.anthropic.com/settings/keys> (paid; ~$5–$20/month for personal use)
-    > - Get an OpenAI key at <https://platform.openai.com/api-keys> (paid)
-2. Ask the user which provider(s) they want to use. **Do NOT ask the user to paste API keys into chat.** Secrets belong in the page, not the transcript.
-3. Tell the user the Anthropic / OpenAI key field is visible in the browser and ask them to type their key(s) directly into the form themselves. Wait for them to confirm in chat that the key is entered.
-4. Once the user confirms, use `browser_select_option` for the provider dropdowns (scoring / keyword / resume / cover letter providers) based on which provider(s) they chose. Do not touch the key inputs.
-5. Click Save.
-6. Verify by re-snapshotting the page and confirming the key input shows a populated/masked value. If empty, ask the user to re-enter and save again.
+When the user confirms they're done (or says skip), continue to Step 3.
 
 ## Step 3: Profile / Experience / Education — offer resume upload first
 
@@ -160,15 +148,9 @@ Click the **Scraper Config** tab. Explain in chat:
 
 Ask the user which sources to enable. Toggle them in the form.
 
-For keywords, suggest defaults based on the job title from the Profile tab:
+For **Relevant Keywords** and **Blocked Keywords**: do **not** suggest values. These fields filter against job **titles only** (not descriptions, not skills), so generic tech suggestions like `typescript` / `react` / `node` reject legitimate matches whose titles are things like "Senior Software Engineer". Ask the user for their own comma-separated list, and briefly explain the title-only matching so they can pick wisely.
 
-- Title contains "frontend" / "react" → suggest `["react", "typescript", "frontend"]`
-- Title contains "backend" / "node" → suggest `["node", "typescript", "backend", "api"]`
-- Title contains "fullstack" → suggest `["typescript", "react", "node"]`
-- Title contains "data" → suggest `["python", "sql", "data"]`
-- Otherwise: ask the user.
-
-Ask the user for any blocked keywords (e.g. "senior", "blockchain", "crypto") and blocked companies. Fill in. Click Save.
+Ask the user for any blocked companies. Fill in. Click Save.
 
 If the user enabled LinkedIn, walk over to the **LinkedIn** tab and explain that they need to add at least one LinkedIn search URL (e.g. <https://www.linkedin.com/jobs/search/?keywords=frontend%20engineer>). Help them build one.
 

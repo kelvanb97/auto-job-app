@@ -4,6 +4,8 @@
 			"mcp__playwright__*",
 			"Bash(pnpm install:*)",
 			"Bash(sqlite3:*)",
+			"Bash(pnpm -v)",
+			"Bash(git --version)",
 			"Bash(curl -sf http://localhost:3000:*)",
 			"Bash(curl -s http://localhost:3000:*)",
 			"Bash(curl -s 'http://localhost:3000:*)",
