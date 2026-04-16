@@ -25,7 +25,7 @@ import { Select } from "@rja-design/ui/library/select"
 import { toast } from "@rja-design/ui/library/toast"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { updateScoringConfigAction } from "#actions/settings-actions"
-import { useState } from "react"
+import type { Dispatch, SetStateAction } from "react"
 
 const WEIGHT_OPTIONS: { label: string; value: TScoringWeight }[] = [
 	{ label: "High", value: "high" },
@@ -33,38 +33,47 @@ const WEIGHT_OPTIONS: { label: string; value: TScoringWeight }[] = [
 	{ label: "Low", value: "low" },
 ]
 
+const BLANK_SCORING: TScoringConfig = {
+	id: 0,
+	userProfileId: 0,
+	titleAndSeniority: "high",
+	skills: "high",
+	salary: "high",
+	location: "medium",
+	industry: "low",
+	createdAt: null,
+	updatedAt: null,
+}
+
 interface IScoringWeightsCardProps {
 	profileId: number
 	scoring: TScoringConfig | null
-	onSaved: (data: TScoringConfig) => void
+	setScoring: Dispatch<SetStateAction<TScoringConfig | null>>
 }
 
 export function ScoringWeightsCard({
 	profileId,
 	scoring,
-	onSaved,
+	setScoring,
 }: IScoringWeightsCardProps) {
-	const [titleAndSeniority, setTitleAndSeniority] = useState<TScoringWeight>(
-		(scoring?.titleAndSeniority as TScoringWeight) ?? "high",
-	)
-	const [skills, setSkills] = useState<TScoringWeight>(
-		(scoring?.skills as TScoringWeight) ?? "high",
-	)
-	const [salary, setSalary] = useState<TScoringWeight>(
-		(scoring?.salary as TScoringWeight) ?? "high",
-	)
-	const [location, setLocation] = useState<TScoringWeight>(
-		(scoring?.location as TScoringWeight) ?? "medium",
-	)
-	const [industry, setIndustry] = useState<TScoringWeight>(
-		(scoring?.industry as TScoringWeight) ?? "low",
-	)
+	const update = (field: keyof TScoringConfig, value: unknown) => {
+		setScoring(
+			(prev) =>
+				({
+					...(prev ?? {
+						...BLANK_SCORING,
+						userProfileId: profileId,
+					}),
+					[field]: value,
+				}) as TScoringConfig,
+		)
+	}
 
 	const { execute, result, status } = useAction(updateScoringConfigAction, {
 		onSuccess: ({ data }) => {
 			if (data) {
 				toast.success("Saved!")
-				onSaved(data)
+				setScoring(data)
 			}
 		},
 	})
@@ -75,11 +84,12 @@ export function ScoringWeightsCard({
 	const handleSave = () => {
 		execute({
 			userProfileId: profileId,
-			titleAndSeniority,
-			skills,
-			salary,
-			location,
-			industry,
+			titleAndSeniority:
+				(scoring?.titleAndSeniority as TScoringWeight) ?? "high",
+			skills: (scoring?.skills as TScoringWeight) ?? "high",
+			salary: (scoring?.salary as TScoringWeight) ?? "high",
+			location: (scoring?.location as TScoringWeight) ?? "medium",
+			industry: (scoring?.industry as TScoringWeight) ?? "low",
 		})
 	}
 
@@ -96,8 +106,13 @@ export function ScoringWeightsCard({
 					<InputLabelWrapper>
 						<Label>Title & Seniority</Label>
 						<Select
-							value={titleAndSeniority}
-							onValueChange={setTitleAndSeniority}
+							value={
+								(scoring?.titleAndSeniority as TScoringWeight) ??
+								"high"
+							}
+							onValueChange={(val) =>
+								update("titleAndSeniority", val)
+							}
 							options={WEIGHT_OPTIONS}
 						/>
 					</InputLabelWrapper>
@@ -105,8 +120,10 @@ export function ScoringWeightsCard({
 					<InputLabelWrapper>
 						<Label>Skills</Label>
 						<Select
-							value={skills}
-							onValueChange={setSkills}
+							value={
+								(scoring?.skills as TScoringWeight) ?? "high"
+							}
+							onValueChange={(val) => update("skills", val)}
 							options={WEIGHT_OPTIONS}
 						/>
 					</InputLabelWrapper>
@@ -114,8 +131,10 @@ export function ScoringWeightsCard({
 					<InputLabelWrapper>
 						<Label>Salary</Label>
 						<Select
-							value={salary}
-							onValueChange={setSalary}
+							value={
+								(scoring?.salary as TScoringWeight) ?? "high"
+							}
+							onValueChange={(val) => update("salary", val)}
 							options={WEIGHT_OPTIONS}
 						/>
 					</InputLabelWrapper>
@@ -123,8 +142,11 @@ export function ScoringWeightsCard({
 					<InputLabelWrapper>
 						<Label>Location</Label>
 						<Select
-							value={location}
-							onValueChange={setLocation}
+							value={
+								(scoring?.location as TScoringWeight) ??
+								"medium"
+							}
+							onValueChange={(val) => update("location", val)}
 							options={WEIGHT_OPTIONS}
 						/>
 					</InputLabelWrapper>
@@ -132,8 +154,10 @@ export function ScoringWeightsCard({
 					<InputLabelWrapper>
 						<Label>Industry</Label>
 						<Select
-							value={industry}
-							onValueChange={setIndustry}
+							value={
+								(scoring?.industry as TScoringWeight) ?? "low"
+							}
+							onValueChange={(val) => update("industry", val)}
 							options={WEIGHT_OPTIONS}
 						/>
 					</InputLabelWrapper>

@@ -7,8 +7,6 @@ import type { TScraperConfig } from "@rja-api/settings/schema/scraper-config-sch
 import type {
 	TCertification,
 	TEducation,
-	TLocationType,
-	TUserProfile,
 	TUserProfileFull,
 	TWorkExperience,
 } from "@rja-api/settings/schema/user-profile-schema"
@@ -105,19 +103,6 @@ export function SettingsTemplate({
 	const [scoring, setScoring] = useState(initialScoring)
 	const [scraper, setScraper] = useState(initialScraper)
 
-	const onProfileSaved = useCallback((data: TUserProfile) => {
-		setProfile((prev) =>
-			prev
-				? {
-						...prev,
-						...data,
-						preferredLocationTypes:
-							data.preferredLocationTypes as TLocationType[],
-					}
-				: null,
-		)
-	}, [])
-
 	const onImported = useCallback((freshProfile: TUserProfileFull) => {
 		setProfile(freshProfile)
 	}, [])
@@ -140,16 +125,6 @@ export function SettingsTemplate({
 			prev ? { ...prev, certifications: entries } : null,
 		)
 	}, [])
-
-	const onEeoSaved = useCallback((data: TEeoConfig) => setEeo(data), [])
-	const onScoringSaved = useCallback(
-		(data: TScoringConfig) => setScoring(data),
-		[],
-	)
-	const onScraperSaved = useCallback(
-		(data: TScraperConfig) => setScraper(data),
-		[],
-	)
 
 	const llmConfigured = !!(llm?.anthropicApiKey || llm?.openaiApiKey)
 
@@ -209,7 +184,7 @@ export function SettingsTemplate({
 					{activeTab === "profile" && (
 						<ProfileCard
 							profile={profile}
-							onSaved={onProfileSaved}
+							setProfile={setProfile}
 						/>
 					)}
 					{activeTab === "work-experience" &&
@@ -247,7 +222,7 @@ export function SettingsTemplate({
 							<EeoCard
 								profileId={profile.id}
 								eeo={eeo}
-								onSaved={onEeoSaved}
+								setEeo={setEeo}
 							/>
 						) : (
 							<NeedsProfile tab="EEO & Work Auth" />
@@ -257,7 +232,7 @@ export function SettingsTemplate({
 							<ScoringWeightsCard
 								profileId={profile.id}
 								scoring={scoring}
-								onSaved={onScoringSaved}
+								setScoring={setScoring}
 							/>
 						) : (
 							<NeedsProfile tab="Scoring Weights" />
@@ -267,7 +242,7 @@ export function SettingsTemplate({
 							<ScraperConfigCard
 								profileId={profile.id}
 								scraper={scraper}
-								onSaved={onScraperSaved}
+								setScraper={setScraper}
 							/>
 						) : (
 							<NeedsProfile tab="Scraper Config" />
@@ -277,7 +252,7 @@ export function SettingsTemplate({
 							<LinkedInCard
 								profileId={profile.id}
 								scraper={scraper}
-								onSaved={onScraperSaved}
+								setScraper={setScraper}
 							/>
 						) : (
 							<NeedsProfile tab="LinkedIn" />

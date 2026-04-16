@@ -25,7 +25,7 @@ import { toast } from "@rja-design/ui/library/toast"
 import { Tooltip } from "@rja-design/ui/library/tooltip"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { updateEeoAction } from "#actions/settings-actions"
-import { useState } from "react"
+import type { Dispatch, SetStateAction } from "react"
 
 const VETERAN_STATUS_OPTIONS = [
 	{
@@ -45,31 +45,41 @@ const DISABILITY_STATUS_OPTIONS = [
 	{ label: "Decline to self-identify", value: "Decline to self-identify" },
 ]
 
+const BLANK_EEO: TEeoConfig = {
+	id: 0,
+	userProfileId: 0,
+	gender: null,
+	ethnicity: null,
+	veteranStatus: null,
+	disabilityStatus: null,
+	workAuthorization: null,
+	requiresVisaSponsorship: false,
+	createdAt: null,
+	updatedAt: null,
+}
+
 interface IEeoCardProps {
 	profileId: number
 	eeo: TEeoConfig | null
-	onSaved: (data: TEeoConfig) => void
+	setEeo: Dispatch<SetStateAction<TEeoConfig | null>>
 }
 
-export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
-	const [gender, setGender] = useState(eeo?.gender ?? "")
-	const [ethnicity, setEthnicity] = useState(eeo?.ethnicity ?? "")
-	const [veteranStatus, setVeteranStatus] = useState(eeo?.veteranStatus ?? "")
-	const [disabilityStatus, setDisabilityStatus] = useState(
-		eeo?.disabilityStatus ?? "",
-	)
-	const [workAuthorization, setWorkAuthorization] = useState(
-		eeo?.workAuthorization ?? "",
-	)
-	const [requiresVisaSponsorship, setRequiresVisaSponsorship] = useState(
-		eeo?.requiresVisaSponsorship ?? false,
-	)
+export function EeoCard({ profileId, eeo, setEeo }: IEeoCardProps) {
+	const update = (field: keyof TEeoConfig, value: unknown) => {
+		setEeo(
+			(prev) =>
+				({
+					...(prev ?? { ...BLANK_EEO, userProfileId: profileId }),
+					[field]: value,
+				}) as TEeoConfig,
+		)
+	}
 
 	const { execute, result, status } = useAction(updateEeoAction, {
 		onSuccess: ({ data }) => {
 			if (data) {
 				toast.success("Saved!")
-				onSaved(data)
+				setEeo(data)
 			}
 		},
 	})
@@ -80,12 +90,12 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 	const handleSave = () => {
 		execute({
 			userProfileId: profileId,
-			gender: gender || null,
-			ethnicity: ethnicity || null,
-			veteranStatus: veteranStatus || null,
-			disabilityStatus: disabilityStatus || null,
-			workAuthorization: workAuthorization || null,
-			requiresVisaSponsorship,
+			gender: eeo?.gender || null,
+			ethnicity: eeo?.ethnicity || null,
+			veteranStatus: eeo?.veteranStatus || null,
+			disabilityStatus: eeo?.disabilityStatus || null,
+			workAuthorization: eeo?.workAuthorization || null,
+			requiresVisaSponsorship: eeo?.requiresVisaSponsorship ?? false,
 		})
 	}
 
@@ -104,8 +114,8 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 						<Label htmlFor="eeo-gender">Gender</Label>
 						<Input
 							id="eeo-gender"
-							value={gender}
-							onChange={(e) => setGender(e.target.value)}
+							value={eeo?.gender ?? ""}
+							onChange={(e) => update("gender", e.target.value)}
 							placeholder="Leave empty to decline"
 						/>
 					</InputLabelWrapper>
@@ -114,8 +124,10 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 						<Label htmlFor="eeo-ethnicity">Ethnicity</Label>
 						<Input
 							id="eeo-ethnicity"
-							value={ethnicity}
-							onChange={(e) => setEthnicity(e.target.value)}
+							value={eeo?.ethnicity ?? ""}
+							onChange={(e) =>
+								update("ethnicity", e.target.value)
+							}
 							placeholder="Leave empty to decline"
 						/>
 					</InputLabelWrapper>
@@ -123,8 +135,10 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 					<InputLabelWrapper>
 						<Label>Veteran Status</Label>
 						<Select
-							value={veteranStatus || null}
-							onValueChange={setVeteranStatus}
+							value={eeo?.veteranStatus || null}
+							onValueChange={(val) =>
+								update("veteranStatus", val)
+							}
 							options={VETERAN_STATUS_OPTIONS}
 							placeholder="Select veteran status"
 						/>
@@ -133,8 +147,10 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 					<InputLabelWrapper>
 						<Label>Disability Status</Label>
 						<Select
-							value={disabilityStatus || null}
-							onValueChange={setDisabilityStatus}
+							value={eeo?.disabilityStatus || null}
+							onValueChange={(val) =>
+								update("disabilityStatus", val)
+							}
 							options={DISABILITY_STATUS_OPTIONS}
 							placeholder="Select disability status"
 						/>
@@ -150,17 +166,19 @@ export function EeoCard({ profileId, eeo, onSaved }: IEeoCardProps) {
 						</Label>
 						<Input
 							id="eeo-work-authorization"
-							value={workAuthorization}
+							value={eeo?.workAuthorization ?? ""}
 							onChange={(e) =>
-								setWorkAuthorization(e.target.value)
+								update("workAuthorization", e.target.value)
 							}
 							placeholder="e.g. United States"
 						/>
 					</InputLabelWrapper>
 
 					<Switch
-						checked={requiresVisaSponsorship}
-						onCheckedChange={setRequiresVisaSponsorship}
+						checked={eeo?.requiresVisaSponsorship ?? false}
+						onCheckedChange={(val) =>
+							update("requiresVisaSponsorship", val)
+						}
 						rightLabel="Requires Visa Sponsorship"
 					/>
 				</YStack>

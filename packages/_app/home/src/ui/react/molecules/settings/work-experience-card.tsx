@@ -92,8 +92,6 @@ export function WorkExperienceCard({
 	workExperience,
 	onChanged,
 }: IWorkExperienceCardProps) {
-	const [entries, setEntries] =
-		useState<IWorkExperienceEntry[]>(workExperience)
 	const [dialogOpen, setDialogOpen] = useState(false)
 	const [editingEntry, setEditingEntry] =
 		useState<IWorkExperienceEntry | null>(null)
@@ -133,13 +131,10 @@ export function WorkExperienceCard({
 		onSuccess: ({ data }) => {
 			if (data) {
 				toast.success("Work experience saved!")
-				setEntries((prev) => {
-					const next = prev.some((e) => e.id === data.id)
-						? prev.map((e) => (e.id === data.id ? data : e))
-						: [...prev, data]
-					onChanged(next)
-					return next
-				})
+				const next = workExperience.some((e) => e.id === data.id)
+					? workExperience.map((e) => (e.id === data.id ? data : e))
+					: [...workExperience, data]
+				onChanged(next)
 				closeDialog()
 			}
 		},
@@ -157,11 +152,8 @@ export function WorkExperienceCard({
 		onSuccess: ({ data }) => {
 			if (data) {
 				toast.success("Work experience deleted!")
-				setEntries((prev) => {
-					const next = prev.filter((e) => e.id !== data.id)
-					onChanged(next)
-					return next
-				})
+				const next = workExperience.filter((e) => e.id !== data.id)
+				onChanged(next)
 			}
 		},
 	})
@@ -181,7 +173,9 @@ export function WorkExperienceCard({
 		executeSave({
 			...(editingEntry ? { id: editingEntry.id } : {}),
 			userProfileId: profileId,
-			sortOrder: editingEntry ? editingEntry.sortOrder : entries.length,
+			sortOrder: editingEntry
+				? editingEntry.sortOrder
+				: workExperience.length,
 			company: form.company,
 			title: form.title,
 			startDate: form.startDate,
@@ -209,13 +203,13 @@ export function WorkExperienceCard({
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					{entries.length === 0 ? (
+					{workExperience.length === 0 ? (
 						<p className="text-sm text-muted-foreground py-4 text-center">
 							No work experience entries yet.
 						</p>
 					) : (
 						<YStack className="gap-3">
-							{entries.map((entry) => (
+							{workExperience.map((entry) => (
 								<div
 									key={entry.id}
 									className="flex items-center justify-between rounded-lg border p-3"

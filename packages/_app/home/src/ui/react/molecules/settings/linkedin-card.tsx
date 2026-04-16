@@ -23,34 +23,56 @@ import { MultiInput } from "@rja-design/ui/library/multi-input"
 import { toast } from "@rja-design/ui/library/toast"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { updateScraperConfigAction } from "#actions/settings-actions"
-import { useState } from "react"
+import type { Dispatch, SetStateAction } from "react"
+
+const BLANK_SCRAPER: TScraperConfig = {
+	id: 0,
+	userProfileId: 0,
+	relevantKeywords: [],
+	blockedKeywords: [],
+	blockedCompanies: [],
+	enabledSources: [],
+	googleTitles: [],
+	googleRemote: true,
+	googleFullTimeOnly: true,
+	googleFreshnessDays: 3,
+	googleMaxPages: 5,
+	linkedinUrls: [],
+	linkedinMaxPages: 5,
+	linkedinMaxPerPage: 25,
+	createdAt: null,
+	updatedAt: null,
+}
 
 interface ILinkedinCardProps {
 	profileId: number
 	scraper: TScraperConfig | null
-	onSaved: (data: TScraperConfig) => void
+	setScraper: Dispatch<SetStateAction<TScraperConfig | null>>
 }
 
 export function LinkedInCard({
 	profileId,
 	scraper,
-	onSaved,
+	setScraper,
 }: ILinkedinCardProps) {
-	const [linkedinUrls, setLinkedinUrls] = useState<string[]>(
-		scraper?.linkedinUrls ?? [],
-	)
-	const [linkedinMaxPages, setLinkedinMaxPages] = useState(
-		scraper?.linkedinMaxPages ?? 5,
-	)
-	const [linkedinMaxPerPage, setLinkedinMaxPerPage] = useState(
-		scraper?.linkedinMaxPerPage ?? 25,
-	)
+	const update = (field: keyof TScraperConfig, value: unknown) => {
+		setScraper(
+			(prev) =>
+				({
+					...(prev ?? {
+						...BLANK_SCRAPER,
+						userProfileId: profileId,
+					}),
+					[field]: value,
+				}) as TScraperConfig,
+		)
+	}
 
 	const { execute, result, status } = useAction(updateScraperConfigAction, {
 		onSuccess: ({ data }) => {
 			if (data) {
 				toast.success("Saved!")
-				onSaved(data)
+				setScraper(data)
 			}
 		},
 	})
@@ -65,9 +87,9 @@ export function LinkedInCard({
 			blockedKeywords: scraper?.blockedKeywords ?? [],
 			blockedCompanies: scraper?.blockedCompanies ?? [],
 			enabledSources: scraper?.enabledSources ?? [],
-			linkedinUrls,
-			linkedinMaxPages,
-			linkedinMaxPerPage,
+			linkedinUrls: scraper?.linkedinUrls ?? [],
+			linkedinMaxPages: scraper?.linkedinMaxPages ?? 5,
+			linkedinMaxPerPage: scraper?.linkedinMaxPerPage ?? 25,
 		})
 	}
 
@@ -84,8 +106,8 @@ export function LinkedInCard({
 					<InputLabelWrapper>
 						<Label>Search URLs</Label>
 						<MultiInput
-							values={linkedinUrls}
-							onChange={setLinkedinUrls}
+							values={scraper?.linkedinUrls ?? []}
+							onChange={(vals) => update("linkedinUrls", vals)}
 							max={30}
 						/>
 					</InputLabelWrapper>
@@ -95,9 +117,12 @@ export function LinkedInCard({
 						<Input
 							id="linkedin-max-pages"
 							type="number"
-							value={linkedinMaxPages}
+							value={scraper?.linkedinMaxPages ?? 5}
 							onChange={(e) =>
-								setLinkedinMaxPages(Number(e.target.value))
+								update(
+									"linkedinMaxPages",
+									Number(e.target.value),
+								)
 							}
 						/>
 					</InputLabelWrapper>
@@ -109,9 +134,12 @@ export function LinkedInCard({
 						<Input
 							id="linkedin-max-per-page"
 							type="number"
-							value={linkedinMaxPerPage}
+							value={scraper?.linkedinMaxPerPage ?? 25}
 							onChange={(e) =>
-								setLinkedinMaxPerPage(Number(e.target.value))
+								update(
+									"linkedinMaxPerPage",
+									Number(e.target.value),
+								)
 							}
 						/>
 					</InputLabelWrapper>

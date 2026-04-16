@@ -65,7 +65,6 @@ export function EducationCard({
 	education,
 	onChanged,
 }: IEducationCardProps) {
-	const [entries, setEntries] = useState<IEducationEntry[]>(education)
 	const [editingId, setEditingId] = useState<number | null>(null)
 	const [isAdding, setIsAdding] = useState(false)
 	const [form, setForm] = useState<IEducationForm>(EMPTY_FORM)
@@ -77,13 +76,10 @@ export function EducationCard({
 	} = useAction(upsertEducationAction, {
 		onSuccess: ({ data }) => {
 			if (data) {
-				setEntries((prev) => {
-					const next = prev.some((e) => e.id === data.id)
-						? prev.map((e) => (e.id === data.id ? data : e))
-						: [...prev, data]
-					onChanged(next)
-					return next
-				})
+				const next = education.some((e) => e.id === data.id)
+					? education.map((e) => (e.id === data.id ? data : e))
+					: [...education, data]
+				onChanged(next)
 				setEditingId(null)
 				setIsAdding(false)
 				setForm(EMPTY_FORM)
@@ -111,8 +107,8 @@ export function EducationCard({
 	const handleSave = () => {
 		const sortOrder =
 			editingId !== null
-				? entries.findIndex((e) => e.id === editingId)
-				: entries.length
+				? education.findIndex((e) => e.id === editingId)
+				: education.length
 
 		executeUpsert({
 			id: form.id,
@@ -138,11 +134,8 @@ export function EducationCard({
 	}
 
 	const handleDelete = (id: number) => {
-		setEntries((prev) => {
-			const next = prev.filter((e) => e.id !== id)
-			onChanged(next)
-			return next
-		})
+		const next = education.filter((e) => e.id !== id)
+		onChanged(next)
 		executeDelete({ id })
 	}
 
@@ -235,7 +228,7 @@ export function EducationCard({
 			</CardHeader>
 			<CardContent>
 				<YStack className="gap-3">
-					{entries.map((entry) =>
+					{education.map((entry) =>
 						editingId === entry.id ? (
 							<div key={entry.id}>{renderForm()}</div>
 						) : (

@@ -4,7 +4,6 @@ import {
 	LOCATION_TYPES,
 	type TLocationType,
 	type TSeniority,
-	type TUserProfile,
 	type TUserProfileFull,
 } from "@rja-api/settings/schema/user-profile-schema"
 import {
@@ -39,7 +38,7 @@ import { Tooltip } from "@rja-design/ui/library/tooltip"
 import { XStack } from "@rja-design/ui/primitives/x-stack"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { updateProfileAction } from "#actions/settings-actions"
-import { useState } from "react"
+import type { Dispatch, SetStateAction } from "react"
 
 function formatCurrency(value: number): string {
 	if (!value) return ""
@@ -78,52 +77,31 @@ const LOCATION_TYPE_OPTIONS = LOCATION_TYPES.map((value) => ({
 
 interface IProfileCardProps {
 	profile: TUserProfileFull | null
-	onSaved: (data: TUserProfile) => void
+	setProfile: Dispatch<SetStateAction<TUserProfileFull | null>>
 }
 
-export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
-	const [name, setName] = useState(profile?.name ?? "")
-	const [email, setEmail] = useState(profile?.email ?? "")
-	const [phone, setPhone] = useState(profile?.phone ?? "")
-	const [links, setLinks] = useState(profile?.links ?? [])
-	const [location, setLocation] = useState(profile?.location ?? "")
-	const [address, setAddress] = useState(profile?.address ?? "")
-	const [jobTitle, setJobTitle] = useState(profile?.jobTitle ?? "")
-	const [seniority, setSeniority] = useState<TSeniority>(
-		(profile?.seniority as TSeniority) ?? "mid",
-	)
-	const [yearsOfExperience, setYearsOfExperience] = useState(
-		profile?.yearsOfExperience ?? 0,
-	)
-	const [summary, setSummary] = useState(profile?.summary ?? "")
-	const [skills, setSkills] = useState(profile?.skills ?? [])
-	const [domainExpertise, setDomainExpertise] = useState(
-		profile?.domainExpertise ?? [],
-	)
-	const [preferredLocationTypes, setPreferredLocationTypes] = useState<
-		TLocationType[]
-	>((profile?.preferredLocationTypes ?? []) as TLocationType[])
-	const [preferredLocations, setPreferredLocations] = useState(
-		profile?.preferredLocations ?? [],
-	)
-	const [salaryMin, setSalaryMin] = useState(profile?.salaryMin ?? 0)
-	const [salaryMax, setSalaryMax] = useState(profile?.salaryMax ?? 0)
-	const [desiredSalary, setDesiredSalary] = useState(
-		profile?.desiredSalary ?? 0,
-	)
-	const [startDateWeeksOut, setStartDateWeeksOut] = useState(
-		profile?.startDateWeeksOut ?? 2,
-	)
-	const [industries, setIndustries] = useState(profile?.industries ?? [])
-	const [dealbreakers, setDealbreakers] = useState(
-		profile?.dealbreakers ?? [],
-	)
+export function ProfileCard({ profile, setProfile }: IProfileCardProps) {
+	const update = <K extends keyof TUserProfileFull>(
+		field: K,
+		value: TUserProfileFull[K],
+	) => {
+		setProfile((prev) => (prev ? { ...prev, [field]: value } : null))
+	}
 
 	const { execute, result, status } = useAction(updateProfileAction, {
 		onSuccess: ({ data }) => {
 			if (data) {
 				toast.success("Profile saved!")
-				onSaved(data)
+				setProfile((prev) =>
+					prev
+						? {
+								...prev,
+								...data,
+								preferredLocationTypes:
+									data.preferredLocationTypes as TLocationType[],
+							}
+						: null,
+				)
 			}
 		},
 	})
@@ -134,26 +112,27 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 	const handleSave = () => {
 		execute({
 			id: profile?.id,
-			name,
-			email,
-			phone,
-			links,
-			location,
-			address,
-			jobTitle,
-			seniority,
-			yearsOfExperience,
-			summary,
-			skills,
-			domainExpertise,
-			preferredLocationTypes,
-			preferredLocations,
-			salaryMin,
-			salaryMax,
-			desiredSalary,
-			startDateWeeksOut,
-			industries,
-			dealbreakers,
+			name: profile?.name ?? "",
+			email: profile?.email ?? "",
+			phone: profile?.phone ?? "",
+			links: profile?.links ?? [],
+			location: profile?.location ?? "",
+			address: profile?.address ?? "",
+			jobTitle: profile?.jobTitle ?? "",
+			seniority: (profile?.seniority as TSeniority) ?? "mid",
+			yearsOfExperience: profile?.yearsOfExperience ?? 0,
+			summary: profile?.summary ?? "",
+			skills: profile?.skills ?? [],
+			domainExpertise: profile?.domainExpertise ?? [],
+			preferredLocationTypes:
+				(profile?.preferredLocationTypes as TLocationType[]) ?? [],
+			preferredLocations: profile?.preferredLocations ?? [],
+			salaryMin: profile?.salaryMin ?? 0,
+			salaryMax: profile?.salaryMax ?? 0,
+			desiredSalary: profile?.desiredSalary ?? 0,
+			startDateWeeksOut: profile?.startDateWeeksOut ?? 2,
+			industries: profile?.industries ?? [],
+			dealbreakers: profile?.dealbreakers ?? [],
 		})
 	}
 
@@ -176,16 +155,18 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 							<Label htmlFor="profile-name">Name</Label>
 							<Input
 								id="profile-name"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
+								value={profile?.name ?? ""}
+								onChange={(e) => update("name", e.target.value)}
 							/>
 						</InputLabelWrapper>
 						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-email">Email</Label>
 							<Input
 								id="profile-email"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
+								value={profile?.email ?? ""}
+								onChange={(e) =>
+									update("email", e.target.value)
+								}
 							/>
 						</InputLabelWrapper>
 					</XStack>
@@ -194,16 +175,18 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 							<Label htmlFor="profile-phone">Phone</Label>
 							<Input
 								id="profile-phone"
-								value={phone}
-								onChange={(e) => setPhone(e.target.value)}
+								value={profile?.phone ?? ""}
+								onChange={(e) =>
+									update("phone", e.target.value)
+								}
 							/>
 						</InputLabelWrapper>
 					</XStack>
 					<InputLabelWrapper>
 						<Label>Links</Label>
 						<MultiInput
-							values={links}
-							onChange={(vals) => setLinks(vals)}
+							values={profile?.links ?? []}
+							onChange={(vals) => update("links", vals)}
 							max={10}
 							placeholder="https://linkedin.com/in/..., https://github.com/..., etc."
 						/>
@@ -213,16 +196,20 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 							<Label htmlFor="profile-location">Location</Label>
 							<Input
 								id="profile-location"
-								value={location}
-								onChange={(e) => setLocation(e.target.value)}
+								value={profile?.location ?? ""}
+								onChange={(e) =>
+									update("location", e.target.value)
+								}
 							/>
 						</InputLabelWrapper>
 						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-address">Address</Label>
 							<Input
 								id="profile-address"
-								value={address}
-								onChange={(e) => setAddress(e.target.value)}
+								value={profile?.address ?? ""}
+								onChange={(e) =>
+									update("address", e.target.value)
+								}
 							/>
 						</InputLabelWrapper>
 					</XStack>
@@ -235,16 +222,20 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 							<Label htmlFor="profile-job-title">Job Title</Label>
 							<Input
 								id="profile-job-title"
-								value={jobTitle}
-								onChange={(e) => setJobTitle(e.target.value)}
+								value={profile?.jobTitle ?? ""}
+								onChange={(e) =>
+									update("jobTitle", e.target.value)
+								}
 							/>
 						</InputLabelWrapper>
 						<InputLabelWrapper className="flex-1">
 							<Label htmlFor="profile-seniority">Seniority</Label>
 							<Select
-								value={seniority || null}
+								value={
+									(profile?.seniority as TSeniority) || null
+								}
 								onValueChange={(val) =>
-									setSeniority(val as TSeniority)
+									update("seniority", val as TSeniority)
 								}
 								options={SENIORITY_OPTIONS}
 								placeholder="Select seniority"
@@ -255,9 +246,9 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 								Years of Experience
 							</Label>
 							<Select
-								value={String(yearsOfExperience)}
+								value={String(profile?.yearsOfExperience ?? 0)}
 								onValueChange={(val) =>
-									setYearsOfExperience(Number(val))
+									update("yearsOfExperience", Number(val))
 								}
 								options={YEARS_OF_EXPERIENCE_OPTIONS}
 								placeholder="Select years"
@@ -272,10 +263,10 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 						<Label htmlFor="profile-summary">Summary</Label>
 						<Textarea
 							id="profile-summary"
-							value={summary}
+							value={profile?.summary ?? ""}
 							onChange={(
 								e: React.ChangeEvent<HTMLTextAreaElement>,
-							) => setSummary(e.target.value)}
+							) => update("summary", e.target.value)}
 						/>
 					</InputLabelWrapper>
 
@@ -285,8 +276,8 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 					<InputLabelWrapper>
 						<Label>Skills</Label>
 						<MultiInput
-							values={skills}
-							onChange={(vals) => setSkills(vals)}
+							values={profile?.skills ?? []}
+							onChange={(vals) => update("skills", vals)}
 							max={100}
 						/>
 					</InputLabelWrapper>
@@ -299,8 +290,8 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 							/>
 						</Label>
 						<MultiInput
-							values={domainExpertise}
-							onChange={(vals) => setDomainExpertise(vals)}
+							values={profile?.domainExpertise ?? []}
+							onChange={(vals) => update("domainExpertise", vals)}
 							max={20}
 							placeholder="Fintech, Healthcare, e-commerce, etc."
 						/>
@@ -312,9 +303,15 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 					<InputLabelWrapper>
 						<Label>Preferred Location Types</Label>
 						<MultiSelect
-							values={preferredLocationTypes}
+							values={
+								(profile?.preferredLocationTypes as TLocationType[]) ??
+								[]
+							}
 							onValueChange={(vals) =>
-								setPreferredLocationTypes(vals)
+								update(
+									"preferredLocationTypes",
+									vals as TLocationType[],
+								)
 							}
 							options={LOCATION_TYPE_OPTIONS}
 							max={LOCATION_TYPE_OPTIONS.length}
@@ -324,8 +321,10 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 					<InputLabelWrapper>
 						<Label>Preferred Locations</Label>
 						<MultiInput
-							values={preferredLocations}
-							onChange={(vals) => setPreferredLocations(vals)}
+							values={profile?.preferredLocations ?? []}
+							onChange={(vals) =>
+								update("preferredLocations", vals)
+							}
 							max={20}
 							placeholder="Seattle WA, San Francisco CA, etc."
 						/>
@@ -340,9 +339,12 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 								<InputGroupInput
 									id="profile-salary-min"
 									inputMode="numeric"
-									value={formatCurrency(salaryMin)}
+									value={formatCurrency(
+										profile?.salaryMin ?? 0,
+									)}
 									onChange={(e) =>
-										setSalaryMin(
+										update(
+											"salaryMin",
 											parseCurrency(e.target.value),
 										)
 									}
@@ -359,9 +361,12 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 								<InputGroupInput
 									id="profile-salary-max"
 									inputMode="numeric"
-									value={formatCurrency(salaryMax)}
+									value={formatCurrency(
+										profile?.salaryMax ?? 0,
+									)}
 									onChange={(e) =>
-										setSalaryMax(
+										update(
+											"salaryMax",
 											parseCurrency(e.target.value),
 										)
 									}
@@ -378,9 +383,12 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 								<InputGroupInput
 									id="profile-desired-salary"
 									inputMode="numeric"
-									value={formatCurrency(desiredSalary)}
+									value={formatCurrency(
+										profile?.desiredSalary ?? 0,
+									)}
 									onChange={(e) =>
-										setDesiredSalary(
+										update(
+											"desiredSalary",
 											parseCurrency(e.target.value),
 										)
 									}
@@ -396,9 +404,12 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 						<Input
 							id="profile-start-date-weeks"
 							type="number"
-							value={startDateWeeksOut}
+							value={profile?.startDateWeeksOut ?? 2}
 							onChange={(e) =>
-								setStartDateWeeksOut(Number(e.target.value))
+								update(
+									"startDateWeeksOut",
+									Number(e.target.value),
+								)
 							}
 						/>
 					</InputLabelWrapper>
@@ -411,8 +422,8 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 							/>
 						</Label>
 						<MultiInput
-							values={industries}
-							onChange={(vals) => setIndustries(vals)}
+							values={profile?.industries ?? []}
+							onChange={(vals) => update("industries", vals)}
 							max={20}
 						/>
 					</InputLabelWrapper>
@@ -425,8 +436,8 @@ export function ProfileCard({ profile, onSaved }: IProfileCardProps) {
 							/>
 						</Label>
 						<MultiInput
-							values={dealbreakers}
-							onChange={(vals) => setDealbreakers(vals)}
+							values={profile?.dealbreakers ?? []}
+							onChange={(vals) => update("dealbreakers", vals)}
 							max={20}
 						/>
 					</InputLabelWrapper>

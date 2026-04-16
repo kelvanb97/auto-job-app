@@ -68,8 +68,6 @@ export function CertificationCard({
 	certifications,
 	onChanged,
 }: ICertificationCardProps) {
-	const [entries, setEntries] =
-		useState<ICertificationEntry[]>(certifications)
 	const [editingId, setEditingId] = useState<number | null>(null)
 	const [isAdding, setIsAdding] = useState(false)
 	const [form, setForm] = useState<ICertificationForm>(EMPTY_FORM)
@@ -81,13 +79,10 @@ export function CertificationCard({
 	} = useAction(upsertCertificationAction, {
 		onSuccess: ({ data }) => {
 			if (data) {
-				setEntries((prev) => {
-					const next = prev.some((e) => e.id === data.id)
-						? prev.map((e) => (e.id === data.id ? data : e))
-						: [...prev, data]
-					onChanged(next)
-					return next
-				})
+				const next = certifications.some((e) => e.id === data.id)
+					? certifications.map((e) => (e.id === data.id ? data : e))
+					: [...certifications, data]
+				onChanged(next)
 				setEditingId(null)
 				setIsAdding(false)
 				setForm(EMPTY_FORM)
@@ -115,8 +110,8 @@ export function CertificationCard({
 	const handleSave = () => {
 		const sortOrder =
 			editingId !== null
-				? entries.findIndex((e) => e.id === editingId)
-				: entries.length
+				? certifications.findIndex((e) => e.id === editingId)
+				: certifications.length
 
 		executeUpsert({
 			id: form.id,
@@ -144,11 +139,8 @@ export function CertificationCard({
 	}
 
 	const handleDelete = (id: number) => {
-		setEntries((prev) => {
-			const next = prev.filter((e) => e.id !== id)
-			onChanged(next)
-			return next
-		})
+		const next = certifications.filter((e) => e.id !== id)
+		onChanged(next)
 		executeDelete({ id })
 	}
 
@@ -251,7 +243,7 @@ export function CertificationCard({
 			</CardHeader>
 			<CardContent>
 				<YStack className="gap-3">
-					{entries.map((entry) =>
+					{certifications.map((entry) =>
 						editingId === entry.id ? (
 							<div key={entry.id}>{renderForm()}</div>
 						) : (

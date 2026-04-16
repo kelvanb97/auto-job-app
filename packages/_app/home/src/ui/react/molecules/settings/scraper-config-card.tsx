@@ -22,37 +22,56 @@ import { MultiInput } from "@rja-design/ui/library/multi-input"
 import { toast } from "@rja-design/ui/library/toast"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { updateScraperConfigAction } from "#actions/settings-actions"
-import { useState } from "react"
+import type { Dispatch, SetStateAction } from "react"
+
+const BLANK_SCRAPER: TScraperConfig = {
+	id: 0,
+	userProfileId: 0,
+	relevantKeywords: [],
+	blockedKeywords: [],
+	blockedCompanies: [],
+	enabledSources: [],
+	googleTitles: [],
+	googleRemote: true,
+	googleFullTimeOnly: true,
+	googleFreshnessDays: 3,
+	googleMaxPages: 5,
+	linkedinUrls: [],
+	linkedinMaxPages: 5,
+	linkedinMaxPerPage: 25,
+	createdAt: null,
+	updatedAt: null,
+}
 
 interface IScraperConfigCardProps {
 	profileId: number
 	scraper: TScraperConfig | null
-	onSaved: (data: TScraperConfig) => void
+	setScraper: Dispatch<SetStateAction<TScraperConfig | null>>
 }
 
 export function ScraperConfigCard({
 	profileId,
 	scraper,
-	onSaved,
+	setScraper,
 }: IScraperConfigCardProps) {
-	const [relevantKeywords, setRelevantKeywords] = useState<string[]>(
-		scraper?.relevantKeywords ?? [],
-	)
-	const [blockedKeywords, setBlockedKeywords] = useState<string[]>(
-		scraper?.blockedKeywords ?? [],
-	)
-	const [blockedCompanies, setBlockedCompanies] = useState<string[]>(
-		scraper?.blockedCompanies ?? [],
-	)
-	const [enabledSources, setEnabledSources] = useState<string[]>(
-		scraper?.enabledSources ?? [],
-	)
+	const update = (field: keyof TScraperConfig, value: unknown) => {
+		setScraper(
+			(prev) =>
+				({
+					...(prev ?? {
+						...BLANK_SCRAPER,
+						userProfileId: profileId,
+					}),
+					[field]: value,
+				}) as TScraperConfig,
+		)
+	}
 
 	const { execute, result, status } = useAction(updateScraperConfigAction, {
 		onSuccess: ({ data }) => {
 			if (data) {
 				toast.success("Saved!")
-				onSaved(data)
+				setScraper(data)
 			}
 		},
 	})
@@ -63,10 +82,10 @@ export function ScraperConfigCard({
 	const handleSave = () => {
 		execute({
 			userProfileId: profileId,
-			relevantKeywords,
-			blockedKeywords,
-			blockedCompanies,
-			enabledSources,
+			relevantKeywords: scraper?.relevantKeywords ?? [],
+			blockedKeywords: scraper?.blockedKeywords ?? [],
+			blockedCompanies: scraper?.blockedCompanies ?? [],
+			enabledSources: scraper?.enabledSources ?? [],
 			linkedinUrls: scraper?.linkedinUrls ?? [],
 			linkedinMaxPages: scraper?.linkedinMaxPages ?? 5,
 			linkedinMaxPerPage: scraper?.linkedinMaxPerPage ?? 25,
@@ -86,8 +105,10 @@ export function ScraperConfigCard({
 					<InputLabelWrapper>
 						<Label>Relevant Keywords</Label>
 						<MultiInput
-							values={relevantKeywords}
-							onChange={setRelevantKeywords}
+							values={scraper?.relevantKeywords ?? []}
+							onChange={(vals) =>
+								update("relevantKeywords", vals)
+							}
 							max={50}
 						/>
 					</InputLabelWrapper>
@@ -95,8 +116,8 @@ export function ScraperConfigCard({
 					<InputLabelWrapper>
 						<Label>Blocked Keywords</Label>
 						<MultiInput
-							values={blockedKeywords}
-							onChange={setBlockedKeywords}
+							values={scraper?.blockedKeywords ?? []}
+							onChange={(vals) => update("blockedKeywords", vals)}
 							max={50}
 						/>
 					</InputLabelWrapper>
@@ -104,8 +125,10 @@ export function ScraperConfigCard({
 					<InputLabelWrapper>
 						<Label>Blocked Companies</Label>
 						<MultiInput
-							values={blockedCompanies}
-							onChange={setBlockedCompanies}
+							values={scraper?.blockedCompanies ?? []}
+							onChange={(vals) =>
+								update("blockedCompanies", vals)
+							}
 							max={50}
 						/>
 					</InputLabelWrapper>
@@ -113,8 +136,8 @@ export function ScraperConfigCard({
 					<InputLabelWrapper>
 						<Label>Enabled Sources</Label>
 						<MultiInput
-							values={enabledSources}
-							onChange={setEnabledSources}
+							values={scraper?.enabledSources ?? []}
+							onChange={(vals) => update("enabledSources", vals)}
 							max={10}
 						/>
 					</InputLabelWrapper>
