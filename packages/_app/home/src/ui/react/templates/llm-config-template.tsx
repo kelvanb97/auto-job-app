@@ -18,7 +18,7 @@ export function LlmConfigTemplate({ llm }: ILlmConfigTemplateProps) {
 	const configured = !!(llm?.anthropicApiKey || llm?.openaiApiKey)
 
 	return (
-		<YStack className="gap-4 pb-6">
+		<YStack className="w-full max-w-4xl gap-4 pb-6">
 			<YStack className="gap-1">
 				<TextBody size="sm" variant="muted-foreground">
 					API keys and per-use-case model selection for Anthropic and

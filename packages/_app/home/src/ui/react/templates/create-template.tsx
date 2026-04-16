@@ -3,5 +3,9 @@
 import { CreateRoleForm } from "#organisms/create-role-form"
 
 export function CreateTemplate() {
-	return <CreateRoleForm />
+	return (
+		<div className="w-full max-w-4xl">
+			<CreateRoleForm />
+		</div>
+	)
 }

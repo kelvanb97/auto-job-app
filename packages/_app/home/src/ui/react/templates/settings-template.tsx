@@ -183,7 +183,7 @@ export function SettingsTemplate({
 				<div className="flex-1 overflow-y-auto">
 					<div
 						className={cn(
-							"mx-auto w-full max-w-4xl p-6",
+							"w-full max-w-4xl p-6",
 							activeTab === "json" && "h-full",
 						)}
 					>
