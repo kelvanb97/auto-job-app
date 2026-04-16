@@ -21,6 +21,7 @@ import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { MultiInput } from "@rja-design/ui/library/multi-input"
 import { toast } from "@rja-design/ui/library/toast"
+import { Tooltip } from "@rja-design/ui/library/tooltip"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { updateScraperConfigAction } from "#actions/settings-actions"
 import type { Dispatch, SetStateAction } from "react"
@@ -104,7 +105,13 @@ export function LinkedInCard({
 			<CardContent>
 				<YStack className="gap-4">
 					<InputLabelWrapper>
-						<Label>Search URLs</Label>
+						<Label>
+							Search URLs
+							<Tooltip
+								iconClassName="size-3.5 text-muted-foreground"
+								content="Paste LinkedIn job search result URLs. The scraper opens each URL and pages through the listings."
+							/>
+						</Label>
 						<MultiInput
 							values={scraper?.linkedinUrls ?? []}
 							onChange={(vals) => update("linkedinUrls", vals)}
@@ -113,7 +120,13 @@ export function LinkedInCard({
 					</InputLabelWrapper>
 
 					<InputLabelWrapper>
-						<Label htmlFor="linkedin-max-pages">Max Pages</Label>
+						<Label htmlFor="linkedin-max-pages">
+							Max Pages
+							<Tooltip
+								iconClassName="size-3.5 text-muted-foreground"
+								content="How many result pages to scrape per URL. LinkedIn returns ~25 listings per page; 5 pages ≈ 125 listings per URL."
+							/>
+						</Label>
 						<Input
 							id="linkedin-max-pages"
 							type="number"
@@ -130,6 +143,10 @@ export function LinkedInCard({
 					<InputLabelWrapper>
 						<Label htmlFor="linkedin-max-per-page">
 							Max Per Page
+							<Tooltip
+								iconClassName="size-3.5 text-muted-foreground"
+								content="Maximum listings to extract from each page. Leave at 25 unless LinkedIn's layout changes."
+							/>
 						</Label>
 						<Input
 							id="linkedin-max-per-page"

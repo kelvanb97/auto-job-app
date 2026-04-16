@@ -1,6 +1,9 @@
 "use client"
 
-import type { TScraperConfig } from "@rja-api/settings/schema/scraper-config-schema"
+import {
+	type TScraperConfig,
+	type TSourceName,
+} from "@rja-api/settings/schema/scraper-config-schema"
 import {
 	useAction,
 	useActionError,
@@ -19,10 +22,16 @@ import {
 import { InputLabelWrapper } from "@rja-design/ui/library/input-label-wrapper"
 import { Label } from "@rja-design/ui/library/label"
 import { MultiInput } from "@rja-design/ui/library/multi-input"
+import { MultiSelect } from "@rja-design/ui/library/multi-select"
 import { toast } from "@rja-design/ui/library/toast"
+import { Tooltip } from "@rja-design/ui/library/tooltip"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { updateScraperConfigAction } from "#actions/settings-actions"
 import type { Dispatch, SetStateAction } from "react"
+
+const SOURCE_OPTIONS: { label: string; value: TSourceName }[] = [
+	{ label: "LinkedIn", value: "linkedin" },
+]
 
 const BLANK_SCRAPER: TScraperConfig = {
 	id: 0,
@@ -103,42 +112,75 @@ export function ScraperConfigCard({
 			<CardContent>
 				<YStack className="gap-4">
 					<InputLabelWrapper>
-						<Label>Relevant Keywords</Label>
+						<Label>
+							Relevant Keywords
+							<Tooltip
+								iconClassName="size-3.5 text-muted-foreground"
+								content="Roles must contain at least one of these keywords in the title to be kept."
+							/>
+						</Label>
 						<MultiInput
 							values={scraper?.relevantKeywords ?? []}
 							onChange={(vals) =>
 								update("relevantKeywords", vals)
 							}
 							max={50}
+							placeholder="Leave empty to skip"
 						/>
 					</InputLabelWrapper>
 
 					<InputLabelWrapper>
-						<Label>Blocked Keywords</Label>
+						<Label>
+							Blocked Keywords
+							<Tooltip
+								iconClassName="size-3.5 text-muted-foreground"
+								content="Roles are ignored if they contain any of these keywords in the title."
+							/>
+						</Label>
 						<MultiInput
 							values={scraper?.blockedKeywords ?? []}
 							onChange={(vals) => update("blockedKeywords", vals)}
 							max={50}
+							placeholder="Leave empty to skip"
 						/>
 					</InputLabelWrapper>
 
 					<InputLabelWrapper>
-						<Label>Blocked Companies</Label>
+						<Label>
+							Blocked Companies
+							<Tooltip
+								iconClassName="size-3.5 text-muted-foreground"
+								content="Roles from these companies are ignored."
+							/>
+						</Label>
 						<MultiInput
 							values={scraper?.blockedCompanies ?? []}
 							onChange={(vals) =>
 								update("blockedCompanies", vals)
 							}
 							max={50}
+							placeholder="Leave empty to skip"
 						/>
 					</InputLabelWrapper>
 
 					<InputLabelWrapper>
-						<Label>Enabled Sources</Label>
-						<MultiInput
-							values={scraper?.enabledSources ?? []}
-							onChange={(vals) => update("enabledSources", vals)}
-							max={10}
+						<Label>
+							Enabled Sources
+							<Tooltip
+								iconClassName="size-3.5 text-muted-foreground"
+								content="Job boards the scraper pulls from. Each run hits every enabled source."
+							/>
+						</Label>
+						<MultiSelect<TSourceName>
+							values={
+								(scraper?.enabledSources ?? []) as TSourceName[]
+							}
+							onValueChange={(vals) =>
+								update("enabledSources", vals)
+							}
+							options={SOURCE_OPTIONS}
+							max={SOURCE_OPTIONS.length}
+							placeholder="Select a source"
 						/>
 					</InputLabelWrapper>
 				</YStack>
