@@ -171,11 +171,7 @@ Ask the user for any blocked keywords (e.g. "senior", "blockchain", "crypto") an
 
 If the user enabled LinkedIn, walk over to the **LinkedIn** tab and explain that they need to add at least one LinkedIn search URL (e.g. <https://www.linkedin.com/jobs/search/?keywords=frontend%20engineer>). Help them build one.
 
-## Step 5: Form Defaults (tour-driven)
-
-Click the **Form Defaults** tab. These are answers to common application form fields the auto-apply skill will fill in. Walk through quickly. Most have sane defaults. Click Save.
-
-## Step 6: EEO & Work Auth (chat-driven)
+## Step 5: EEO & Work Auth (chat-driven)
 
 Click the **EEO & Work Auth** tab. Explain in chat:
 
@@ -192,7 +188,7 @@ Ask each question gently:
 
 Fill via Playwright. Click Save.
 
-## Step 7: Scoring Weights (chat-driven)
+## Step 6: Scoring Weights (chat-driven)
 
 Click the **Scoring Weights** tab. Explain:
 
@@ -208,7 +204,7 @@ Walk through each:
 
 Ask which they want to bump or lower. Fill via Playwright. Click Save.
 
-## Step 8: Hand off
+## Step 7: Hand off
 
 Tell the user:
 

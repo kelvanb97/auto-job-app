@@ -71,6 +71,13 @@
 			"when": 1776289462226,
 			"tag": "0009_glossy_firelord",
 			"breakpoints": true
+		},
+		{
+			"idx": 10,
+			"version": "6",
+			"when": 1776325711695,
+			"tag": "0010_chemical_mesmero",
+			"breakpoints": true
 		}
 	]
 }

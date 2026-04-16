@@ -414,35 +414,6 @@ export type TEeoConfig = typeof eeoConfig.$inferSelect
 export type TNewEeoConfig = typeof eeoConfig.$inferInsert
 
 // =============================================================
-// FORM DEFAULTS
-// =============================================================
-
-export const formDefaults = sqliteTable("form_defaults", {
-	id: int("id").primaryKey({ autoIncrement: true }),
-	userProfileId: int("user_profile_id")
-		.unique()
-		.notNull()
-		.references(() => userProfile.id, { onDelete: "cascade" }),
-	howDidYouHear: text("how_did_you_hear").notNull().default(""),
-	referredByEmployee: text("referred_by_employee").notNull().default("No"),
-	nonCompeteAgreement: text("non_compete_agreement").notNull().default("No"),
-	previouslyEmployed: text("previously_employed").notNull().default("No"),
-	professionalReferences: text("professional_references")
-		.notNull()
-		.default(""),
-	employmentType: text("employment_type").notNull().default("Full-Time"),
-	createdAt: int("created_at", { mode: "timestamp" }).$defaultFn(
-		() => new Date(),
-	),
-	updatedAt: int("updated_at", { mode: "timestamp" })
-		.$defaultFn(() => new Date())
-		.$onUpdate(() => new Date()),
-})
-
-export type TFormDefaults = typeof formDefaults.$inferSelect
-export type TNewFormDefaults = typeof formDefaults.$inferInsert
-
-// =============================================================
 // SCORING CONFIG
 // =============================================================
 

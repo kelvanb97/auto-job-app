@@ -138,7 +138,7 @@ To apply migrations without starting the server: `pnpm --filter @rja-app/drizzle
 
 ### User Settings
 
-User configuration (profile, work experience, education, EEO, form defaults, scoring weights, scraper config) is stored in the database via `@rja-api/settings`. The settings page at `/settings` provides a UI for editing all values.
+User configuration (profile, work experience, education, EEO, scoring weights, scraper config) is stored in the database via `@rja-api/settings`. The settings page at `/settings` provides a UI for editing all values.
 
 ## Documentation
 

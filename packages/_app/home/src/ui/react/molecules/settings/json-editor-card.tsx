@@ -1,7 +1,6 @@
 "use client"
 
 import type { TEeoConfig } from "@rja-api/settings/schema/eeo-config-schema"
-import type { TFormDefaults } from "@rja-api/settings/schema/form-defaults-schema"
 import type { TScoringConfig } from "@rja-api/settings/schema/scoring-config-schema"
 import type { TScraperConfig } from "@rja-api/settings/schema/scraper-config-schema"
 import type { TUserProfileFull } from "@rja-api/settings/schema/user-profile-schema"
@@ -26,7 +25,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 interface IJsonEditorCardProps {
 	profile: TUserProfileFull | null
 	eeo: TEeoConfig | null
-	formDefaults: TFormDefaults | null
 	scoring: TScoringConfig | null
 	scraper: TScraperConfig | null
 }
@@ -67,7 +65,7 @@ function highlightJson(json: string): string {
 // ---------------------------------------------------------------------------
 
 function buildJsonView(props: IJsonEditorCardProps) {
-	const { profile, eeo, formDefaults, scoring, scraper } = props
+	const { profile, eeo, scoring, scraper } = props
 
 	return {
 		profile: profile
@@ -132,16 +130,6 @@ function buildJsonView(props: IJsonEditorCardProps) {
 					disabilityStatus: eeo.disabilityStatus,
 					workAuthorization: eeo.workAuthorization,
 					requiresVisaSponsorship: eeo.requiresVisaSponsorship,
-				}
-			: null,
-		formDefaults: formDefaults
-			? {
-					howDidYouHear: formDefaults.howDidYouHear,
-					referredByEmployee: formDefaults.referredByEmployee,
-					nonCompeteAgreement: formDefaults.nonCompeteAgreement,
-					previouslyEmployed: formDefaults.previouslyEmployed,
-					professionalReferences: formDefaults.professionalReferences,
-					employmentType: formDefaults.employmentType,
 				}
 			: null,
 		scoring: scoring

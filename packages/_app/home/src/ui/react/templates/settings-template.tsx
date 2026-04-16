@@ -1,7 +1,6 @@
 "use client"
 
 import type { TEeoConfig } from "@rja-api/settings/schema/eeo-config-schema"
-import type { TFormDefaults } from "@rja-api/settings/schema/form-defaults-schema"
 import type { TLlmConfig } from "@rja-api/settings/schema/llm-config-schema"
 import type { TScoringConfig } from "@rja-api/settings/schema/scoring-config-schema"
 import type { TScraperConfig } from "@rja-api/settings/schema/scraper-config-schema"
@@ -18,7 +17,6 @@ import {
 	BarChart3,
 	Braces,
 	Briefcase,
-	FileText,
 	GraduationCap,
 	Linkedin,
 	Search,
@@ -32,7 +30,6 @@ import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { CertificationCard } from "#molecules/settings/certification-card"
 import { EducationCard } from "#molecules/settings/education-card"
 import { EeoCard } from "#molecules/settings/eeo-card"
-import { FormDefaultsCard } from "#molecules/settings/form-defaults-card"
 import { ImportFromResumeBar } from "#molecules/settings/import-from-resume-bar"
 import { JsonEditorCard } from "#molecules/settings/json-editor-card"
 import { LinkedInCard } from "#molecules/settings/linkedin-card"
@@ -68,7 +65,6 @@ const SECTIONS: TSection[] = [
 		label: "Application",
 		tabs: [
 			{ key: "eeo", label: "EEO & Work Auth", icon: Shield },
-			{ key: "form-defaults", label: "Form Defaults", icon: FileText },
 			{ key: "scoring", label: "Scoring Weights", icon: BarChart3 },
 		],
 	},
@@ -90,7 +86,6 @@ type TTabKey = string
 interface ISettingsTemplateProps {
 	initialProfile: TUserProfileFull | null
 	initialEeo: TEeoConfig | null
-	initialFormDefaults: TFormDefaults | null
 	initialScoring: TScoringConfig | null
 	initialScraper: TScraperConfig | null
 	llm: TLlmConfig | null
@@ -99,7 +94,6 @@ interface ISettingsTemplateProps {
 export function SettingsTemplate({
 	initialProfile,
 	initialEeo,
-	initialFormDefaults,
 	initialScoring,
 	initialScraper,
 	llm,
@@ -107,7 +101,6 @@ export function SettingsTemplate({
 	const [activeTab, setActiveTab] = useState<TTabKey>("profile")
 	const [profile, setProfile] = useState(initialProfile)
 	const [eeo, setEeo] = useState(initialEeo)
-	const [formDefaults, setFormDefaults] = useState(initialFormDefaults)
 	const [scoring, setScoring] = useState(initialScoring)
 	const [scraper, setScraper] = useState(initialScraper)
 
@@ -148,10 +141,6 @@ export function SettingsTemplate({
 	}, [])
 
 	const onEeoSaved = useCallback((data: TEeoConfig) => setEeo(data), [])
-	const onFormDefaultsSaved = useCallback(
-		(data: TFormDefaults) => setFormDefaults(data),
-		[],
-	)
 	const onScoringSaved = useCallback(
 		(data: TScoringConfig) => setScoring(data),
 		[],
@@ -262,16 +251,6 @@ export function SettingsTemplate({
 						) : (
 							<NeedsProfile tab="EEO & Work Auth" />
 						))}
-					{activeTab === "form-defaults" &&
-						(profile ? (
-							<FormDefaultsCard
-								profileId={profile.id}
-								formDefaults={formDefaults}
-								onSaved={onFormDefaultsSaved}
-							/>
-						) : (
-							<NeedsProfile tab="Form Defaults" />
-						))}
 					{activeTab === "scoring" &&
 						(profile ? (
 							<ScoringWeightsCard
@@ -306,7 +285,6 @@ export function SettingsTemplate({
 						<JsonEditorCard
 							profile={profile}
 							eeo={eeo}
-							formDefaults={formDefaults}
 							scoring={scoring}
 							scraper={scraper}
 						/>

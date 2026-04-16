@@ -236,30 +236,6 @@ Save the first row as `eeo` if present. Use these `eeo_config` columns:
 
 If the query returns an empty array, treat `eeo` as missing and ask the user for anything the form requires.
 
-**6. Load saved form defaults**
-
-```bash
-sqlite3 -json apps/web/data/rja.db '
-WITH active_profile AS (
-  SELECT id FROM user_profile ORDER BY id ASC LIMIT 1
-)
-SELECT * FROM form_defaults
-WHERE user_profile_id = (SELECT id FROM active_profile)
-LIMIT 1;
-'
-```
-
-Save the first row as `formDefaults` if present. Use these `form_defaults` columns:
-
-- `how_did_you_hear`
-- `referred_by_employee`
-- `non_compete_agreement`
-- `previously_employed`
-- `professional_references`
-- `employment_type`
-
-If the query returns an empty array, treat `formDefaults` as missing and ask the user for those answers if needed.
-
 **Important JSON note:** some SQLite columns are stored as JSON arrays and will be returned as JSON values or JSON-encoded strings depending on the CLI output. For `skills`, `preferred_location_types`, `preferred_locations`, `industries`, `dealbreakers`, `domain_expertise`, and `highlights`, treat them as arrays of strings. If the CLI returns them as strings, parse the JSON string before using the values.
 
 ### Personal information
@@ -314,19 +290,22 @@ If the form asks for a salary range, use `profile.salary_min` and `profile.salar
 
 For open-ended questions like "Why do you want to work here?" or "Tell us about a relevant project":
 
-- Generate a concise 2-3 sentence response based on the role description, company info, and the SQLite data you loaded from `user_profile`, `work_experience`, `education`, `certification`, and `form_defaults`.
+- Generate a concise 2-3 sentence response based on the role description, company info, and the SQLite data you loaded from `user_profile`, `work_experience`, `education`, and `certification`.
 - Tailor the response to highlight relevant skills and experience.
 - Keep it professional and specific to the role.
 
 ### Questions not covered by config
 
-If you encounter a form field that you cannot answer from the profile, EEO config, or form defaults, ask the user. Common examples:
+If you encounter a form field that you cannot answer from the profile or EEO config, use these hardcoded defaults for common questions. Ask the user only for anything genuinely unusual or role-specific.
 
 - Start date availability — compute by adding `profile.start_date_weeks_out` weeks to today's date.
-- How did you hear about this role? — use `formDefaults.how_did_you_hear` if present and non-empty.
-- Referral name — use `formDefaults.referred_by_employee` if present and non-empty.
-- Employment type / references / non-compete / previous employment — use `formDefaults.employment_type`, `formDefaults.professional_references`, `formDefaults.non_compete_agreement`, and `formDefaults.previously_employed` if present and non-empty.
-- Anything role-specific or unusual.
+- How did you hear about this role? — infer from `role.source` (e.g. "LinkedIn", "Google Jobs", "Company website"). If unknown, use "Online job board".
+- Referred by employee? — "No"
+- Non-compete agreement — "No"
+- Previously employed at this company? — "No"
+- Professional references — "Available upon request"
+- Employment type — infer from `role.type` if available, otherwise "Full-Time".
+- Anything role-specific or unusual — ask the user.
 
 ### Multi-page forms
 

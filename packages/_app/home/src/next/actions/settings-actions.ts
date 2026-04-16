@@ -8,14 +8,12 @@ import { getUserProfile } from "@rja-api/settings/api/get-user-profile"
 import { upsertCertification } from "@rja-api/settings/api/upsert-certification"
 import { upsertEducation } from "@rja-api/settings/api/upsert-education"
 import { upsertEeoConfig } from "@rja-api/settings/api/upsert-eeo-config"
-import { upsertFormDefaults } from "@rja-api/settings/api/upsert-form-defaults"
 import { upsertLlmConfig } from "@rja-api/settings/api/upsert-llm-config"
 import { upsertScoringConfig } from "@rja-api/settings/api/upsert-scoring-config"
 import { upsertScraperConfig } from "@rja-api/settings/api/upsert-scraper-config"
 import { upsertUserProfile } from "@rja-api/settings/api/upsert-user-profile"
 import { upsertWorkExperience } from "@rja-api/settings/api/upsert-work-experience"
 import { upsertEeoConfigSchema } from "@rja-api/settings/schema/eeo-config-schema"
-import { upsertFormDefaultsSchema } from "@rja-api/settings/schema/form-defaults-schema"
 import { upsertLlmConfigSchema } from "@rja-api/settings/schema/llm-config-schema"
 import { upsertScoringConfigSchema } from "@rja-api/settings/schema/scoring-config-schema"
 import { upsertScraperConfigSchema } from "@rja-api/settings/schema/scraper-config-schema"
@@ -93,14 +91,6 @@ export const updateEeoAction = actionClient
 	.inputSchema(upsertEeoConfigSchema)
 	.action(async ({ parsedInput }) => {
 		const result = upsertEeoConfig(parsedInput)
-		if (!result.ok) throw new SafeForClientError(result.error.message)
-		return result.data
-	})
-
-export const updateFormDefaultsAction = actionClient
-	.inputSchema(upsertFormDefaultsSchema)
-	.action(async ({ parsedInput }) => {
-		const result = upsertFormDefaults(parsedInput)
 		if (!result.ok) throw new SafeForClientError(result.error.message)
 		return result.data
 	})
@@ -201,14 +191,6 @@ export const saveAllSettingsAction = actionClient
 			const result = upsertEeoConfig({
 				userProfileId: profileId,
 				...data.eeo,
-			})
-			if (!result.ok) throw new SafeForClientError(result.error.message)
-		}
-
-		if (data.formDefaults) {
-			const result = upsertFormDefaults({
-				userProfileId: profileId,
-				...data.formDefaults,
 			})
 			if (!result.ok) throw new SafeForClientError(result.error.message)
 		}
