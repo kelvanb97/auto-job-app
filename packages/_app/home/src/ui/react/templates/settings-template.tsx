@@ -63,10 +63,11 @@ const SECTIONS: TSection[] = [
 	},
 	{
 		label: "Application",
-		tabs: [
-			{ key: "eeo", label: "EEO & Work Auth", icon: Shield },
-			{ key: "scoring", label: "Scoring Weights", icon: BarChart3 },
-		],
+		tabs: [{ key: "eeo", label: "EEO & Work Auth", icon: Shield }],
+	},
+	{
+		label: "Scoring",
+		tabs: [{ key: "scoring", label: "Scoring Weights", icon: BarChart3 }],
 	},
 	{
 		label: "Scraper",
