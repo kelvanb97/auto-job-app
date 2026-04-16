@@ -180,91 +180,98 @@ export function SettingsTemplate({
 					))}
 				</YStack>
 
-				<div className="flex-1 overflow-y-auto p-6">
-					{activeTab === "profile" && (
-						<ProfileCard
-							profile={profile}
-							setProfile={setProfile}
-						/>
-					)}
-					{activeTab === "work-experience" &&
-						(profile ? (
-							<WorkExperienceCard
-								profileId={profile.id}
-								workExperience={profile.workExperience}
-								onChanged={onWorkExperienceChanged}
+				<div className="flex-1 overflow-y-auto">
+					<div
+						className={cn(
+							"mx-auto w-full max-w-4xl p-6",
+							activeTab === "json" && "h-full",
+						)}
+					>
+						{activeTab === "profile" && (
+							<ProfileCard
+								profile={profile}
+								setProfile={setProfile}
 							/>
-						) : (
-							<NeedsProfile tab="Experience" />
-						))}
-					{activeTab === "education" &&
-						(profile ? (
-							<EducationCard
-								profileId={profile.id}
-								education={profile.education}
-								onChanged={onEducationChanged}
-							/>
-						) : (
-							<NeedsProfile tab="Education" />
-						))}
-					{activeTab === "certifications" &&
-						(profile ? (
-							<CertificationCard
-								profileId={profile.id}
-								certifications={profile.certifications}
-								onChanged={onCertificationsChanged}
-							/>
-						) : (
-							<NeedsProfile tab="Certifications" />
-						))}
-					{activeTab === "eeo" &&
-						(profile ? (
-							<EeoCard
-								profileId={profile.id}
+						)}
+						{activeTab === "work-experience" &&
+							(profile ? (
+								<WorkExperienceCard
+									profileId={profile.id}
+									workExperience={profile.workExperience}
+									onChanged={onWorkExperienceChanged}
+								/>
+							) : (
+								<NeedsProfile tab="Experience" />
+							))}
+						{activeTab === "education" &&
+							(profile ? (
+								<EducationCard
+									profileId={profile.id}
+									education={profile.education}
+									onChanged={onEducationChanged}
+								/>
+							) : (
+								<NeedsProfile tab="Education" />
+							))}
+						{activeTab === "certifications" &&
+							(profile ? (
+								<CertificationCard
+									profileId={profile.id}
+									certifications={profile.certifications}
+									onChanged={onCertificationsChanged}
+								/>
+							) : (
+								<NeedsProfile tab="Certifications" />
+							))}
+						{activeTab === "eeo" &&
+							(profile ? (
+								<EeoCard
+									profileId={profile.id}
+									eeo={eeo}
+									setEeo={setEeo}
+								/>
+							) : (
+								<NeedsProfile tab="EEO & Work Auth" />
+							))}
+						{activeTab === "scoring" &&
+							(profile ? (
+								<ScoringWeightsCard
+									profileId={profile.id}
+									scoring={scoring}
+									setScoring={setScoring}
+								/>
+							) : (
+								<NeedsProfile tab="Scoring Weights" />
+							))}
+						{activeTab === "scraper" &&
+							(profile ? (
+								<ScraperConfigCard
+									profileId={profile.id}
+									scraper={scraper}
+									setScraper={setScraper}
+								/>
+							) : (
+								<NeedsProfile tab="Scraper Config" />
+							))}
+						{activeTab === "linkedin" &&
+							(profile ? (
+								<LinkedInCard
+									profileId={profile.id}
+									scraper={scraper}
+									setScraper={setScraper}
+								/>
+							) : (
+								<NeedsProfile tab="LinkedIn" />
+							))}
+						{activeTab === "json" && (
+							<JsonEditorCard
+								profile={profile}
 								eeo={eeo}
-								setEeo={setEeo}
-							/>
-						) : (
-							<NeedsProfile tab="EEO & Work Auth" />
-						))}
-					{activeTab === "scoring" &&
-						(profile ? (
-							<ScoringWeightsCard
-								profileId={profile.id}
 								scoring={scoring}
-								setScoring={setScoring}
-							/>
-						) : (
-							<NeedsProfile tab="Scoring Weights" />
-						))}
-					{activeTab === "scraper" &&
-						(profile ? (
-							<ScraperConfigCard
-								profileId={profile.id}
 								scraper={scraper}
-								setScraper={setScraper}
 							/>
-						) : (
-							<NeedsProfile tab="Scraper Config" />
-						))}
-					{activeTab === "linkedin" &&
-						(profile ? (
-							<LinkedInCard
-								profileId={profile.id}
-								scraper={scraper}
-								setScraper={setScraper}
-							/>
-						) : (
-							<NeedsProfile tab="LinkedIn" />
-						))}
-					{activeTab === "json" && (
-						<JsonEditorCard
-							profile={profile}
-							eeo={eeo}
-							scoring={scoring}
-							scraper={scraper}
-						/>
-					)}
+						)}
+					</div>
 				</div>
 			</XStack>
 		</YStack>
