@@ -4,7 +4,7 @@ import "@rja-design/ui/global.css"
 import { Providers } from "../ui/react/providers"
 
 export const metadata: Metadata = {
-	title: "rocket-jobs-app",
+	title: "Rocket Jobs",
 	description: "Dashboard for managing role opportunities",
 	icons: {
 		icon: "/favicon.ico",

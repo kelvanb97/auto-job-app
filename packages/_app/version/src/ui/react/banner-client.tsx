@@ -1,6 +1,7 @@
 "use client"
 
 import { Download, X } from "@rja-design/ui/assets/lucide"
+import { CopyChip } from "@rja-design/ui/library/copy-chip"
 import { XStack } from "@rja-design/ui/primitives/x-stack"
 import { YStack } from "@rja-design/ui/primitives/y-stack"
 import { useEffect, useState } from "react"
@@ -37,33 +38,39 @@ export function VersionOutdatedBannerClient({
 	if (dismissed) return null
 
 	return (
-		<XStack className="items-center justify-between gap-4 border-b border-border bg-muted/30 px-6 py-3">
-			<XStack className="items-center gap-3">
-				<Download className="size-5 text-primary" />
-				<YStack className="gap-0.5">
+		<YStack
+			role="status"
+			aria-live="polite"
+			className="fixed bottom-4 right-4 z-50 max-w-sm gap-3 rounded-xl border border-border bg-background/95 p-4 shadow-lg backdrop-blur"
+		>
+			<XStack className="items-start justify-between gap-3">
+				<XStack className="items-center gap-2">
+					<Download className="size-4 text-primary" />
 					<span className="text-sm font-medium">
-						A newer version of Rocket Jobs is available
+						Update available
 					</span>
-					<span className="text-xs text-muted-foreground">
-						Run{" "}
-						<code className="font-mono text-xs text-primary">
-							/rj-update
-						</code>{" "}
-						in your AI assistant (Claude Code or Codex) to pull the
-						latest code, reinstall dependencies, and apply
-						migrations.
-					</span>
-				</YStack>
+				</XStack>
+				<button
+					type="button"
+					onClick={handleDismiss}
+					className="-m-1 inline-flex size-6 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+					aria-label="Dismiss update banner"
+				>
+					<X className="size-3.5" />
+				</button>
 			</XStack>
-			<button
-				type="button"
-				onClick={handleDismiss}
-				className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
-				aria-label="Dismiss update banner"
-			>
-				<X className="size-3.5" />
-				Dismiss
-			</button>
-		</XStack>
+			<span className="text-xs text-muted-foreground">
+				Run the update skill in your AI assistant to pull the latest
+				code, reinstall dependencies, and apply migrations.
+			</span>
+			<YStack className="gap-1">
+				<CopyChip
+					command="/rj-update"
+					label="Claude Code"
+					harness="claude-code"
+				/>
+				<CopyChip command="$rj-update" label="Codex" harness="codex" />
+			</YStack>
+		</YStack>
 	)
 }

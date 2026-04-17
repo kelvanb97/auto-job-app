@@ -572,6 +572,9 @@ importers:
       '@rja-api/storage':
         specifier: workspace:*
         version: link:../../_api/storage
+      '@rja-app/version':
+        specifier: workspace:*
+        version: link:../version
       '@rja-core/dates':
         specifier: workspace:*
         version: link:../../_core/dates

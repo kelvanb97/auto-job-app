@@ -5,7 +5,8 @@
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
-		"./banner": "./src/ui/react/banner.tsx"
+		"./banner": "./src/ui/react/banner.tsx",
+		"./card": "./src/ui/react/card.tsx"
 	},
 	"scripts": {
 		"check-types": "tsc --noEmit",
